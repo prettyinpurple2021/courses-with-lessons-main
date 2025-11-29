@@ -5,6 +5,9 @@
 
 import { onCLS, onINP, onFCP, onLCP, onTTFB, Metric } from 'web-vitals';
 
+// Get API base URL from environment
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8787/api';
+
 /**
  * Performance metric types
  */
@@ -50,7 +53,7 @@ function sendToAnalytics(metric: PerformanceMetric) {
 
   // Example: Send to custom analytics endpoint
   if (process.env.NODE_ENV === 'production') {
-    fetch('/api/analytics/performance', {
+    fetch(`${API_BASE_URL}/analytics/performance`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -151,7 +154,7 @@ export function trackCustomMetric(name: string, value: number, metadata?: Record
 
   // Send to analytics with metadata
   if (process.env.NODE_ENV === 'production') {
-    fetch('/api/analytics/performance', {
+    fetch(`${API_BASE_URL}/analytics/performance`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
