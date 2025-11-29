@@ -23,7 +23,7 @@ router.post(
     body('activityNumber').isInt({ min: 1 }).withMessage('Activity number must be a positive integer'),
     body('position').optional().isIn(['opening', 'mid', 'closing']).withMessage('Position must be opening, mid, or closing'),
   ]),
-  asyncHandler(contentGenerationController.generateActivity)
+  asyncHandler((contentGenerationController as any).generateActivity)
 );
 
 /**
@@ -36,7 +36,7 @@ router.post(
     body('activityPlan').optional().isArray().withMessage('Activity plan must be an array'),
     body('dryRun').optional().isBoolean().withMessage('Dry run must be a boolean'),
   ]),
-  asyncHandler(contentGenerationController.generateLessonActivities)
+  asyncHandler((contentGenerationController as any).generateLessonActivities)
 );
 
 /**
@@ -48,7 +48,7 @@ router.post(
     param('courseId').isUUID().withMessage('Valid course ID is required'),
     body('dryRun').optional().isBoolean().withMessage('Dry run must be a boolean'),
   ]),
-  asyncHandler(contentGenerationController.generateCourseActivities)
+  asyncHandler((contentGenerationController as any).generateCourseActivities)
 );
 
 export default router;

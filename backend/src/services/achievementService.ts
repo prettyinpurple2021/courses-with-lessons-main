@@ -248,7 +248,7 @@ export async function unlockAchievement(
       unlockedAt: achievement.unlockedAt.toISOString(),
     });
   } catch (error) {
-    logger.error('Failed to send achievement webhook:', error);
+    logger.error('Failed to send achievement webhook:', error as Record<string, unknown>);
     // Don't fail achievement unlock if webhook fails
   }
 

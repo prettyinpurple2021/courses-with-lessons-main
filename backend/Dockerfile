@@ -16,8 +16,10 @@ RUN npm ci
 # Generate Prisma Client
 RUN npx prisma generate
 
-# Copy source code
+# Copy source code and TypeScript configs
 COPY . .
+# Copy root tsconfig.json (backend tsconfig extends it)
+COPY ../tsconfig.json ../tsconfig.json
 
 # Build the application
 RUN npm run build
@@ -54,15 +56,15 @@ RUN mkdir -p /app/logs && chown -R nodejs:nodejs /app/logs
 # Switch to non-root user
 USER nodejs
 
-# Expose port
-EXPOSE 3000
+# Expose port (Fly.io will set PORT env var, default to 5000)
+EXPOSE 5000
 
 # Set NODE_ENV to production
 ENV NODE_ENV=production
 
 # Health check with proper timeout
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-    CMD node -e "require('http').get('http://localhost:3000/api/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)}).on('error', () => process.exit(1))"
+    CMD node -e "require('http').get('http://localhost:5000/api/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)}).on('error', () => process.exit(1))"
 
 # Use dumb-init to handle signals properly
 ENTRYPOINT ["dumb-init", "--"]

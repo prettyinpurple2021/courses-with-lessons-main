@@ -28,7 +28,7 @@ interface AiResponse {
     sources?: Array<{ title?: string; url?: string }>;
 }
 
-const chatModeConfig: Record<ChatMode, { model: string; systemInstruction: string; tools?: unknown[] }> = {
+const chatModeConfig: Record<ChatMode, { model: string; systemInstruction: string; tools?: Array<Record<string, unknown>> }> = {
     quick: {
         model: 'gemini-1.5-flash',
         systemInstruction:

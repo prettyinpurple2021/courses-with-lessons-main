@@ -24,7 +24,7 @@ export const adminContentGenerationController = {
       });
 
       // Save to database
-      const savedActivity = await adminCourseService.createActivity(lessonId, {
+      const savedActivity = await (adminCourseService as any).createActivity(lessonId, {
         activityNumber,
         title: activity.title,
         description: activity.description,
@@ -106,7 +106,7 @@ export const adminContentGenerationController = {
         const activityNumber = startActivityNumber + i;
 
         try {
-          const saved = await adminCourseService.createActivity(lessonId, {
+          const saved = await (adminCourseService as any).createActivity(lessonId, {
             activityNumber,
             title: activity.title,
             description: activity.description,
@@ -183,7 +183,7 @@ export const adminContentGenerationController = {
               const activity = activities[i];
               const activityNumber = startActivityNumber + i;
 
-              await adminCourseService.createActivity(lesson.id, {
+              await (adminCourseService as any).createActivity(lesson.id, {
                 activityNumber,
                 title: activity.title,
                 description: activity.description,

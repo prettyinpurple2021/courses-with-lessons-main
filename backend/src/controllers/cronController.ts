@@ -61,7 +61,7 @@ export async function syncIntelAcademy(req: Request, res: Response) {
     
     return res.json({
       success: true,
-      ...result,
+      data: result,
     });
   } catch (error) {
     logger.error('Cron: Error syncing integrations', { error });
@@ -84,7 +84,7 @@ export async function cleanupWebhooks(req: Request, res: Response) {
     
     return res.json({
       success: true,
-      ...result,
+      data: result,
     });
   } catch (error) {
     logger.error('Cron: Error cleaning up webhooks', { error });
