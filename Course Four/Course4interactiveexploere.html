@@ -1,0 +1,608 @@
+<!-- Chosen Palette: Calm Harmony (Grays, Whites, Accent Blue) -->
+<!-- Application Structure Plan: A 3-tab SPA (Overview, Curriculum, Final Project). Overview features a chart of activity types. Curriculum uses a 2-column layout with a sticky left nav to dynamically load full lesson plans into the right content area. Final Project shows project details and an exam breakdown bar chart. This structure is best for exploring a course syllabus, allowing users to see the high-level structure and drill down into specific details (lessons) easily. -->
+<!-- Visualization & Content Choices: 1) Overview Donut Chart (Chart.js): Goal=Inform. Shows breakdown of 38 learning activities by type (Tool Exploration, Case Study, Strategic, Peer Collab, Creative) to visualize the course's hands-on nature. 2) Curriculum JS Renderer: Goal=Organize. Dynamically populates HTML to display full lesson plans, making the 12-lesson structure navigable. 3) Final Project Bar Chart (Chart.js): Goal=Inform. Shows breakdown of 25 final exam questions by type (MCQ, T/F, etc.) to clarify the assessment. All textual content is parsed from the 14 source files and stored in a JS object. -->
+<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course 4: Interactive Explorer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (max-width: 640px) {
+            .chart-container {
+                height: 300px;
+                max-height: 350px;
+            }
+        }
+        .tab-button {
+            transition: all 0.3s ease;
+        }
+        .tab-button.active {
+            border-bottom-color: #2563EB;
+            color: #2563EB;
+            font-weight: 600;
+        }
+        .lesson-nav-button {
+            transition: all 0.2s ease;
+        }
+        .lesson-nav-button.active {
+            background-color: #EFF6FF;
+            color: #2563EB;
+            font-weight: 600;
+            transform: scale(1.02);
+        }
+        .lesson-nav-button:hover {
+            background-color: #F9FAFB;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="max-w-7xl mx-auto p-4 md:p-8">
+        
+        <header class="text-center md:text-left mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900">Course 4: The Automated Empire</h1>
+            <p class="text-lg text-gray-600 mt-2">Scale to 6-Figures on Autopilot</p>
+        </header>
+
+        <nav class="mb-8 border-b border-gray-200">
+            <div class="flex flex-wrap -mb-px">
+                <button class="tab-button text-lg py-4 px-6 border-b-2 border-transparent" data-tab="overview">
+                    Overview
+                </button>
+                <button class="tab-button text-lg py-4 px-6 border-b-2 border-transparent" data-tab="curriculum">
+                    Curriculum
+                </button>
+                <button class="tab-button text-lg py-4 px-6 border-b-2 border-transparent" data-tab="project">
+                    Final Project
+                </button>
+            </div>
+        </nav>
+
+        <main>
+            <div id="overviewContent" class="tab-content">
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <h2 class="text-2xl font-bold mb-4">Course Overview</h2>
+                    <p class="text-gray-600 mb-6">This course is a comprehensive, 12-lesson bootcamp designed to transform your business from a manual, task-based operation into a scalable, automated empire. You will learn to identify automation opportunities, map core processes, build a "Single Source of Truth," and master tools like Zapier and Make to automate your entire client lifecycle, from lead capture to testimonial requests.</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 text-center">
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <div class="text-4xl font-bold text-blue-600">12</div>
+                            <div class="text-gray-700">Core Lessons</div>
+                        </div>
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <div class="text-4xl font-bold text-blue-600">38</div>
+                            <div class="text-gray-700">Interactive Activities</div>
+                        </div>
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <div class="text-4xl font-bold text-blue-600">1</div>
+                            <div class="text-gray-700">Portfolio-Ready Playbook</div>
+                        </div>
+                    </div>
+
+                    <h3 class="text-xl font-bold mb-4 text-center">Interactive Learning Activity Breakdown</h3>
+                    <p class="text-center text-gray-600 mb-4">This course is built on hands-on application, not passive reading. Here's a breakdown of the 38 activities you'll complete:</p>
+                    <div class="chart-container">
+                        <canvas id="activityChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div id="curriculumContent" class="tab-content hidden">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div class="md:col-span-1">
+                        <div class="sticky top-8">
+                            <h2 class="text-2xl font-bold mb-4">Lessons</h2>
+                            <div id="lessonNav" class="flex flex-col space-y-2"></div>
+                        </div>
+                    </div>
+                    <div class="md:col-span-3">
+                        <div id="lessonDetail" class="bg-white p-6 rounded-lg shadow-sm">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="projectContent" class="tab-content hidden">
+                <div id="finalProjectDetail" class="bg-white p-6 rounded-lg shadow-sm">
+                </div>
+                
+                <h3 class="text-xl font-bold my-6 text-center">Final Exam Question Breakdown</h3>
+                <p class="text-center text-gray-600 mb-4">The final exam consists of 25 questions testing your applied knowledge from across all 12 lessons.</p>
+                <div class="bg-white p-6 rounded-lg shadow-sm">
+                    <div class="chart-container" style="max-width: 800px;">
+                        <canvas id="examChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+    </div>
+
+    <script>
+        const courseData = {
+            lessons: [
+                {
+                    title: "Lesson 1: The 'Automate-First' Mindset",
+                    concept: "<p class='text-gray-600 leading-relaxed'>This lesson is the foundational 'why' for the entire course. Most solopreneurs are trapped in 'The Manual Mindset,' believing 'It's faster if I just do it myself.' This is a lie that keeps businesses small. The 'Automate-First' Mindset is a strategic shift. It trains you to stop seeing your business as a list of *tasks* and to start seeing it as a system of *processes*. You'll learn to ruthlessly analyze every action by its 'Return on Time Invested' (ROTI). The goal is to install a new mental filter that, before you *do* any repetitive task, makes you ask: 'How can I *automate* this so I never have to do it again?'</p>",
+                    activities: [
+                        { type: 'Strategic Exercise', title: 'The "Everything I Do" Audit' },
+                        { type: 'Case Study Analysis', title: 'The \'Value vs. Effort\' Matrix' },
+                        { type: 'Peer Collaboration', title: '"Could an Automation Do This?"' }
+                    ],
+                    assignment: {
+                        title: 'My "Automation Hit List" (Component 1 of Final Project)',
+                        description: 'You will take your raw data from the "Task Audit" and filter it through the "Value vs. Effort" matrix to create a definitive, prioritized list of the 5 tasks that are costing your business the most time and money. This "Hit List" becomes the target for everything we build in the rest of the course.'
+                    },
+                    assessment: [
+                        { q: 'What is the "Automate-First" Mindset?', a: 'B. The habit of asking "How can I automate this?" *before* doing a repetitive task.' },
+                        { q: 'In the "Value vs. Effort" Matrix, which quadrant is the *highest* priority for automation?', a: 'C. Low Value / High Effort' },
+                        { q: 'A "low-value" task is best described as:', a: 'B. A repetitive, administrative task that does not directly require your unique genius or strategic input.' }
+                    ]
+                },
+                {
+                    title: "Lesson 2: Mapping Your Core Business Processes",
+                    concept: "<p class='text-gray-600 leading-relaxed'>You cannot automate what you do not understand. Right now, your business processes (like 'new lead to client' or 'new idea to blog post') probably live in your head. This is a single point of failure and makes automation impossible. This lesson teaches you to become a 'business cartographer'—a person who maps processes. By creating a visual flowchart, you pull the process *out* of your brain and onto the screen. This allows you to see every step, every decision point, and every bottleneck. You'll see *exactly* where a manual task is breaking your flow, and more importantly, you'll identify the *precise* points where an automation 'trigger' can take over.</p>",
+                    activities: [
+                        { type: 'Strategic Exercise', title: 'Deconstruct a Simple Process' },
+                        { type: 'Tool Exploration', title: "'Whimsical' or 'Lucidchart'" },
+                        { type: 'Case Study Analysis', title: 'Find the Bottleneck' },
+                        { type: 'Peer Collaboration', title: "'Map Your Mess'" }
+                    ],
+                    assignment: {
+                        title: 'My "Lead-to-Client" Process Map v1.0 (Component 2 of Final Project)',
+                        description: 'This is your first "automation blueprint." You will visually map your *current* (messy or not) process for what happens from the moment a new person shows interest (a "lead") to the moment they become a paying client. This map is not about what you *wish* happened; it\'s about what *actually* happens right now.'
+                    },
+                    assessment: [
+                        { q: 'The *primary* reason for mapping a business process is to:', a: 'C. Get the process out of your head so you can visually identify bottlenecks and automation points.' },
+                        { q: 'In a flowchart, what shape is typically used to represent a "Decision" or "If/Then" step?', a: 'D. Diamond' },
+                        { q: 'What is a "bottleneck" in a process map?', a: 'C. A manual step where the process gets "stuck" waiting for human intervention.' }
+                    ]
+                },
+                {
+                    title: "Lesson 3: Your Operations Hub (The 'Single Source of Truth')",
+                    concept: "<p class='text-gray-600 leading-relaxed'>Your business is currently scattered across 10+ apps: notes in Google Docs, tasks in a to-do list, client info in your email, and content ideas on a sticky note. This 'digital clutter' is a primary source of burnout. An Operations Hub, or 'Single Source of Truth' (SSOT), fixes this. It is a centralized, digital dashboard you build *yourself* (in a tool like Notion or Airtable) to manage your entire business from one screen. It’s not just a 'project manager'; it’s your 'Business HQ.' It links your Projects, Clients, Content, Tasks, and SOPs together in one place, giving you 10-second access to any piece of information and enabling much more powerful automations.</p>",
+                    activities: [
+                        { type: 'Case Study Analysis', title: 'The $10k \'Lost\' Client' },
+                        { type: 'Tool Exploration', title: 'Notion vs. Airtable' },
+                        { type: 'Peer Collaboration', title: '"Hub Skeptic"' }
+                    ],
+                    assignment: {
+                        title: 'My Operations Hub v1.0 (Component 3 of Final Project)',
+                        description: 'This is the "chassis" of your automated empire. You will build the basic "skeleton" of your Operations Hub in the tool you chose (Notion or Airtable). You are not building the *whole* thing, just the foundational databases that we will connect and automate in later lessons.'
+                    },
+                    assessment: [
+                        { q: 'What is a "Single Source of Truth" (SSOT)?', a: 'B. A centralized, digital dashboard you build to manage all your business info in one place.' },
+                        { q: 'The *main* problem with "digital clutter" (info in 10+ apps) is that it:', a: 'C. Makes it hard to find information, causing errors, delays, and lost opportunities.' },
+                        { q: 'What is the *most important* feature you built in your Assignment 3 hub?', a: 'B. The "Relation" property that links "Tasks" to "Projects."' }
+                    ]
+                },
+                {
+                    title: "Lesson 4: Mastering Zapier or Make (Your Digital Glue)",
+                    concept: "<p class='text-gray-600 leading-relaxed'>Your Operations Hub (Lesson 3) is your 'fortress,' but it's isolated. The apps you use (email, forms, payment) are 'castles' that don't talk to each other. Tools like Zapier and Make are the 'digital glue' (or 'messengers') that connect them all. This lesson is your boot camp for these tools. You'll master the two words that run the entire automated world: **'Trigger'** (the 'if this happens...' event) and **'Action'** (the 'then do this...' command). Forget the complexity; this is simple. 'When I get a new email (Trigger), create a task in Notion (Action).' This lesson teaches you how to think in 'recipes' and build your first simple, 2-step automation.</p>",
+                    activities: [
+                        { type: 'Case Study Analysis', title: 'The "Digital Duct Tape"' },
+                        { type: 'Tool Exploration', title: 'Zapier vs. Make' },
+                        { type: 'Peer Collaboration', title: '"Find Your First Recipe"' }
+                    ],
+                    assignment: {
+                        title: 'My First Automation: The "Quick Win" (Component 4 of Final Project)',
+                        description: 'It\'s time to build. You will create your very first, simple, 2-step automation. This "Quick Win" will prove you can do this and will be the first working "machine" in your empire. This must be a *new* automation you build from scratch.'
+                    },
+                    assessment: [
+                        { q: 'In automation, what is a "Trigger"?', a: 'B. The "If this happens..." event that starts the automation.' },
+                        { q: 'In automation, what is an "Action"?', a: 'C. The "Then do this..." command that completes the automation.' },
+                        { q: 'What is the primary *visual* difference between the Zapier and Make interfaces?', a: 'B. Zapier is a linear, top-to-bottom list; Make is a visual, "bubbly" flowchart.' }
+                    ]
+                },
+                {
+                    title: "Lesson 5: Automating Your Lead Funnel",
+                    concept: "<p class='text-gray-600 leading-relaxed'>A 'leaky funnel' is the #1 silent killer of solo businesses. You spend time and money getting traffic to a lead magnet, but the 'handoff' from your form (e.g., Typeform) to your email list (e.g., ConvertKit) is manual. This is a 'leak.' Leads get lost, follow-ups are late, and you lose trust instantly. This lesson plugs that leak forever. You'll build your first *critical* automation: the 'Lead Capture Machine.' This machine will instantly and automatically take a new lead from your sign-up form, add them to your email list, 'tag' them based on *what* they signed up for, and deliver your lead magnet.</p>",
+                    activities: [
+                        { type: 'Case Study Analysis', title: "The 48-Hour 'Dead' Lead" },
+                        { type: 'Tool Exploration', title: '"Anatomy of a Smart Form"' },
+                        { type: 'Peer Collaboration', title: '"Map Your \'Tagging\' System"' }
+                    ],
+                    assignment: {
+                        title: 'The Automated Lead Magnet Machine (Component 5 of Final Project)',
+                        description: 'This is your first *mission-critical* automation. You will build a 2 or 3-step automation that connects your lead magnet form, your automation tool, and your email provider. You will record a short Loom video to prove it works.'
+                    },
+                    assessment: [
+                        { q: 'What is "Speed-to-Lead"?', a: 'C. The time between a lead signing up and you delivering the value (the lead magnet).' },
+                        { q: 'What is the *primary* purpose of "tagging" a new lead in your email system?', a: 'C. To segment your list so you know *what* they are interested in, allowing for personalized follow-up.' },
+                        { q: 'In the "Anatomy of a Smart Form" activity, what is a "hidden field" used for?', a: 'B. To pass "meta-data" (like "LeadSource: Website") to your automation without the user seeing it.' }
+                    ]
+                },
+                {
+                    title: "Lesson 6: The Automated Client Onboarding Machine",
+                    concept: "<p class='text-gray-600 leading-relaxed'>You've made the sale! This is the most *critical* moment in your client relationship, and for most solopreneurs, it's the *messiest*. Manually sending contracts, invoices, and welcome packets is slow, error-prone, and creates instant 'buyer's remorse.' This lesson builds your 'Onboarding Machine' to ensure a 'white-glove' experience that starts 30 seconds after they pay. You'll build a 'hands-free' sequence that triggers *from* the payment, and automatically sends the contract, creates their private client folder, sends the welcome packet, and even creates their project in your Operations Hub. This is how you *prove* your professionalism and create clients for life.</p>",
+                    activities: [
+                        { type: 'Case Study Analysis', title: "The $5,000 Buyer's Remorse" },
+                        { type: 'Tool Exploration', title: '"The Payment Trigger"' },
+                        { type: 'Peer Collaboration', title: '"My Onboarding \'Must-Haves\'"' }
+                    ],
+                    assignment: {
+                        title: 'The "Payment-to-Welcome" Automation (Component 6 of Final Project)',
+                        description: 'This is your most complex and valuable automation yet. You will build the multi-step sequence that *defines* your client experience. This will connect your payment system, your file system, your email, and your Operations Hub.'
+                    },
+                    assessment: [
+                        { q: "What is 'client buyer's remorse'?", a: "B. The feeling of anxiety or regret a client feels *after* making a large purchase." },
+                        { q: 'The *best* "Trigger" for a client onboarding automation is:', a: "B. The client's 'Payment Successful' event." },
+                        { q: 'What is the *primary benefit* of an automated "white-glove" onboarding experience?', a: 'B. It impresses the client, reduces buyer\'s remorse, and proves your professionalism instantly.' }
+                    ]
+                },
+                {
+                    title: "Lesson 7: Automated Project & Task Management",
+                    concept: "<p class='text-gray-600 leading-relaxed'>Your client onboarding (Lesson 6) is now automated, but what happens *next*? The 'project' starts, and a 'task tsunami' hits. You manually create 20 to-do items, set 10 reminders, and copy/paste the same info into your Operations Hub. This is a 'handoff' bottleneck. This lesson automates your *internal* project kick-off. You'll learn to use your Operations Hub (Notion/Airtable) as a *trigger*. The 'Trigger' (a new project) will automatically create your entire project to-do list from a template, assign tasks, and set due dates, all before you've even opened your laptop. This isn't just about saving time; it's about building a scalable, repeatable system for delivering perfect work, every time.</p>",
+                    activities: [
+                        { type: 'Case Study Analysis', title: "The 'Forgot-a-Step' Failure" },
+                        { type: 'Tool Exploration', title: '"The \'Database Template\' Feature"' },
+                        { type: 'Peer Collaboration', title: '"My \'Standard Operating Procedure\' (SOP) for a Project"' }
+                    ],
+                    assignment: {
+                        title: 'The "Project Kick-Off" Automation (Component 7 of Final Project)',
+                        description: 'This automation "daisy-chains" onto your last one. Your "Payment-to-Welcome" machine (Lesson 6) creates the project. This *new* automation sees that project and *builds out* the entire task list.'
+                    },
+                    assessment: [
+                        { q: 'What is the *primary* risk of managing project tasks "from memory"?', a: 'B. You will inevitably forget a critical step, which breaks client trust.' },
+                        { q: 'What is a "daisy-chain" automation?', a: 'C. When the "Action" of one automation (e.g., "Create Project") becomes the "Trigger" for a *second* automation (e.g., "Populate Tasks").' },
+                        { q: 'What is the "Trigger" for the "Project Kick-Off" automation (Assignment 7)?', a: 'C. A new "Project" record being created in your Operations Hub.' }
+                    ]
+                },
+                {
+                    title: "Lesson 8: 'Clone Yourself' with Advanced Email Automation",
+                    concept: "<p class='text-gray-600 leading-relaxed'>Your 'Lead Funnel' (Lesson 5) gets leads in the door. But what about the 90% of leads who *don't* buy right away? Or the clients who *finish* a project? This is where fortunes are lost. This lesson moves beyond 'welcome' emails and teaches you to 'clone yourself' with advanced sequences. You'll build automated 'nurture' campaigns that work for you 24/7. This includes 'abandoned cart' sequences to recover lost sales, 're-engagement' campaigns to warm up cold leads, and 'testimonial request' sequences to get social proof, all running on autopilot. This is how you build long-term relationships and revenue without lifting a finger.</p>",
+                    activities: [
+                        { type: 'Case Study Analysis', title: "The 6-Month 'Cold' List" },
+                        { type: 'Tool Exploration', title: '"Visual Sequence Builder"' },
+                        { type: 'Peer Collaboration', title: '"My Abandoned Cart \'Save\'"' }
+                    ],
+                    assignment: {
+                        title: 'The "Automated Testimonial Request" Machine (Component 8 of Final Project)',
+                        description: 'This is an incredibly powerful, set-it-and-forget-it automation. It "clones" you by following up with happy clients at the *perfect* moment (a few days after the project ends) to ask for a testimonial, which is pure marketing gold.'
+                    },
+                    assessment: [
+                        { q: 'What is the *primary* goal of a "re-engagement" campaign?', a: 'C. To warm up "cold" subscribers with value-based emails *before* you try to sell them something.' },
+                        { q: 'In the "Testimonial Request" assignment, what is the purpose of the "Filter" on the trigger?', a: 'C. To make the automation *only* run if the "Status" field is changed to "Done."' },
+                        { q: 'What is the *most important* "logic" step you explored in the "Visual Sequence Builder" (Activity 2)?', a: 'B. The "Wait" or "Delay" step, which allows you to build a sequence over *time*.' }
+                    ]
+                },
+                {
+                    title: "Lesson 9: Automating Your Social Media & Content",
+                    concept: "<p class='text-gray-600 leading-relaxed'>Content creation is a high-value (manual) task. Content *distribution* (posting, re-posting, cross-promoting) is a low-value (repetitive) task. Most solopreneurs are stuck in the 'post-and-ghost' trap: they spend 3 hours on a blog post, post it once, and then it's forgotten. This is a massive waste of effort. This lesson teaches you to automate your 'content engine.' You'll build a system that *distributes* your core content far and wide, on autopilot. This includes 'Blog-to-Social' automations that turn one blog post into 5 social media posts, and 'content-repurposing' systems that automatically create tasks for your team (or you) to turn that blog post into a video script.</p>",
+                    activities: [
+                        { type: 'Case Study Analysis', title: "The 'One-and-Done' Content Waste" },
+                        { type: 'Tool Exploration', title: '"The RSS Feed Trigger"' },
+                        { type: 'Peer Collaboration', title: '"My Content Repurposing \'Map\'"' }
+                    ],
+                    assignment: {
+                        title: 'The "Blog-to-Social" Automation (Component 9 of Final Project)',
+                        description: 'This is the classic "set-it-and-forget-it" content automation. You will build a machine that "listens" to your blog\'s RSS feed and, when it detects a new post, automatically blasts it to your social channels.'
+                    },
+                    assessment: [
+                        { q: 'What is the difference between content *creation* and content *distribution*?', a: 'B. Creation is the high-value (manual) work; distribution is the low-value (automatable) work of posting/sharing.' },
+                        { q: 'What is the "RSS" trigger you used in your assignment?', a: 'B. A "Rich Site Summary" feed that "listens" for new content on a blog.' },
+                        { q: 'What is "Content Repurposing"?', a: 'B. "Atomizing" one "pillar" piece of content into many smaller "micro-content" pieces.' }
+                    ]
+                },
+                {
+                    title: "Lesson 10: Scaling Your System (Webhooks & Filters)",
+                    concept: "<p class='text-gray-600 leading-relaxed'>Your 2-step automations are great, but what happens when you need complexity? What if you want to run an automation *only* for clients who paid over $1,000? Or what if an app doesn't have a 'Zapier App'? This lesson scales your skills. You'll learn two advanced tools: **Filters** (the 'bouncers' or 'traffic cops' that stop an automation if a condition isn't met) and **Webhooks** (the 'universal language' that lets *any* app talk to *any* other app, even if they aren't 'integrated'). These tools are the keys to unlocking truly custom, powerful, and conditional logic to handle any scenario.</p>",
+                    activities: [
+                        { type: 'Case Study Analysis', title: "The 'Wrong-Person' Automation Failure" },
+                        { type: 'Tool Exploration', title: '"The \'Filter\' Step"' },
+                        { type: 'Tool Exploration', title: '"The \'Webhook\' Trigger (The \'A-ha\' Moment)"' },
+                        { type: 'Peer Collaboration', title: '"My First \'Filter\' Idea"' }
+                    ],
+                    assignment: {
+                        title: 'The "Smart Lead" Automation (Component 10 of Final Project)',
+                        description: 'You will build a "smart" lead-sorting automation that uses "Paths" (or two Zaps with filters) to handle different *types* of leads.'
+                    },
+                    assessment: [
+                        { q: 'What is a "Filter" in an automation?', a: 'B. A "traffic cop" that stops an automation from running *unless* a specific condition is met.' },
+                        { q: 'What is a "Webhook"?', a: 'B. A "universal language" (a URL) that allows apps to send data to each other, even if they don\'t have a direct integration.' },
+                        { q: 'In the "Wrong-Person" case study, Sam\'s automation failed because it was missing:', a: 'B. A "Filter" or "Path" to handle different *types* of form submissions.' }
+                    ]
+                },
+                {
+                    title: "Lesson 11: Building Your '5-Minute' Status Dashboard",
+                    concept: "<p class='text-gray-600 leading-relaxed'>You have built an empire of *actions*. Now you need a 'cockpit' to *monitor* them. You're 'drowning in data' that's scattered across 10 apps. A '5-Minute Dashboard' solves this. It's a *Single Pane of Glass*, built inside your Operations Hub (Notion/Airtable), that gives you a complete overview of your business health (Leads, Sales, Tasks) in one glance. This isn't a *new* database; it's a new, 'read-only' *view* of the data you *already have*. This is the payoff. It's how you move from 'frantically checking 10 tabs' to 'calmly reviewing one dashboard' every morning.</p>",
+                    activities: [
+                        { type: 'Case Study Analysis', title: "The '10-Tab Check-In' Burnout" },
+                        { type: 'Tool Exploration', title: '"The \'Kanban\' & \'Calendar\' Views"' },
+                        { type: 'Tool Exploration', title: '"The \'Rollup\' (The \'Boss-Level\' Metric)"' },
+                        { type: 'Peer Collaboration', title: '"My #1 \'Dashboard\' Metric"' }
+                    ],
+                    assignment: {
+                        title: '"The Cockpit" Dashboard v1.0 (Component 11 of Final Project)',
+                        description: 'You will build the "cockpit" of your empire. This is *not* a new database. It is a new, blank page where you will *embed* linked "views" of your other databases. This is your "Single Pane of Glass."'
+                    },
+                    assessment: [
+                        { q: 'What is a "Single Pane of Glass" or "5-Minute Dashboard"?', a: 'B. A single page in your Operations Hub that embeds *views* of all your key data (leads, projects, tasks).' },
+                        { q: 'The "Kanban" (Board) view in Activity 2 is *most* useful for:', a: 'C. Visually tracking the *status* (e.g., "To-Do," "In Progress") of your projects.' },
+                        { q: 'What was the "a-ha" moment of Activity 2 (Kanban & Calendar Views)?', a: 'B. That one database ("Projects") can have *multiple views* (Table, Board, Calendar) of the *same data*.' }
+                    ]
+                },
+                {
+                    title: "Lesson 12: How to Test, Debug, & Maintain Your Empire",
+                    concept: "<p class='text-gray-600 leading-relaxed'>Your empire is built. But this is not 'set it and forget it.' It is 'set it and *monitor* it.' Your automations *will* break. An app will update its API, a field name will change, a connection will expire. A 'broken' automation is a silent killer, losing leads and clients without you even knowing. This final lesson is your 'defense system.' It teaches you 'automation hygiene': how to properly test *before* you launch, how to debug (using the 'Run History' to find the *one* broken step), and how to document (so you can fix it 6 months from now). This is how you ensure your empire runs for *years*, not just weeks.</p>",
+                    activities: [
+                        { type: 'Case Study Analysis', title: "The 'Silent Failure'" },
+                        { type: 'Tool Exploration', title: '"The \'Run History\' (Your #1 Debugging Tool)"' },
+                        { type: 'Creative Development', title: '"My First \'SOP\'"' },
+                        { type: 'Peer Collaboration', title: '"My \'Automation Audit\' Checklist"' }
+                    ],
+                    assignment: {
+                        title: 'My "Automation SOPs" & Maintenance Hub (Component 12 of Final Project)',
+                        description: 'This is the "User Manual" for your empire. You will create a new page in your Ops Hub that acts as your "SOP Library," storing your maintenance checklists and your "readme" files for your automations.'
+                    },
+                    assessment: [
+                        { q: 'What is a "Silent Failure" (from the case study)?', a: "B. An automation that *breaks* (e.g., an app connection expires) but doesn't *notify* you, so leads/tasks get lost." },
+                        { q: 'What is the "Run History" (from Activity 2)?', a: 'C. The *most important* debugging tool, which shows a "log" of every automation run ("Success" or "Failed") and the data that went through.' },
+                        { q: 'Why is "Set it and Forget it" a dangerous mindset for automation?', a: 'B. Because "Silent Failures" are inevitable (apps update, connections break), so you must "Set it and *Monitor* it."' }
+                    ]
+                }
+            ],
+            finalProject: {
+                title: 'The Automated Empire Playbook: My Complete, Portfolio-Ready Business Automation System',
+                overview: `<h2 class="text-2xl font-bold mb-4">Final Project: The Automated Empire Playbook</h2>
+                    <p class="text-gray-600 leading-relaxed mb-4">This "Automated Empire Playbook" is the comprehensive, portfolio-worthy culmination of Course 4. It is not a theoretical assignment; it is a live, functional, multi-part "machine" designed to run a solo business on autopilot.</p>
+                    <p class="text-gray-600 leading-relaxed mb-4">This Playbook assembles all 12 individual lesson components into a single, cohesive "Business Operations Manual." It begins with the foundational "why" (The Automation Hit List) and the "blueprints" (The Process Maps). It then showcases the "core engine" of the business: the interconnected set of automations that manage the entire client lifecycle.</p>
+                    <h3 class="text-xl font-semibold mt-6 mb-2">Portfolio Value</h3>
+                    <p class="text-gray-600 leading-relaxed">This Playbook is a direct, tangible asset. It serves as a "living" case study of your ability to analyze, design, and build a complete, end-to-end automated business system. It can be presented to potential clients, business partners, or even sold as a template.</p>`,
+                components: [
+                    'My "Automation Hit List"',
+                    '"Lead-to-Client" Process Map v1.0',
+                    'My Operations Hub v1.0',
+                    'My First Automation ("Quick Win")',
+                    'The Automated Lead Magnet Machine',
+                    'The "Payment-to-Welcome" Automation',
+                    'The "Project Kick-Off" Automation',
+                    'The "Automated Testimonial Request" Machine',
+                    'The "Blog-to-Social" Automation',
+                    'The "Smart Lead" Automation',
+                    '"The Cockpit" Dashboard v1.0',
+                    'My "Automation SOPs" & Maintenance Hub'
+                ],
+                assembly: `<h3 class="text-xl font-semibold mt-6 mb-2">Assembly Instructions</h3>
+                    <p class="text-gray-600 leading-relaxed mb-4">Your goal is to assemble these 12 components into a single, impressive "Playbook" using a tool like Notion or Canva.</p>
+                    <ol class="list-decimal list-inside text-gray-600 space-y-2">
+                        <li>Create a new, top-level "Page" in Notion (or a new Canva Presentation).</li>
+                        <li>Create 7 "Sections" (e.g., "The 'Why'", "The 'Home Base'", "The 'Core Engine'").</li>
+                        <li>Embed or paste in your "Automation Hit List" (Component 1) under "The 'Why'".</li>
+                        <li>Embed or paste the image of your "Process Map" (Component 2) under "The 'Before'".</li>
+                        <li>Embed the link to your "Operations Hub" (Component 3) under "The 'Home Base'".</li>
+                        <li>Assemble all your automation videos and screenshots (Components 4-10) under the "Engine" sections.</li>
+                        <li>Embed the link to your "Dashboard" (Component 11) under "The 'Cockpit'".</li>
+                        <li>Embed the link to your "SOP Hub" (Component 12) under "The 'Manual'".</li>
+                        <li>Submit the single, public "share" link to this completed presentation.</li>
+                    </ol>`,
+                rubric: `<h3 class="text-xl font-semibold mt-6 mb-2">Evaluation Rubric</h3>
+                    <ul class="list-disc list-inside text-gray-600 space-y-2">
+                        <li><b>Completeness (40%):</b> Are all 12 components present, clearly labeled, and embedded?</li>
+                        <li><b>Professional Presentation (30%):</b> Is the final Playbook well-organized and easy to navigate? Does it "tell a story"?</li>
+                        <li><b>Strategic Thinking (20%):</b> Do the automations clearly solve the problems from the "Hit List"?</li>
+                        <li><b>Functionality (10%):</b> Do all the links (Loom videos, Hub links, Dashboard links) work correctly?</li>
+                    </ul>`,
+                exam: [
+                    { type: 'Multiple Choice', count: 12 },
+                    { type: 'True/False', count: 6 },
+                    { type: 'Short Answer', count: 4 },
+                    { type: 'Scenario-Based', count: 3 }
+                ]
+            }
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+            const lessonNav = document.getElementById('lessonNav');
+            const lessonDetail = document.getElementById('lessonDetail');
+            const finalProjectDetail = document.getElementById('finalProjectDetail');
+
+            let currentLesson = 0;
+
+            function showTab(tabName) {
+                tabContents.forEach(content => {
+                    if (content.id === `${tabName}Content`) {
+                        content.classList.remove('hidden');
+                    } else {
+                        content.classList.add('hidden');
+                    }
+                });
+                tabButtons.forEach(button => {
+                    if (button.dataset.tab === tabName) {
+                        button.classList.add('active');
+                    } else {
+                        button.classList.remove('active');
+                    }
+                });
+            }
+
+            function displayLesson(index) {
+                const lesson = courseData.lessons[index];
+                if (!lesson) return;
+
+                currentLesson = index;
+                
+                let activitiesHtml = lesson.activities.map(activity => 
+                    `<li class="mb-1"><span class="font-semibold text-blue-600">${activity.type}:</span> ${activity.title}</li>`
+                ).join('');
+
+                let assessmentHtml = lesson.assessment.map(q =>
+                    `<li class="mb-2">
+                        <p class="font-semibold">${q.q}</p>
+                        <p class="text-gray-600 text-sm"><b>Answer:</b> ${q.a}</p>
+                    </li>`
+                ).join('');
+
+                lessonDetail.innerHTML = `
+                    <h2 class="text-2xl md:text-3xl font-bold mb-4">${lesson.title}</h2>
+                    
+                    <h3 class="text-xl font-semibold mt-6 mb-2">Core Concept</h3>
+                    ${lesson.concept}
+
+                    <h3 class="text-xl font-semibold mt-6 mb-2">Interactive Activities (${lesson.activities.length})</h3>
+                    <ul class="list-disc list-inside text-gray-600 space-y-1">
+                        ${activitiesHtml}
+                    </ul>
+
+                    <h3 class="text-xl font-semibold mt-6 mb-2">Assignment & Project Milestone</h3>
+                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                        <h4 class="font-bold text-lg text-blue-800">${lesson.assignment.title}</h4>
+                        <p class="text-gray-700 mt-1">${lesson.assignment.description}</p>
+                    </div>
+
+                    <h3 class="text-xl font-semibold mt-6 mb-2">Key Assessment Questions</h3>
+                    <ul class="space-y-2">
+                        ${assessmentHtml}
+                    </ul>
+                `;
+                
+                updateLessonNavActiveState();
+            }
+
+            function populateLessonNav() {
+                lessonNav.innerHTML = courseData.lessons.map((lesson, index) => `
+                    <button class="lesson-nav-button w-full text-left p-3 rounded-lg" data-index="${index}">
+                        <span class="font-semibold">Lesson ${index + 1}:</span>
+                        <span class="block text-sm text-gray-600">${lesson.title.split(': ')[1]}</span>
+                    </button>
+                `).join('');
+
+                lessonNav.querySelectorAll('.lesson-nav-button').forEach(button => {
+                    button.addEventListener('click', () => {
+                        displayLesson(parseInt(button.dataset.index));
+                    });
+                });
+            }
+            
+            function updateLessonNavActiveState() {
+                lessonNav.querySelectorAll('.lesson-nav-button').forEach((button, index) => {
+                    if (index === currentLesson) {
+                        button.classList.add('active');
+                    } else {
+                        button.classList.remove('active');
+                    }
+                });
+            }
+            
+            function displayFinalProject() {
+                const project = courseData.finalProject;
+                
+                let componentsHtml = project.components.map((component, index) => 
+                    `<li class="text-gray-600"><b>Component ${index + 1}:</b> ${component}</li>`
+                ).join('');
+                
+                finalProjectDetail.innerHTML = `
+                    ${project.overview}
+                    <h3 class="text-xl font-semibold mt-6 mb-2">Required Project Components (12)</h3>
+                    <ul class="list-decimal list-inside space-y-1">
+                        ${componentsHtml}
+                    </ul>
+                    ${project.assembly}
+                    ${project.rubric}
+                `;
+            }
+
+            function renderCharts() {
+                const activityCtx = document.getElementById('activityChart').getContext('2d');
+                new Chart(activityCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Case Study', 'Peer Collab', 'Tool Exploration', 'Strategic', 'Creative Dev'],
+                        datasets: [{
+                            label: 'Activity Types',
+                            data: [12, 12, 11, 2, 1],
+                            backgroundColor: [
+                                '#3B82F6',
+                                '#10B981',
+                                '#F59E0B',
+                                '#EC4899',
+                                '#8B5CF6'
+                            ],
+                            borderColor: '#ffffff',
+                            borderWidth: 3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                            }
+                        }
+                    }
+                });
+
+                const examCtx = document.getElementById('examChart').getContext('2d');
+                new Chart(examCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Multiple Choice', 'True/False', 'Short Answer', 'Scenario-Based'],
+                        datasets: [{
+                            label: 'Number of Questions',
+                            data: [12, 6, 4, 3],
+                            backgroundColor: [
+                                '#3B82F6',
+                                '#10B981',
+                                '#F59E0B',
+                                '#EF4444'
+                            ],
+                            borderRadius: 4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 2
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    showTab(button.dataset.tab);
+                });
+            });
+
+            showTab('overview');
+            populateLessonNav();
+            displayLesson(0);
+            displayFinalProject();
+            renderCharts();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+/* Beautiful Gradient Backgrounds */
+.camo-background {
+  background: linear-gradient(135deg, 
+    #FFC0CB 0%,      /* Pink */
+    #FF69B4 25%,     /* Hot Pink */
+    #000000 50%,     /* Black */
+    #FF1493 75%,     /* Deep Pink */
+    #808080 100%     /* Grey */
+  );
+  background-size: 400% 400%;
+}
+
+.camo-background-subtle {
+  background: linear-gradient(135deg, 
+    #FFB6C1 0%,      /* Light Pink */
+    #FFC0CB 25%,     /* Pink */
+    #1a1a1a 50%,     /* Dark Grey (softer than black) */
+    #FFB6C1 75%,     /* Light Pink */
+    #A9A9A9 100%     /* Light Grey */
+  );
+  background-size: 400% 400%;
+}
+
+.camo-animated {
+  animation: gradient-shift 15s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.camo-background-bold {
+  background: linear-gradient(135deg, 
+    #FF1493 0%,      /* Deep Pink */
+    #FF69B4 20%,     /* Hot Pink */
+    #000000 40%,     /* Black */
+    #FF1493 60%,     /* Deep Pink */
+    #FFC0CB 80%,     /* Pink */
+    #696969 100%     /* Dim Grey */
+  );
+  background-size: 400% 400%;
+}
+
+/* Gradient Overlay Utility */
+.camo-overlay {
+  position: relative;
+}
+
+.camo-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, 
+    rgba(255, 192, 203, 0.3) 0%,    /* Pink with transparency */
+    rgba(0, 0, 0, 0.2) 50%,         /* Black with transparency */
+    rgba(128, 128, 128, 0.3) 100%   /* Grey with transparency */
+  );
+  pointer-events: none;
+  z-index: 0;
+}

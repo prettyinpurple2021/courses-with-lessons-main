@@ -1,0 +1,128 @@
+name: E2E Tests
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+
+jobs:
+  e2e-tests:
+    name: End-to-End Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    env:
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
+      REDIS_URL: redis://localhost:6379
+      VITE_API_URL: http://localhost:3000
+
+    services:
+      postgres:
+        image: postgres:15-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test_db
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      - name: Generate Prisma Client
+        run: npx prisma generate --schema=./backend/prisma/schema.prisma
+
+      - name: Run Prisma migrations
+        run: npx prisma migrate deploy --schema=./backend/prisma/schema.prisma
+
+      - name: Seed test database
+        run: npm run prisma:seed --workspace=backend
+
+      # Run TypeScript separately for clearer errors
+      - name: TypeScript check (frontend)
+        run: |
+          npm run type-check --workspace=frontend --if-present
+
+      # Build and capture full log
+      - name: Build frontend (capture log)
+        run: |
+          set -o pipefail
+          npm run build:frontend 2>&1 | tee frontend-build.log
+          test "${PIPESTATUS[0]}" -eq 0
+        env:
+          VITE_API_URL: http://localhost:3000
+          NODE_ENV: production
+
+      - name: Upload frontend build log
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: frontend-build-log
+          path: frontend-build.log
+          retention-days: 7
+
+      - name: Build backend
+        run: npm run build:backend
+
+      - name: Start backend server
+        run: npm run start --workspace=backend &
+        env:
+          JWT_SECRET: test_jwt_secret_for_e2e
+          JWT_REFRESH_SECRET: test_jwt_refresh_secret_for_e2e
+          PORT: 3000
+
+      - name: Start frontend server
+        run: npm run preview --workspace=frontend &
+
+      - name: Wait for servers to be ready
+        run: |
+          npx wait-on http://localhost:3000/api/health http://localhost:4173 --timeout 90000
+
+      - name: Run E2E tests
+        run: npm run test:e2e --workspace=frontend --if-present
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: frontend/playwright-report/
+          retention-days: 7
+
+      - name: Upload test videos
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-videos
+          path: frontend/test-results/
+          retention-days: 7

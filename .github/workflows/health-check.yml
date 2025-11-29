@@ -1,0 +1,69 @@
+name: Health Check
+
+on:
+  schedule:
+    # Run every 5 minutes
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+
+jobs:
+  health-check:
+    name: Check Application Health
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Check backend health
+        id: backend
+        run: |
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" https://api.solosuccess-academy.com/api/health)
+          if [ "$RESPONSE" != "200" ]; then
+            echo "Backend health check failed with status: $RESPONSE"
+            exit 1
+          fi
+          echo "Backend is healthy"
+
+      - name: Check frontend health
+        id: frontend
+        run: |
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" https://solosuccess-academy.com/health)
+          if [ "$RESPONSE" != "200" ]; then
+            echo "Frontend health check failed with status: $RESPONSE"
+            exit 1
+          fi
+          echo "Frontend is healthy"
+
+      - name: Check database connectivity
+        id: database
+        run: |
+          HEALTH=$(curl -s https://api.solosuccess-academy.com/api/health | jq -r '.database')
+          if [ "$HEALTH" != "connected" ]; then
+            echo "Database is not connected"
+            exit 1
+          fi
+          echo "Database is connected"
+
+      - name: Check Redis connectivity
+        id: redis
+        run: |
+          HEALTH=$(curl -s https://api.solosuccess-academy.com/api/health | jq -r '.redis')
+          if [ "$HEALTH" != "connected" ]; then
+            echo "Redis is not connected"
+            exit 1
+          fi
+          echo "Redis is connected"
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "Health check failed!"
+          # Add notification logic
+          # Example: Send to Slack
+          # curl -X POST -H 'Content-type: application/json' \
+          #   --data '{"text":"🚨 Health check failed for SoloSuccess Academy"}' \
+          #   ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Create incident
+        if: failure()
+        run: |
+          echo "Creating incident..."
+          # Add incident creation logic (PagerDuty, Opsgenie, etc.)

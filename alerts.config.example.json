@@ -1,0 +1,81 @@
+{
+  "alerts": {
+    "error_rate": {
+      "enabled": true,
+      "threshold": 5,
+      "window": "5m",
+      "severity": "high",
+      "description": "Error rate exceeds 5% over 5 minutes"
+    },
+    "response_time": {
+      "enabled": true,
+      "threshold": 1000,
+      "percentile": 95,
+      "window": "5m",
+      "severity": "medium",
+      "description": "95th percentile response time exceeds 1 second"
+    },
+    "memory_usage": {
+      "enabled": true,
+      "threshold": 90,
+      "window": "5m",
+      "severity": "high",
+      "description": "Memory usage exceeds 90%"
+    },
+    "database_connections": {
+      "enabled": true,
+      "threshold": 80,
+      "window": "1m",
+      "severity": "critical",
+      "description": "Database connection pool usage exceeds 80%"
+    },
+    "uptime": {
+      "enabled": true,
+      "threshold": 99.9,
+      "window": "24h",
+      "severity": "critical",
+      "description": "Uptime falls below 99.9% in 24 hours"
+    }
+  },
+  "notification_channels": {
+    "email": {
+      "enabled": true,
+      "recipients": ["alerts@solosuccess-academy.com"],
+      "severity_levels": ["critical", "high"]
+    },
+    "slack": {
+      "enabled": true,
+      "webhook_url": "https://hooks.slack.com/services/YOUR/WEBHOOK/URL",
+      "channel": "#alerts",
+      "severity_levels": ["critical", "high", "medium"]
+    },
+    "pagerduty": {
+      "enabled": false,
+      "integration_key": "YOUR_PAGERDUTY_INTEGRATION_KEY",
+      "severity_levels": ["critical"]
+    },
+    "discord": {
+      "enabled": false,
+      "webhook_url": "https://discord.com/api/webhooks/YOUR/WEBHOOK",
+      "severity_levels": ["critical", "high"]
+    }
+  },
+  "escalation_policy": {
+    "critical": {
+      "immediate": ["pagerduty", "slack", "email"],
+      "after_5min": ["phone"],
+      "after_15min": ["escalate_to_manager"]
+    },
+    "high": {
+      "immediate": ["slack", "email"],
+      "after_30min": ["escalate"]
+    },
+    "medium": {
+      "immediate": ["slack"],
+      "after_1hour": ["email"]
+    },
+    "low": {
+      "immediate": ["slack"]
+    }
+  }
+}

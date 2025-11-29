@@ -1,0 +1,90 @@
+# Render configuration for Docker-based deployment
+services:
+  # Backend API Service (Docker)
+  - type: web
+    name: solosuccess-backend
+    env: docker
+    region: oregon
+    plan: starter
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: DATABASE_URL
+        fromDatabase:
+          name: solosuccess-postgres
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          name: solosuccess-redis
+          type: redis
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+      - key: YOUTUBE_API_KEY
+        sync: false
+      - key: CORS_ORIGIN
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
+      - key: COOKIE_DOMAIN
+        sync: false
+      - key: SENTRY_DSN
+        sync: false
+      - key: EMAIL_FROM
+        sync: false
+    autoDeploy: true
+
+  # Frontend Application (Docker)
+  - type: web
+    name: solosuccess-frontend
+    env: docker
+    region: oregon
+    plan: starter
+    dockerfilePath: ./frontend/Dockerfile
+    dockerContext: ./frontend
+    dockerCommand: |
+      --build-arg VITE_API_BASE_URL=$VITE_API_BASE_URL
+    healthCheckPath: /health
+    envVars:
+      - key: VITE_API_BASE_URL
+        sync: false
+      - key: VITE_GA_MEASUREMENT_ID
+        sync: false
+      - key: VITE_PLAUSIBLE_DOMAIN
+        sync: false
+      - key: VITE_ANALYTICS_PROVIDER
+        value: ga4
+      - key: VITE_SENTRY_DSN
+        sync: false
+    autoDeploy: true
+
+  # Redis Cache
+  - type: redis
+    name: solosuccess-redis
+    region: oregon
+    plan: starter
+    maxmemoryPolicy: allkeys-lru
+    ipAllowList: []
+databases:
+  # PostgreSQL Database
+  - name: solosuccess-postgres
+    databaseName: solosuccess_academy
+    region: oregon
+    plan: starter
+    postgresMajorVersion: 15
+    ipAllowList: []

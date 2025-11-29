@@ -1,0 +1,99 @@
+# Workspace files
+node_modules
+package-lock.json
+yarn.lock
+
+# Documentation
+*.md
+!README.md
+docs
+ADMIN_*.md
+DEPLOYMENT*.md
+PRODUCTION*.md
+SETUP*.md
+TROUBLESHOOTING.md
+USER_*.md
+QUICK_START.md
+LAUNCH_CHECKLIST.md
+TESTING*.md
+MONITORING.md
+PERFORMANCE*.md
+REDIS*.md
+SECURITY*.md
+CLOUDINARY*.md
+RESEND*.md
+API_DOCUMENTATION.md
+ANALYTICS*.md
+DESIGN_SYSTEM.md
+ACCESSIBILITY.md
+LOADING_STATES*.md
+RESPONSIVE*.md
+DATA_PERSISTENCE*.md
+FIXES_APPLIED.md
+SERVER_STATUS.md
+TASK_*.md
+LANDING_PAGE*.md
+REDIS_INTEGRATION*.md
+DEPLOYMENT_SETUP*.md
+comprehensive*.pdf
+
+# Course PDFs (large files)
+Course One
+Course Two
+Course Three
+Course Four
+Course Five
+Course Six
+Course Seven
+*.pdf
+
+# Testing
+e2e
+test-results
+coverage
+.nyc_output
+playwright-report
+
+# CI/CD
+.github
+.gitlab-ci.yml
+.travis.yml
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Environment files
+.env
+.env.*
+!.env.example
+!.env.production.example
+
+# Logs
+*.log
+logs
+
+# Misc
+.cache
+.temp
+.tmp
+*.pem
+*.key
+*.crt
+railway.json
+render.yaml.backup
+
+# Build artifacts
+dist
+build
+*.tsbuildinfo
+

@@ -1,0 +1,338 @@
+import prisma from '../config/prisma.js';
+
+export class UserService {
+  async getProfileData(userId: string) {
+    // Get user basic info
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        avatar: true,
+        bio: true,
+        emailNotifications: true,
+        courseUpdates: true,
+        communityDigest: true,
+        achievementAlerts: true,
+        createdAt: true,
+      },
+    });
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    // Get statistics
+    const statistics = await this.getUserStatistics(userId);
+
+    // Get course progress
+    const courseProgress = await this.getCourseProgress(userId);
+
+    // Get achievements
+    const achievements = await prisma.achievement.findMany({
+      where: { userId },
+      orderBy: { unlockedAt: 'desc' },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        icon: true,
+        rarity: true,
+        unlockedAt: true,
+      },
+    });
+
+    return {
+      user,
+      statistics,
+      courseProgress,
+      achievements,
+    };
+  }
+
+  async getUserStatistics(userId: string) {
+    // Count completed courses
+    const coursesCompleted = await prisma.enrollment.count({
+      where: {
+        userId,
+        completedAt: { not: null },
+      },
+    });
+
+    // Count lessons viewed (completed)
+    const lessonsViewed = await prisma.lessonProgress.count({
+      where: {
+        userId,
+        completed: true,
+      },
+    });
+
+    // Count activities completed
+    const activitiesCompleted = await prisma.activitySubmission.count({
+      where: {
+        userId,
+        completed: true,
+      },
+    });
+
+    // Calculate average exam score
+    const examResults = await prisma.finalExamResult.findMany({
+      where: { userId },
+      select: { score: true },
+    });
+
+    const averageScore =
+      examResults.length > 0
+        ? Math.round(examResults.reduce((sum: number, result: { score: number }) => sum + result.score, 0) / examResults.length)
+        : 0;
+
+    // For now, we'll use placeholder values for study time and streaks
+    // In a real implementation, these would be tracked separately
+    const totalStudyTime = lessonsViewed * 45; // Estimate 45 minutes per lesson
+    const currentStreak = 0; // Would need daily activity tracking
+    const longestStreak = 0; // Would need daily activity tracking
+
+    return {
+      coursesCompleted,
+      lessonsViewed,
+      activitiesCompleted,
+      averageScore,
+      totalStudyTime,
+      currentStreak,
+      longestStreak,
+    };
+  }
+
+  async getCourseProgress(userId: string) {
+    const enrollments = await prisma.enrollment.findMany({
+      where: { userId },
+      include: {
+        course: {
+          select: {
+            id: true,
+            courseNumber: true,
+            title: true,
+            thumbnail: true,
+            lessons: {
+              select: {
+                id: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: {
+        course: {
+          courseNumber: 'asc',
+        },
+      },
+    });
+
+    const progressData = await Promise.all(
+      enrollments.map(async (enrollment: any) => {
+        const totalLessons = enrollment.course.lessons.length;
+
+        // Count completed lessons for this course
+        const completedLessons = await prisma.lessonProgress.count({
+          where: {
+            userId,
+            lessonId: {
+              in: enrollment.course.lessons.map((l: any) => l.id),
+            },
+            completed: true,
+          },
+        });
+
+        const progress = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
+
+        let status: 'not_started' | 'in_progress' | 'completed' = 'not_started';
+        if (enrollment.completedAt) {
+          status = 'completed';
+        } else if (completedLessons > 0) {
+          status = 'in_progress';
+        }
+
+        return {
+          courseId: enrollment.course.id,
+          courseNumber: enrollment.course.courseNumber,
+          courseTitle: enrollment.course.title,
+          thumbnail: enrollment.course.thumbnail,
+          progress,
+          lessonsCompleted: completedLessons,
+          totalLessons,
+          status,
+          enrolledAt: enrollment.enrolledAt.toISOString(),
+          completedAt: enrollment.completedAt?.toISOString(),
+        };
+      })
+    );
+
+    return progressData;
+  }
+
+  async updateProfile(
+    userId: string,
+    data: {
+      firstName?: string;
+      lastName?: string;
+      bio?: string;
+    }
+  ) {
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: {
+        ...(data.firstName && { firstName: data.firstName }),
+        ...(data.lastName && { lastName: data.lastName }),
+        ...(data.bio !== undefined && { bio: data.bio }),
+      },
+      select: {
+        id: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        avatar: true,
+        bio: true,
+        emailNotifications: true,
+        courseUpdates: true,
+        communityDigest: true,
+        achievementAlerts: true,
+        createdAt: true,
+      },
+    });
+
+    return updatedUser;
+  }
+
+  async updateAvatar(userId: string, avatarData: string) {
+    const { uploadImageToCloudinary, deleteImageFromCloudinary, isCloudinaryConfigured } = await import('../utils/imageUpload.js');
+    
+    // Get current user to check for existing avatar
+    const currentUser = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { avatar: true },
+    });
+
+    let avatarUrl = avatarData;
+
+    // If Cloudinary is configured and data is base64, upload to Cloudinary
+    if (isCloudinaryConfigured() && avatarData.startsWith('data:image')) {
+      try {
+        avatarUrl = await uploadImageToCloudinary(avatarData, 'avatars');
+
+        // Delete old avatar from Cloudinary if it exists
+        if (currentUser?.avatar && currentUser.avatar.includes('cloudinary.com')) {
+          await deleteImageFromCloudinary(currentUser.avatar);
+        }
+      } catch (error) {
+        console.error('Failed to upload to Cloudinary, using base64:', error);
+        // Fall back to storing base64 if Cloudinary fails
+      }
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: { avatar: avatarUrl },
+      select: {
+        id: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        avatar: true,
+        bio: true,
+        emailNotifications: true,
+        courseUpdates: true,
+        communityDigest: true,
+        achievementAlerts: true,
+        createdAt: true,
+      },
+    });
+
+    return updatedUser;
+  }
+
+  async changePassword(userId: string, currentPassword: string, newPassword: string) {
+    const bcrypt = await import('bcrypt');
+    
+    // Get user with password
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { password: true },
+    });
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    // Verify current password
+    const isValid = await bcrypt.compare(currentPassword, user.password);
+    if (!isValid) {
+      throw new Error('Current password is incorrect');
+    }
+
+    // Hash new password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    // Update password
+    await prisma.user.update({
+      where: { id: userId },
+      data: { password: hashedPassword },
+    });
+
+    return { success: true };
+  }
+
+  async updateNotificationPreferences(
+    userId: string,
+    preferences: {
+      emailNotifications?: boolean;
+      courseUpdates?: boolean;
+      communityDigest?: boolean;
+      achievementAlerts?: boolean;
+    }
+  ) {
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: preferences,
+      select: {
+        id: true,
+        emailNotifications: true,
+        courseUpdates: true,
+        communityDigest: true,
+        achievementAlerts: true,
+      },
+    });
+
+    return updatedUser;
+  }
+
+  async deleteAccount(userId: string, password: string) {
+    const bcrypt = await import('bcrypt');
+    
+    // Get user with password
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { password: true },
+    });
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    // Verify password
+    const isValid = await bcrypt.compare(password, user.password);
+    if (!isValid) {
+      throw new Error('Password is incorrect');
+    }
+
+    // Delete user (cascade will handle related records)
+    await prisma.user.delete({
+      where: { id: userId },
+    });
+
+    return { success: true };
+  }
+}
+
+export const userService = new UserService();

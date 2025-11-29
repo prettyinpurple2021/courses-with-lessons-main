@@ -1,0 +1,25 @@
+name = "intel-academy-api"
+main = "src/index.ts"
+compatibility_date = "2025-11-16"
+compatibility_flags = ["nodejs_compat"]
+workers_dev = true
+migrations_dir = "drizzle/migrations"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "intel-academy-storage"
+migrations_dir = "drizzle/migrations"
+
+[[kv_namespaces]]
+binding = "CACHE"
+id = "ddca6f5b74c14b32993d436af2175bf1"
+
+[[r2_buckets]]
+binding = "FILES"
+bucket_name = "intel-academy-uploads"
+
+[env.preview]
+workers_dev = true
+
+[env.production]
+workers_dev = true

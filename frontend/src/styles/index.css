@@ -1,0 +1,48 @@
+@import './glassmorphism.css';
+@import './holographic.css';
+@import './camo-patterns.css';
+@import './responsive.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom slider styling for avatar cropper */
+input[type='range'].slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FF1493, #FF00FF);
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 0 10px rgba(255, 20, 147, 0.5);
+}
+
+input[type='range'].slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FF1493, #FF00FF);
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 0 10px rgba(255, 20, 147, 0.5);
+}
+
+input[type='range'].slider::-webkit-slider-runnable-track {
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+input[type='range'].slider::-moz-range-track {
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+@layer base {
+  body {
+    @apply font-sans antialiased;
+  }
+}

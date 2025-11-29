@@ -1,0 +1,631 @@
+/* Responsive Design Utilities */
+
+/* Touch-friendly tap targets for mobile */
+@media (max-width: 767px) {
+  button,
+  a,
+  input[type="button"],
+  input[type="submit"],
+  [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Increase padding for better touch targets */
+  .touch-target {
+    padding: 12px 16px;
+  }
+  
+  /* Ensure all interactive elements meet minimum size */
+  .glassmorphic button,
+  .glassmorphic a[role="button"] {
+    min-height: 44px;
+    padding: 12px 16px;
+  }
+}
+
+/* Container max-widths for different breakpoints */
+.container-responsive {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  .container-responsive {
+    max-width: 640px;
+  }
+}
+
+@media (min-width: 768px) {
+  .container-responsive {
+    max-width: 768px;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container-responsive {
+    max-width: 1024px;
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .container-responsive {
+    max-width: 1280px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .container-responsive {
+    max-width: 1536px;
+  }
+}
+
+/* Responsive text sizes */
+.text-responsive-xs {
+  font-size: 0.75rem; /* 12px */
+}
+
+.text-responsive-sm {
+  font-size: 0.875rem; /* 14px */
+}
+
+.text-responsive-base {
+  font-size: 1rem; /* 16px */
+}
+
+.text-responsive-lg {
+  font-size: 1.125rem; /* 18px */
+}
+
+@media (min-width: 768px) {
+  .text-responsive-lg {
+    font-size: 1.25rem; /* 20px */
+  }
+}
+
+.text-responsive-xl {
+  font-size: 1.25rem; /* 20px */
+}
+
+@media (min-width: 768px) {
+  .text-responsive-xl {
+    font-size: 1.5rem; /* 24px */
+  }
+}
+
+.text-responsive-2xl {
+  font-size: 1.5rem; /* 24px */
+}
+
+@media (min-width: 768px) {
+  .text-responsive-2xl {
+    font-size: 2rem; /* 32px */
+  }
+}
+
+.text-responsive-3xl {
+  font-size: 1.875rem; /* 30px */
+}
+
+@media (min-width: 768px) {
+  .text-responsive-3xl {
+    font-size: 2.5rem; /* 40px */
+  }
+}
+
+@media (min-width: 1024px) {
+  .text-responsive-3xl {
+    font-size: 3rem; /* 48px */
+  }
+}
+
+/* Responsive spacing utilities */
+.spacing-responsive-sm {
+  padding: 1rem;
+}
+
+@media (min-width: 768px) {
+  .spacing-responsive-sm {
+    padding: 1.5rem;
+  }
+}
+
+.spacing-responsive-md {
+  padding: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .spacing-responsive-md {
+    padding: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .spacing-responsive-md {
+    padding: 3rem;
+  }
+}
+
+.spacing-responsive-lg {
+  padding: 2rem;
+}
+
+@media (min-width: 768px) {
+  .spacing-responsive-lg {
+    padding: 3rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .spacing-responsive-lg {
+    padding: 4rem;
+  }
+}
+
+/* Hide/show utilities for different breakpoints */
+.mobile-only {
+  display: block;
+}
+
+@media (min-width: 768px) {
+  .mobile-only {
+    display: none;
+  }
+}
+
+.tablet-up {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .tablet-up {
+    display: block;
+  }
+}
+
+.desktop-only {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .desktop-only {
+    display: block;
+  }
+}
+
+/* Responsive grid utilities */
+.grid-responsive-1 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .grid-responsive-2 {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid-responsive-3 {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+}
+
+/* Responsive flex utilities */
+.flex-responsive-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .flex-responsive-row {
+    flex-direction: row;
+    gap: 1.5rem;
+  }
+}
+
+/* Responsive card sizing */
+.card-responsive {
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .card-responsive {
+    max-width: 400px;
+  }
+}
+
+/* Responsive modal/dialog */
+.modal-responsive {
+  width: 100%;
+  max-width: 100vw;
+  height: 100vh;
+  border-radius: 0;
+}
+
+@media (min-width: 768px) {
+  .modal-responsive {
+    max-width: 600px;
+    height: auto;
+    max-height: 90vh;
+    border-radius: 12px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .modal-responsive {
+    max-width: 800px;
+  }
+}
+
+/* Responsive video player aspect ratio */
+.video-responsive {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* 16:9 aspect ratio */
+  height: 0;
+  overflow: hidden;
+}
+
+.video-responsive iframe,
+.video-responsive video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Responsive image sizing */
+.img-responsive {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Prevent horizontal scroll on mobile */
+body {
+  overflow-x: hidden;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Focus visible for keyboard navigation with holographic effect */
+*:focus-visible {
+  outline: 3px solid #FF1493;
+  outline-offset: 3px;
+  border-radius: 4px;
+  box-shadow: 0 0 0 6px rgba(255, 20, 147, 0.2),
+              0 0 15px rgba(0, 255, 255, 0.3);
+  transition: outline 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Enhanced focus for buttons and interactive elements */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[role="button"]:focus-visible {
+  outline: 3px solid #FF1493;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 6px rgba(255, 20, 147, 0.2),
+              0 0 15px rgba(0, 255, 255, 0.3),
+              0 0 25px rgba(255, 0, 255, 0.2);
+}
+
+/* Improve tap highlight on mobile */
+* {
+  -webkit-tap-highlight-color: rgba(255, 20, 147, 0.3);
+}
+
+/* Prevent text size adjustment on orientation change */
+html {
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* Responsive table */
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 767px) {
+  .table-responsive table {
+    font-size: 0.875rem;
+  }
+}
+
+/* Keyboard Navigation Utilities */
+.skip-to-content {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: #FF1493;
+  color: white;
+  padding: 8px 16px;
+  text-decoration: none;
+  border-radius: 0 0 4px 0;
+  z-index: 100;
+  transition: top 0.3s ease;
+}
+
+.skip-to-content:focus {
+  top: 0;
+}
+
+/* Ensure tab order is logical */
+[tabindex="-1"]:focus {
+  outline: none;
+}
+
+/* Touch gesture support */
+@media (hover: none) and (pointer: coarse) {
+  /* Remove hover effects on touch devices */
+  .hover-only:hover {
+    transform: none !important;
+    background: inherit !important;
+  }
+  
+  /* Increase touch target sizes */
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    min-height: 48px;
+  }
+  
+  /* Add active state for touch feedback */
+  button:active,
+  a:active,
+  [role="button"]:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+    transition: transform 0.1s ease, opacity 0.1s ease;
+  }
+  
+  /* Optimize glassmorphic effects for touch */
+  .glassmorphic:active,
+  .glassmorphic-elevated:active {
+    background: rgba(255, 255, 255, 0.15);
+  }
+  
+  /* Remove hover transforms on touch devices */
+  .holographic-hover:hover {
+    transform: none;
+  }
+  
+  /* Add tap highlight for better feedback */
+  button,
+  a,
+  [role="button"] {
+    -webkit-tap-highlight-color: rgba(255, 20, 147, 0.3);
+  }
+}
+
+/* Touch device specific styles */
+.touch-device button,
+.touch-device a,
+.touch-device input,
+.touch-device select,
+.touch-device textarea {
+  min-height: 48px;
+  min-width: 48px;
+}
+
+.touch-device .hover-effect {
+  display: none;
+}
+
+/* Pointer device specific styles */
+.pointer-device .touch-only {
+  display: none;
+}
+
+/* Swipe gesture indicators */
+.swipeable {
+  touch-action: pan-x;
+  -webkit-overflow-scrolling: touch;
+}
+
+.swipeable-vertical {
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Touch ripple animation */
+@keyframes ripple-animation {
+  0% {
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(4);
+    opacity: 0;
+  }
+}
+
+.animate-ripple {
+  animation: ripple-animation 0.6s ease-out;
+}
+
+/* Responsive navigation improvements */
+@media (max-width: 767px) {
+  /* Mobile navigation should be full width */
+  nav {
+    width: 100%;
+  }
+  
+  /* Stack navigation items vertically on mobile */
+  .nav-items {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  /* Ensure mobile menu is accessible */
+  .mobile-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 50;
+    overflow-y: auto;
+  }
+}
+
+/* Responsive form improvements */
+@media (max-width: 767px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px; /* Prevents zoom on iOS */
+    width: 100%;
+  }
+  
+  form {
+    width: 100%;
+  }
+}
+
+/* Responsive card layouts */
+@media (max-width: 767px) {
+  .card-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .card-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .card-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+}
+
+/* Responsive video player */
+@media (max-width: 767px) {
+  .video-responsive {
+    padding-bottom: 75%; /* Adjust aspect ratio for mobile */
+  }
+}
+
+/* Responsive modal/dialog improvements */
+@media (max-width: 767px) {
+  .modal-responsive {
+    margin: 0;
+    border-radius: 0;
+    min-height: 100vh;
+  }
+  
+  .modal-content {
+    padding: 1rem;
+  }
+}
+
+/* Accessibility: High contrast mode support */
+@media (prefers-contrast: high) {
+  .glassmorphic,
+  .glassmorphic-elevated,
+  .glassmorphic-flat {
+    border-width: 2px;
+    border-color: currentColor;
+  }
+  
+  button,
+  a {
+    border: 2px solid currentColor;
+  }
+}
+
+/* Accessibility: Reduced transparency mode */
+@media (prefers-reduced-transparency: reduce) {
+  .glassmorphic,
+  .glassmorphic-elevated,
+  .glassmorphic-flat {
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+/* Screen reader only utility class */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.sr-only-focusable:focus,
+.sr-only-focusable:active {
+  position: static;
+  width: auto;
+  height: auto;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+/* Print styles */
+@media print {
+  .no-print,
+  nav,
+  .navigation,
+  .sidebar,
+  button {
+    display: none !important;
+  }
+  
+  .glassmorphic,
+  .glassmorphic-elevated {
+    background: white;
+    color: black;
+    border: 1px solid black;
+    box-shadow: none;
+  }
+  
+  a {
+    text-decoration: underline;
+  }
+  
+  a[href]:after {
+    content: " (" attr(href) ")";
+  }
+}

@@ -1,0 +1,74 @@
+name: Deploy to Staging
+
+on:
+  push:
+    branches: [develop]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    name: Build and Deploy to Staging
+    runs-on: ubuntu-latest
+    environment:
+      name: staging
+      url: https://staging.solosuccess-academy.com
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run linting
+        run: npm run lint
+
+      - name: Run type checking
+        run: npm run type-check
+
+      - name: Build frontend
+        run: npm run build:frontend
+        env:
+          VITE_API_URL: ${{ secrets.STAGING_API_URL }}
+
+      - name: Build backend
+        run: npm run build:backend
+
+      - name: Deploy frontend to Vercel/Netlify
+        run: |
+          echo "Deploying frontend to staging..."
+          # Add your deployment command here
+          # Example for Vercel: npx vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
+          # Example for Netlify: npx netlify deploy --prod --auth=${{ secrets.NETLIFY_TOKEN }}
+
+      - name: Deploy backend to Railway/Render
+        run: |
+          echo "Deploying backend to staging..."
+          # Add your deployment command here
+          # Example for Railway: railway up --service backend --environment staging
+          # Example for Render: render deploy --service backend --env staging
+
+      - name: Run database migrations
+        run: |
+          echo "Running database migrations on staging..."
+          # npx prisma migrate deploy
+        env:
+          DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
+
+      - name: Run smoke tests
+        run: |
+          echo "Running smoke tests against staging..."
+          # Add smoke test commands here
+          # curl -f https://staging-api.solosuccess-academy.com/api/health || exit 1
+
+      - name: Notify deployment status
+        if: always()
+        run: |
+          echo "Deployment to staging completed with status: ${{ job.status }}"
+          # Add notification logic (Slack, Discord, email, etc.)
