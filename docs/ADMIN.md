@@ -319,6 +319,78 @@ Get an API key:
 - Monitor API response times
 - Optimize large queries
 
+## Course and Lesson Management Interface
+
+### Admin Pages Overview
+
+#### AdminCoursesPage (`/admin/courses`)
+- Lists all 7 courses with statistics
+- Shows lesson count, enrollment count, final project/exam status
+- Navigate to course edit, lesson management
+
+#### AdminCourseEditPage (`/admin/courses/:id`)
+- Create/edit course details (title, description, thumbnail, published status)
+- Course number validation (1-7)
+- Quick access to Final Project and Final Exam management
+- Shows current status of final project and exam
+
+#### AdminLessonsPage (`/admin/courses/:courseId/lessons`)
+- Lists all lessons for a course (up to 12)
+- Shows lesson number, title, YouTube video ID, duration
+- Activity and resource counts
+- Navigate to lesson edit, activity management
+
+#### AdminLessonEditPage (`/admin/courses/:courseId/lessons/:lessonId/edit`)
+- Create/edit lesson details
+- YouTube video ID validation using YouTube API
+- Fetches video metadata (title, duration, thumbnail)
+- Lesson number validation (1-12)
+- Auto-fills duration from YouTube validation
+
+#### AdminActivitiesPage (`/admin/courses/:courseId/lessons/:lessonId/activities`)
+- Lists all activities for a lesson
+- Shows activity type badges (Quiz, Exercise, Reflection, Practical Task)
+- Optional/Required indicators
+- Navigate to activity edit
+
+#### AdminActivityEditPage (`/admin/courses/:courseId/lessons/:lessonId/activities/:activityId/edit`)
+- Create/edit activity details
+- Activity type selection with templates
+- JSON content editor for activity-specific data
+- Required/optional toggle
+- **Activity preview functionality** - visualize how students will see the activity
+- Content templates for each activity type
+
+#### AdminFinalProjectEditPage (`/admin/courses/:courseId/final-project/edit`)
+- Create/edit final project for a course
+- Project title, description, instructions
+- JSON requirements editor (deliverables, format, etc.)
+- Automatically detects if project exists or needs to be created
+
+#### AdminFinalExamEditPage (`/admin/courses/:courseId/final-exam/edit`)
+- Create/edit final exam for a course
+- Exam title, description, time limit, passing score
+- **Visual question bank editor** - add/edit/remove questions with a user-friendly interface
+- **JSON editor mode** - switch between visual and JSON editing
+- **Exam preview functionality** - see how students will experience the exam
+- Question management with visual option editor
+- Automatically detects if exam exists or needs to be created
+
+#### AdminUsersPage (`/admin/users`)
+- Lists all users with search and filters
+- Search by name or email
+- Filter by role (student/admin)
+- Shows enrollment count, certificates, and activity submissions
+- Pagination support
+
+#### AdminUserDetailPage (`/admin/users/:userId`)
+- View user's complete progress across all 7 courses
+- Shows enrollment status, lesson progress, activity completion
+- Displays final project and final exam status
+- Visual progress bars for lessons and activities
+- Manually unlock courses for users
+- View detailed activity completion status
+
 ## Admin API Endpoints
 
 ### Course Management

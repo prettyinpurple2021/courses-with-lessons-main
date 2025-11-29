@@ -12,6 +12,7 @@ This is a monorepo containing:
 - `frontend/` - React + Vite + TypeScript frontend application
 - `backend/` - Node.js + Express + TypeScript backend API
 - `e2e/` - Playwright end-to-end tests
+- `docs/` - Complete documentation (see below)
 
 ## ✅ Prerequisites
 
@@ -403,11 +404,10 @@ docker-compose -f docker-compose.prod.yml up -d
 
 ### Quick Deploy
 
-#### Render (Docker-based)
-1. Push code to GitHub
-2. Connect repository to Render
-3. Render detects `render.yaml` and deploys automatically
-4. See [RENDER_DEPLOYMENT.md](./RENDER_DEPLOYMENT.md) for complete guide
+#### Current Production Setup
+- **Frontend**: Vercel
+- **Backend**: Fly.io
+- See [DEPLOYMENT.md](./docs/DEPLOYMENT.md) for complete guide
 
 #### Frontend (Vercel/Netlify)
 ```bash
@@ -428,13 +428,34 @@ npm run build
 - Run migrations: `npm run prisma:migrate deploy`
 - Seed data: `npm run prisma:seed`
 
-### Production Documentation
+## 📚 Documentation
 
-- **[RENDER_DEPLOYMENT.md](./RENDER_DEPLOYMENT.md)** - Complete Render deployment guide
-- **[DOCKER_PRODUCTION.md](./DOCKER_PRODUCTION.md)** - Docker production guide
-- **[PRODUCTION_ENV.md](./PRODUCTION_ENV.md)** - Environment variables guide
-- **[PRODUCTION_TESTING.md](./PRODUCTION_TESTING.md)** - Production testing procedures
-- **[DEPLOYMENT.md](./DEPLOYMENT.md)** - General deployment instructions
+All documentation is organized in the `docs/` folder:
+
+### Getting Started
+- **[SETUP.md](./docs/SETUP.md)** - Complete setup guide for local development
+- **[DEPLOYMENT.md](./docs/DEPLOYMENT.md)** - Production deployment guide (Vercel + Fly.io)
+
+### Content Management
+- **[CONTENT_AUTOMATION.md](./docs/CONTENT_AUTOMATION.md)** - AI-powered content generation guide
+- **[CONTENT_CREATION.md](./docs/CONTENT_CREATION.md)** - Quick start for creating content
+- **[CONTENT_GENERATION.md](./docs/CONTENT_GENERATION.md)** - Complete content generation guide
+- **[INTERACTIVE_CONTENT.md](./docs/INTERACTIVE_CONTENT.md)** - Interactive content examples
+
+### Admin & User Guides
+- **[ADMIN.md](./docs/ADMIN.md)** - Admin panel guide
+- **[USER_GUIDE.md](./docs/USER_GUIDE.md)** - User guide for students
+
+### Technical Documentation
+- **[API.md](./docs/API.md)** - API documentation
+- **[SECURITY.md](./docs/SECURITY.md)** - Security implementation guide
+- **[AUTH.md](./docs/AUTH.md)** - Authentication guide
+- **[TROUBLESHOOTING.md](./docs/TROUBLESHOOTING.md)** - Troubleshooting guide
+
+### Service Setup
+- **[SERVICES_CLOUDINARY.md](./docs/SERVICES_CLOUDINARY.md)** - Cloudinary setup
+- **[SERVICES_RESEND.md](./docs/SERVICES_RESEND.md)** - Resend email setup
+- **[SERVICES_REDIS.md](./docs/SERVICES_REDIS.md)** - Redis usage guide
 
 ## 🔒 Security
 
@@ -466,8 +487,8 @@ Private - All rights reserved
 ## 🆘 Support
 
 For issues or questions:
-- Check [TROUBLESHOOTING.md](./TROUBLESHOOTING.md)
-- Review documentation in `/docs`
+- Check [TROUBLESHOOTING.md](./docs/TROUBLESHOOTING.md)
+- Review documentation in [docs/](./docs/)
 - Contact the development team
 
 ## 🎯 Roadmap
