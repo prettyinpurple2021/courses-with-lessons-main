@@ -17,6 +17,11 @@ build/
 .env.test.local
 .env.production.local
 
+# Secrets
+**/cron_secret.txt
+*.secret
+*.key
+
 # Logs
 logs
 *.log
