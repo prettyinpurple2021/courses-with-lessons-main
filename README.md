@@ -47,7 +47,7 @@ Edit `backend/.env` with your configuration:
 
 ```env
 # Database
-DATABASE_URL="postgresql://user:password@localhost:5432/solosuccess_db"
+DATABASE_URL="postgresql://user:password@localhost:5432/solosuccess_elearning_db"
 
 # JWT Secrets
 JWT_SECRET=your-super-secret-jwt-key-change-this-in-production

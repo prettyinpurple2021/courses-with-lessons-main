@@ -28,10 +28,10 @@
 If you prefer Docker:
 
 ```bash
-docker run --name postgres-solosuccess -e POSTGRES_PASSWORD=yourpassword -e POSTGRES_DB=solosuccess_db -p 5432:5432 -d postgres:18
+docker run --name postgres-solosuccess -e POSTGRES_PASSWORD=yourpassword -e POSTGRES_DB=solosuccess_elearning_db -p 5432:5432 -d postgres:18
 ```
 
-Then use: `postgresql://postgres:yourpassword@localhost:5432/solosuccess_db`
+Then use: `postgresql://postgres:yourpassword@localhost:5432/solosuccess_elearning_db`
 
 ## Step 2: Create the Database
 
@@ -40,7 +40,7 @@ Then use: `postgresql://postgres:yourpassword@localhost:5432/solosuccess_db`
 1. Open **pgAdmin 4**
 2. Connect to your PostgreSQL server (use the password you set during installation)
 3. Right-click on "Databases" → "Create" → "Database"
-4. Name: `solosuccess_db`
+4. Name: `solosuccess_elearning_db`
 5. Click "Save"
 
 ### Using Command Line (psql):
@@ -58,7 +58,7 @@ psql -U postgres
 6. Create the database:
 
 ```sql
-CREATE DATABASE solosuccess_db;
+CREATE DATABASE solosuccess_elearning_db;
 \q
 ```
 
@@ -70,7 +70,7 @@ The `.env` file should contain:
 
 ```env
 # Database
-DATABASE_URL="postgresql://postgres:YOUR_PASSWORD@localhost:5432/solosuccess_db"
+DATABASE_URL="postgresql://postgres:YOUR_PASSWORD@localhost:5432/solosuccess_elearning_db"
 
 # Node Environment
 NODE_ENV="development"

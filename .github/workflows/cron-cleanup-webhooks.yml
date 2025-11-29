@@ -1,0 +1,22 @@
+name: Cron - Cleanup Webhooks
+
+on:
+  schedule:
+    # Run daily at 3 AM UTC
+    - cron: '0 3 * * *'
+  workflow_dispatch: # Allow manual triggers
+
+jobs:
+  cleanup-webhooks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call cleanup-webhooks endpoint
+        run: |
+          curl -X GET "${{ secrets.API_URL }}/api/cron/cleanup-webhooks" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Content-Type: application/json" \
+            -f || exit 1
+        env:
+          API_URL: ${{ secrets.API_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+

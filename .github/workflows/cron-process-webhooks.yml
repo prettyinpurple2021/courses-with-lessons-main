@@ -1,0 +1,22 @@
+name: Cron - Process Webhooks
+
+on:
+  schedule:
+    # Run every minute
+    - cron: '* * * * *'
+  workflow_dispatch: # Allow manual triggers
+
+jobs:
+  process-webhooks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call process-webhooks endpoint
+        run: |
+          curl -X GET "${{ secrets.API_URL }}/api/cron/process-webhooks" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Content-Type: application/json" \
+            -f || exit 1
+        env:
+          API_URL: ${{ secrets.API_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+

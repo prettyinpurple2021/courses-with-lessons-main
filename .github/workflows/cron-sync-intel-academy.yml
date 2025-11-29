@@ -1,0 +1,22 @@
+name: Cron - Sync Intel Academy
+
+on:
+  schedule:
+    # Run daily at 2 AM UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch: # Allow manual triggers
+
+jobs:
+  sync-intel-academy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call sync-intel-academy endpoint
+        run: |
+          curl -X GET "${{ secrets.API_URL }}/api/cron/sync-intel-academy" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Content-Type: application/json" \
+            -f || exit 1
+        env:
+          API_URL: ${{ secrets.API_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+
