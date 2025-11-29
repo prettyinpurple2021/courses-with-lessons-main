@@ -4,7 +4,7 @@ import { requireAdmin } from '../middleware/adminAuth.js';
 import { validate } from '../middleware/validation.js';
 import { asyncHandler } from '../middleware/errorHandler.js';
 import { param, body } from 'express-validator';
-import * as contentGenerationController from '../controllers/adminContentGenerationController.js';
+import { adminContentGenerationController } from '../controllers/adminContentGenerationController.js';
 
 const router = Router();
 
@@ -23,7 +23,7 @@ router.post(
     body('activityNumber').isInt({ min: 1 }).withMessage('Activity number must be a positive integer'),
     body('position').optional().isIn(['opening', 'mid', 'closing']).withMessage('Position must be opening, mid, or closing'),
   ]),
-  asyncHandler((contentGenerationController as any).generateActivity)
+  asyncHandler(adminContentGenerationController.generateActivity)
 );
 
 /**
@@ -36,7 +36,7 @@ router.post(
     body('activityPlan').optional().isArray().withMessage('Activity plan must be an array'),
     body('dryRun').optional().isBoolean().withMessage('Dry run must be a boolean'),
   ]),
-  asyncHandler((contentGenerationController as any).generateLessonActivities)
+  asyncHandler(adminContentGenerationController.generateLessonActivities)
 );
 
 /**
@@ -48,7 +48,7 @@ router.post(
     param('courseId').isUUID().withMessage('Valid course ID is required'),
     body('dryRun').optional().isBoolean().withMessage('Dry run must be a boolean'),
   ]),
-  asyncHandler((contentGenerationController as any).generateCourseActivities)
+  asyncHandler(adminContentGenerationController.generateCourseActivities)
 );
 
 export default router;

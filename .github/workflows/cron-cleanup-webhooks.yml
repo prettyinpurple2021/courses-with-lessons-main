@@ -11,12 +11,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Call cleanup-webhooks endpoint
-        run: |
-          curl -X GET "${{ secrets.API_URL }}/api/cron/cleanup-webhooks" \
-            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
-            -H "Content-Type: application/json" \
-            -f || exit 1
         env:
+          # These secrets must be configured in GitHub repository settings
           API_URL: ${{ secrets.API_URL }}
           CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          curl -X GET "${API_URL}/api/cron/cleanup-webhooks" \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            -H "Content-Type: application/json" \
+            -f || exit 1
 

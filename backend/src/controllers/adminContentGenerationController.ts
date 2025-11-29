@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import * as contentGenerationService from '../services/contentGenerationService.js';
-import * as adminCourseService from '../services/adminCourseService.js';
+import { adminCourseService } from '../services/adminCourseService.js';
 import { PrismaClient } from '@prisma/client';
 import { logger } from '../utils/logger.js';
 
@@ -24,7 +24,7 @@ export const adminContentGenerationController = {
       });
 
       // Save to database
-      const savedActivity = await (adminCourseService as any).createActivity(lessonId, {
+      const savedActivity = await adminCourseService.createActivity(lessonId, {
         activityNumber,
         title: activity.title,
         description: activity.description,
@@ -106,7 +106,7 @@ export const adminContentGenerationController = {
         const activityNumber = startActivityNumber + i;
 
         try {
-          const saved = await (adminCourseService as any).createActivity(lessonId, {
+          const saved = await adminCourseService.createActivity(lessonId, {
             activityNumber,
             title: activity.title,
             description: activity.description,
@@ -183,7 +183,7 @@ export const adminContentGenerationController = {
               const activity = activities[i];
               const activityNumber = startActivityNumber + i;
 
-              await (adminCourseService as any).createActivity(lesson.id, {
+              await adminCourseService.createActivity(lesson.id, {
                 activityNumber,
                 title: activity.title,
                 description: activity.description,

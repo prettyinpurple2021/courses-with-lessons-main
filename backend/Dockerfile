@@ -16,10 +16,8 @@ RUN npm ci
 # Generate Prisma Client
 RUN npx prisma generate
 
-# Copy source code and TypeScript configs
+# Copy source code
 COPY . .
-# Copy root tsconfig.json (backend tsconfig extends it)
-COPY ../tsconfig.json ../tsconfig.json
 
 # Build the application
 RUN npm run build
