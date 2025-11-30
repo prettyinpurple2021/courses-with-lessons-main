@@ -54,7 +54,7 @@ RUN mkdir -p /app/logs && chown -R nodejs:nodejs /app/logs
 # Switch to non-root user
 USER nodejs
 
-# Expose port (Fly.io will set PORT env var, default to 5000)
+# Expose port (Render/Fly.io will set PORT env var)
 EXPOSE 5000
 
 # Set NODE_ENV to production
@@ -62,7 +62,7 @@ ENV NODE_ENV=production
 
 # Health check with proper timeout
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-    CMD node -e "require('http').get('http://localhost:5000/api/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)}).on('error', () => process.exit(1))"
+    CMD node -e "const port = process.env.PORT || 5000; require('http').get(`http://localhost:${port}/api/health`, (r) => {process.exit(r.statusCode === 200 ? 0 : 1)}).on('error', () => process.exit(1))"
 
 # Use dumb-init to handle signals properly
 ENTRYPOINT ["dumb-init", "--"]
