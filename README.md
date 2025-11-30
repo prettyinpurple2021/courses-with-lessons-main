@@ -398,8 +398,7 @@ The project includes Docker configuration for production deployment:
 # Build and run with Docker Compose
 docker-compose -f docker-compose.prod.yml up -d
 
-# Or deploy to Render using render.yaml
-# See RENDER_DEPLOYMENT.md for details
+# See docs/DEPLOYMENT.md for deployment details
 ```
 
 ### Quick Deploy
@@ -416,7 +415,7 @@ npm run build
 # Deploy dist/ folder
 ```
 
-#### Backend (Railway/Render)
+#### Backend (Fly.io)
 ```bash
 cd backend
 npm run build
@@ -424,7 +423,7 @@ npm run build
 ```
 
 #### Database
-- Use managed PostgreSQL (Supabase, Railway, or Render)
+- Use managed PostgreSQL (Fly.io, Supabase, or Railway)
 - Run migrations: `npm run prisma:migrate deploy`
 - Seed data: `npm run prisma:seed`
 

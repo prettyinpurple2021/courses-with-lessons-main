@@ -54,7 +54,7 @@ RUN mkdir -p /app/logs && chown -R nodejs:nodejs /app/logs
 # Switch to non-root user
 USER nodejs
 
-# Expose port (Render/Fly.io will set PORT env var)
+# Expose port (Fly.io will set PORT env var)
 EXPOSE 5000
 
 # Set NODE_ENV to production
