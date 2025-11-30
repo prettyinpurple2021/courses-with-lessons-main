@@ -75,18 +75,17 @@ Comprehensive checklist for launching SoloSuccess Intel Academy.
 - [ ] Deployment successful
 - [ ] Preview deployments working
 
-#### Backend Hosting (Railway/Render)
+#### Backend Hosting (Fly.io)
 
-- [ ] Account created
-- [ ] Project created (or Blueprint configured)
-- [ ] Repository connected
-- [ ] Docker deployment configured (if using Render)
-- [ ] Build command: `npm run build` (or Docker build)
-- [ ] Start command: `npm start` (or Docker CMD)
-- [ ] Environment variables added
+- [ ] Fly.io account created
+- [ ] App created: `intel-academy-api`
+- [ ] `fly.toml` configured
+- [ ] Dockerfile configured
+- [ ] Environment variables/secrets added via `flyctl secrets set`
 - [ ] Health check endpoint configured: `/api/health`
-- [ ] Auto-deploy enabled
+- [ ] Database and Redis attached (via Fly.io add-ons)
 - [ ] Deployment successful
+- [ ] Health check passing: `https://intel-academy-api.fly.dev/api/health`
 - [ ] Logs accessible
 - [ ] Docker images build successfully (if using Docker)
 

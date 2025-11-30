@@ -39,10 +39,7 @@ The deployment setup includes:
 │   └── nginx.conf             # Nginx configuration
 ├── docker-compose.yml         # Production orchestration
 ├── docker-compose.dev.yml     # Development orchestration
-├── vercel.json                # Vercel configuration
-├── netlify.toml               # Netlify configuration
-├── railway.json               # Railway configuration
-├── render.yaml                # Render configuration
+├── fly.toml                   # Fly.io backend configuration
 └── alerts.config.example.json # Alert configuration
 
 ```
@@ -85,8 +82,7 @@ git push origin main
 
 Add these to your GitHub repository settings:
 
-- `VERCEL_TOKEN` or `NETLIFY_TOKEN`
-- `RAILWAY_TOKEN` or `RENDER_API_KEY`
+- `VERCEL_TOKEN` (for frontend deployment)
 - `STAGING_DATABASE_URL`
 - `PRODUCTION_DATABASE_URL`
 - `STAGING_API_URL`
@@ -153,7 +149,7 @@ For issues or questions:
        ├──────────┬──────────┐          ├──────────┬──────────┐
        ▼          ▼          ▼          ▼          ▼          ▼
    Frontend   Backend   Database    Frontend   Backend   Database
-   (Vercel)   (Railway) (Railway)   (Vercel)   (Railway) (Railway)
+   (Vercel)   (Fly.io)  (Fly.io)    (Vercel)   (Fly.io)  (Fly.io)
 ```
 
 ## CI/CD Pipeline
@@ -242,7 +238,7 @@ Push to Branch
 - [Docker Documentation](https://docs.docker.com/)
 - [GitHub Actions Documentation](https://docs.github.com/en/actions)
 - [Vercel Documentation](https://vercel.com/docs)
-- [Railway Documentation](https://docs.railway.app/)
+- [Fly.io Documentation](https://fly.io/docs)
 - [Sentry Documentation](https://docs.sentry.io/)
 
 ---
