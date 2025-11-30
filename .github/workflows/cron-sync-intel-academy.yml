@@ -10,14 +10,70 @@ jobs:
   sync-intel-academy:
     runs-on: ubuntu-latest
     steps:
-      - name: Call sync-intel-academy endpoint
+      - name: Validate and prepare
         env:
-          # These secrets must be configured in GitHub repository settings
           API_URL: ${{ secrets.API_URL }}
           CRON_SECRET: ${{ secrets.CRON_SECRET }}
         run: |
-          curl -X GET "${API_URL}/api/cron/sync-intel-academy" \
+          if [ -z "$API_URL" ]; then
+            echo "❌ Error: API_URL secret is not set in GitHub repository settings"
+            exit 1
+          fi
+          if [ -z "$CRON_SECRET" ]; then
+            echo "❌ Error: CRON_SECRET secret is not set in GitHub repository settings"
+            exit 1
+          fi
+          
+          # Normalize API_URL (remove trailing slash, ensure it doesn't end with /api)
+          API_URL=$(echo "$API_URL" | sed 's:/*$::')
+          API_URL=$(echo "$API_URL" | sed 's:/api$::')
+          echo "API_URL_NORMALIZED=${API_URL}" >> $GITHUB_ENV
+          echo "CRON_SECRET=${CRON_SECRET}" >> $GITHUB_ENV
+          
+          echo "✅ Secrets validated"
+          echo "📍 API URL: ${API_URL}"
+      
+      - name: Check backend health
+        run: |
+          echo "🏥 Checking backend health endpoint..."
+          HEALTH_RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}" "${API_URL_NORMALIZED}/api/health" || echo "HTTP_STATUS:000")
+          HEALTH_STATUS=$(echo "$HEALTH_RESPONSE" | grep "HTTP_STATUS" | cut -d: -f2)
+          
+          if [ "$HEALTH_STATUS" = "200" ]; then
+            echo "✅ Backend is healthy and reachable"
+          else
+            echo "⚠️ Warning: Backend health check returned status $HEALTH_STATUS"
+            echo "Continuing anyway..."
+          fi
+      
+      - name: Call sync-intel-academy endpoint
+        run: |
+          echo "🔗 Calling: ${API_URL_NORMALIZED}/api/cron/sync-intel-academy"
+          echo "🔑 Using CRON_SECRET: ${CRON_SECRET:0:8}..." # Show first 8 chars for debugging
+          
+          RESPONSE=$(curl -X GET "${API_URL_NORMALIZED}/api/cron/sync-intel-academy" \
             -H "Authorization: Bearer ${CRON_SECRET}" \
             -H "Content-Type: application/json" \
-            -f || exit 1
+            -w "\nHTTP_STATUS:%{http_code}" \
+            -s)
+          
+          HTTP_STATUS=$(echo "$RESPONSE" | grep "HTTP_STATUS" | cut -d: -f2)
+          BODY=$(echo "$RESPONSE" | sed '/HTTP_STATUS/d')
+          
+          echo "📊 HTTP Status: $HTTP_STATUS"
+          echo "📄 Response: $BODY"
+          
+          if [ "$HTTP_STATUS" -ge 200 ] && [ "$HTTP_STATUS" -lt 300 ]; then
+            echo "✅ Success! Cron job executed successfully"
+            exit 0
+          elif [ "$HTTP_STATUS" -eq 401 ]; then
+            echo "❌ Unauthorized: CRON_SECRET doesn't match. Check that it's set correctly in both GitHub and Fly.io"
+            exit 1
+          elif [ "$HTTP_STATUS" -eq 500 ]; then
+            echo "❌ Server Error: Check your backend logs"
+            exit 1
+          else
+            echo "❌ Failed with HTTP status: $HTTP_STATUS"
+            exit 1
+          fi
 
