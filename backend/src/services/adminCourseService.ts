@@ -1,5 +1,5 @@
-import prisma from '../config/prisma';
-import { NotFoundError, ValidationError } from '../utils/errors';
+import prisma from '../config/prisma.js';
+import { NotFoundError, ValidationError } from '../utils/errors.js';
 import axios from 'axios';
 
 interface CourseData {
