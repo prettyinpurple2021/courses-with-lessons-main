@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { AuthorizationError } from '../utils/errors';
+import { AuthorizationError } from '../utils/errors.js';
 
 export const requireAdmin = (req: Request, _res: Response, next: NextFunction) => {
   // Check if user is authenticated (should be set by authenticate middleware)
