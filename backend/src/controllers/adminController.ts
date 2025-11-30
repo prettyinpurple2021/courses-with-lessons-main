@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { adminService } from '../services/adminService';
+import { adminService } from '../services/adminService.js';
 
 /**
  * Admin authentication controller
