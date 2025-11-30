@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { adminUserService } from '../services/adminUserService';
+import { adminUserService } from '../services/adminUserService.js';
 
 export const adminUserController = {
   /**
