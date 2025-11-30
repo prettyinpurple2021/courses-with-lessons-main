@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { adminCourseService } from '../services/adminCourseService';
+import { adminCourseService } from '../services/adminCourseService.js';
 
 export const adminCourseController = {
   /**
