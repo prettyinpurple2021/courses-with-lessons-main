@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import { adminController } from '../controllers/adminController.js';
-import { authenticate } from '../middleware/auth';
-import { requireAdmin } from '../middleware/adminAuth';
-import { validate } from '../middleware/validation';
-import { asyncHandler } from '../middleware/errorHandler';
+import { authenticate } from '../middleware/auth.js';
+import { requireAdmin } from '../middleware/adminAuth.js';
+import { validate } from '../middleware/validation.js';
+import { asyncHandler } from '../middleware/errorHandler.js';
 import { body } from 'express-validator';
 
 const router = Router();
