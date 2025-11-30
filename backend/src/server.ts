@@ -38,7 +38,7 @@ import cronRouter from './routes/cron.js';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = Number(process.env.PORT) || 5000;
 
 // Middleware
 // Configure Helmet with security headers
