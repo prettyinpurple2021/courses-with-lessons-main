@@ -1,8 +1,8 @@
 import express from 'express';
-import { adminUserController } from '../controllers/adminUserController';
-import { authenticate } from '../middleware/auth';
-import { requireAdmin } from '../middleware/requireAdmin';
-import { asyncHandler } from '../middleware/errorHandler';
+import { adminUserController } from '../controllers/adminUserController.js';
+import { authenticate } from '../middleware/auth.js';
+import { requireAdmin } from '../middleware/requireAdmin.js';
+import { asyncHandler } from '../middleware/errorHandler.js';
 
 const router = express.Router();
 
