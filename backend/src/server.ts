@@ -194,7 +194,7 @@ async function startServer() {
     // Only start listening if not in serverless environment
     // Vercel serverless functions don't need app.listen()
     if (!process.env.VERCEL) {
-      app.listen(PORT, () => {
+      app.listen(PORT, '0.0.0.0', () => {
         logger.info(`Server running on port ${PORT}`, {
           port: PORT,
           environment: process.env.NODE_ENV || 'development',
