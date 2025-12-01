@@ -3,6 +3,7 @@ import { hashPassword, comparePassword, validatePasswordStrength } from '../util
 import { generateAccessToken, generateRefreshToken, TokenPayload } from '../utils/jwt.js';
 import { generateResetToken, verifyResetToken, deleteResetToken } from '../utils/tokenStore.js';
 import emailService from './emailService.js';
+import { ValidationError, AuthenticationError, ConflictError, NotFoundError, ServerError } from '../utils/errors.js';
 
 const prisma = new PrismaClient();
 
@@ -36,7 +37,7 @@ export class AuthService {
     // Validate password strength
     const passwordValidation = validatePasswordStrength(password);
     if (!passwordValidation.valid) {
-      throw new Error(passwordValidation.message);
+      throw new ValidationError(passwordValidation.message);
     }
 
     // Check if user already exists
@@ -45,7 +46,7 @@ export class AuthService {
     });
 
     if (existingUser) {
-      throw new Error('User with this email already exists');
+      throw new ConflictError('User with this email already exists');
     }
 
     // Hash password
@@ -108,14 +109,14 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new Error('Invalid email or password');
+      throw new AuthenticationError('Invalid email or password');
     }
 
     // Verify password
     const isPasswordValid = await comparePassword(password, user.password);
 
     if (!isPasswordValid) {
-      throw new Error('Invalid email or password');
+      throw new AuthenticationError('Invalid email or password');
     }
 
     // Generate tokens
@@ -183,13 +184,13 @@ export class AuthService {
     const userId = verifyResetToken(token);
 
     if (!userId) {
-      throw new Error('Invalid or expired reset token');
+      throw new ValidationError('Invalid or expired reset token');
     }
 
     // Validate password strength
     const passwordValidation = validatePasswordStrength(newPassword);
     if (!passwordValidation.valid) {
-      throw new Error(passwordValidation.message);
+      throw new ValidationError(passwordValidation.message);
     }
 
     // Hash new password
@@ -220,7 +221,7 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new Error('User not found');
+      throw new NotFoundError('User not found');
     }
 
     return user;
