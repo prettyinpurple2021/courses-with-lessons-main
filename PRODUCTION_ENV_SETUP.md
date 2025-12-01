@@ -304,3 +304,4 @@ After configuring environment variables:
 
 **Important:** Never commit `.env.production` files to git. Always use your hosting platform's environment variable configuration.
 
+

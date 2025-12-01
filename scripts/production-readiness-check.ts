@@ -65,10 +65,26 @@ async function checkEnvironmentVariables() {
   for (const env of required) {
     const value = process.env[env.name];
     if (!value) {
-      addResult(`Env: ${env.name}`, 'fail', 'Not set', 'Required for production');
+      let details = 'Required for production';
+      if (env.name === 'NODE_ENV') {
+        details = 'Set to "production" for production deployment';
+      } else if (env.name === 'CORS_ORIGIN' || env.name === 'FRONTEND_URL') {
+        details = 'Must use HTTPS URL (e.g., https://yourdomain.com) - no localhost';
+      }
+      addResult(`Env: ${env.name}`, 'fail', 'Not set', details);
       allPassed = false;
     } else if (!env.validator(value)) {
-      addResult(`Env: ${env.name}`, 'fail', 'Invalid value', 'Check configuration');
+      let details = 'Check configuration';
+      if (env.name === 'NODE_ENV') {
+        details = `Current value: "${value}". Must be "production" for production deployment`;
+      } else if (env.name === 'CORS_ORIGIN' || env.name === 'FRONTEND_URL') {
+        details = `Current value: "${value}". Must start with "https://" and not contain "localhost". Example: https://yourdomain.com`;
+      } else if (env.name === 'JWT_SECRET' || env.name === 'JWT_REFRESH_SECRET') {
+        details = 'Must be at least 32 characters long and not contain "change-this"';
+      } else if (env.name === 'RESEND_API_KEY') {
+        details = 'Must start with "re_"';
+      }
+      addResult(`Env: ${env.name}`, 'fail', 'Invalid value', details);
       allPassed = false;
     } else {
       addResult(`Env: ${env.name}`, 'pass', 'Valid');

@@ -57,7 +57,16 @@ async function verifyCourses() {
         orderBy: { lessonNumber: 'asc' },
       },
       finalProject: true,
-      finalExam: true,
+      finalExam: {
+        include: {
+          questions: {
+            include: {
+              options: true,
+            },
+            orderBy: { order: 'asc' },
+          },
+        },
+      },
     },
     orderBy: { courseNumber: 'asc' },
   });
@@ -134,8 +143,8 @@ async function verifyCourses() {
       );
     } else {
       // Verify final exam has questions
-      const questions = course.finalExam.questions as any;
-      if (!questions || !Array.isArray(questions) || questions.length === 0) {
+      const questions = course.finalExam.questions || [];
+      if (questions.length === 0) {
         addIssue(
           'error',
           `Course ${course.courseNumber}`,
@@ -151,6 +160,20 @@ async function verifyCourses() {
           'Consider adding more questions (recommended: 20+)',
           course.courseNumber
         );
+      } else {
+        // Verify each question has options
+        for (const question of questions) {
+          const options = question.options || [];
+          if (options.length === 0 && question.type !== 'short_answer') {
+            addIssue(
+              'error',
+              `Course ${course.courseNumber}`,
+              `Final exam question "${question.text.substring(0, 50)}..." has no options`,
+              'Add options to question',
+              course.courseNumber
+            );
+          }
+        }
       }
     }
 
