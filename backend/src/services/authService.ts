@@ -34,111 +34,247 @@ export class AuthService {
   async register(input: RegisterInput): Promise<AuthResponse> {
     const { email, password, firstName, lastName } = input;
 
+    // #region agent log
+    fetch('http://127.0.0.1:7242/ingest/a6613aa6-709b-4c6a-b69d-a5caff5afc35', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sessionId: 'debug-session',
+        runId: 'pre-fix',
+        hypothesisId: 'H2',
+        location: 'authService.ts:register',
+        message: 'AuthService.register input received',
+        data: {
+          emailLength: email?.length ?? 0,
+        },
+        timestamp: Date.now(),
+      }),
+    }).catch(() => {});
+    // #endregion
+
     // Validate password strength
     const passwordValidation = validatePasswordStrength(password);
     if (!passwordValidation.valid) {
       throw new ValidationError(passwordValidation.message);
     }
 
-    // Check if user already exists
-    const existingUser = await prisma.user.findUnique({
-      where: { email },
-    });
+    try {
+      // Check if user already exists
+      const existingUser = await prisma.user.findUnique({
+        where: { email },
+      });
 
-    if (existingUser) {
-      throw new ConflictError('User with this email already exists');
-    }
+      if (existingUser) {
+        throw new ConflictError('User with this email already exists');
+      }
 
-    // Hash password
-    const hashedPassword = await hashPassword(password);
+      // Hash password
+      const hashedPassword = await hashPassword(password);
 
-    // Create user
-    const user = await prisma.user.create({
-      data: {
-        email,
-        password: hashedPassword,
-        firstName,
-        lastName,
-      },
-    });
-
-    // Auto-enroll in Course One
-    const courseOne = await prisma.course.findFirst({
-      where: { courseNumber: 1 },
-    });
-
-    if (courseOne) {
-      await prisma.enrollment.create({
+      // Create user
+      const user = await prisma.user.create({
         data: {
-          userId: user.id,
-          courseId: courseOne.id,
-          currentLesson: 1,
-          unlockedCourses: 1,
+          email,
+          password: hashedPassword,
+          firstName,
+          lastName,
         },
       });
-    }
 
-    // Generate tokens
-    const tokenPayload: TokenPayload = {
-      userId: user.id,
-      email: user.email,
-      role: user.role,
-    };
+      // Auto-enroll in Course One
+      const courseOne = await prisma.course.findFirst({
+        where: { courseNumber: 1 },
+      });
 
-    const accessToken = generateAccessToken(tokenPayload);
-    const refreshToken = generateRefreshToken(tokenPayload);
+      if (courseOne) {
+        await prisma.enrollment.create({
+          data: {
+            userId: user.id,
+            courseId: courseOne.id,
+            currentLesson: 1,
+            unlockedCourses: 1,
+          },
+        });
+      }
 
-    return {
-      user: {
-        id: user.id,
+      // Generate tokens
+      const tokenPayload: TokenPayload = {
+        userId: user.id,
         email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
-      },
-      accessToken,
-      refreshToken,
-    };
+        role: user.role,
+      };
+
+      const accessToken = generateAccessToken(tokenPayload);
+      const refreshToken = generateRefreshToken(tokenPayload);
+
+      // #region agent log
+      fetch('http://127.0.0.1:7242/ingest/a6613aa6-709b-4c6a-b69d-a5caff5afc35', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId: 'debug-session',
+          runId: 'pre-fix',
+          hypothesisId: 'H3',
+          location: 'authService.ts:register',
+          message: 'AuthService.register success',
+          data: {
+            userId: user.id,
+          },
+          timestamp: Date.now(),
+        }),
+      }).catch(() => {});
+      // #endregion
+
+      return {
+        user: {
+          id: user.id,
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
+        },
+        accessToken,
+        refreshToken,
+      };
+    } catch (error) {
+      // #region agent log
+      fetch('http://127.0.0.1:7242/ingest/a6613aa6-709b-4c6a-b69d-a5caff5afc35', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId: 'debug-session',
+          runId: 'pre-fix',
+          hypothesisId: 'H4',
+          location: 'authService.ts:register',
+          message: 'AuthService.register error',
+          data: {
+            errorName: (error as Error).name,
+            errorMessage: (error as Error).message,
+          },
+          timestamp: Date.now(),
+        }),
+      }).catch(() => {});
+      // #endregion
+
+      throw error;
+    }
   }
 
   async login(input: LoginInput): Promise<AuthResponse> {
     const { email, password } = input;
 
-    // Find user
-    const user = await prisma.user.findUnique({
-      where: { email },
-    });
+    // #region agent log
+    fetch('http://127.0.0.1:7242/ingest/a6613aa6-709b-4c6a-b69d-a5caff5afc35', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sessionId: 'debug-session',
+        runId: 'pre-fix',
+        hypothesisId: 'H5',
+        location: 'authService.ts:login',
+        message: 'AuthService.login input received',
+        data: {
+          emailLength: email?.length ?? 0,
+        },
+        timestamp: Date.now(),
+      }),
+    }).catch(() => {});
+    // #endregion
 
-    if (!user) {
-      throw new AuthenticationError('Invalid email or password');
-    }
+    try {
+      // Find user
+      const user = await prisma.user.findUnique({
+        where: { email },
+      });
 
-    // Verify password
-    const isPasswordValid = await comparePassword(password, user.password);
+      // #region agent log
+      fetch('http://127.0.0.1:7242/ingest/a6613aa6-709b-4c6a-b69d-a5caff5afc35', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId: 'debug-session',
+          runId: 'pre-fix',
+          hypothesisId: 'H6',
+          location: 'authService.ts:login',
+          message: 'AuthService.login user lookup result',
+          data: {
+            userFound: !!user,
+          },
+          timestamp: Date.now(),
+        }),
+      }).catch(() => {});
+      // #endregion
 
-    if (!isPasswordValid) {
-      throw new AuthenticationError('Invalid email or password');
-    }
+      if (!user) {
+        throw new AuthenticationError('Invalid email or password');
+      }
 
-    // Generate tokens
-    const tokenPayload: TokenPayload = {
-      userId: user.id,
-      email: user.email,
-      role: user.role,
-    };
+      // Verify password
+      const isPasswordValid = await comparePassword(password, user.password);
 
-    const accessToken = generateAccessToken(tokenPayload);
-    const refreshToken = generateRefreshToken(tokenPayload);
+      // #region agent log
+      fetch('http://127.0.0.1:7242/ingest/a6613aa6-709b-4c6a-b69d-a5caff5afc35', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId: 'debug-session',
+          runId: 'pre-fix',
+          hypothesisId: 'H7',
+          location: 'authService.ts:login',
+          message: 'AuthService.login password validation result',
+          data: {
+            isPasswordValid,
+          },
+          timestamp: Date.now(),
+        }),
+      }).catch(() => {});
+      // #endregion
 
-    return {
-      user: {
-        id: user.id,
+      if (!isPasswordValid) {
+        throw new AuthenticationError('Invalid email or password');
+      }
+
+      // Generate tokens
+      const tokenPayload: TokenPayload = {
+        userId: user.id,
         email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
-      },
-      accessToken,
-      refreshToken,
-    };
+        role: user.role,
+      };
+
+      const accessToken = generateAccessToken(tokenPayload);
+      const refreshToken = generateRefreshToken(tokenPayload);
+
+      return {
+        user: {
+          id: user.id,
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
+        },
+        accessToken,
+        refreshToken,
+      };
+    } catch (error) {
+      // #region agent log
+      fetch('http://127.0.0.1:7242/ingest/a6613aa6-709b-4c6a-b69d-a5caff5afc35', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId: 'debug-session',
+          runId: 'pre-fix',
+          hypothesisId: 'H8',
+          location: 'authService.ts:login',
+          message: 'AuthService.login error',
+          data: {
+            errorName: (error as Error).name,
+            errorMessage: (error as Error).message,
+          },
+          timestamp: Date.now(),
+        }),
+      }).catch(() => {});
+      // #endregion
+
+      throw error;
+    }
   }
 
   async refreshToken(_refreshToken: string): Promise<{ accessToken: string; refreshToken: string }> {
