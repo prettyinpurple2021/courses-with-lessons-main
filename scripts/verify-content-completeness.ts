@@ -281,38 +281,47 @@ async function verifyDatabaseIntegrity() {
   console.log('\n🔍 Verifying Database Integrity...\n');
 
   try {
-    // Check for orphaned records
-    const lessonsWithoutCourse = await prisma.lesson.findMany({
-      where: {
-        course: null,
-      },
+    // Check for orphaned records by verifying all lessons have valid courseIds
+    const allLessons = await prisma.lesson.findMany({
+      select: { id: true, courseId: true },
     });
 
-    if (lessonsWithoutCourse.length > 0) {
+    const allCourseIds = new Set(
+      (await prisma.course.findMany({ select: { id: true } })).map(c => c.id)
+    );
+
+    const orphanedLessons = allLessons.filter(lesson => !allCourseIds.has(lesson.courseId));
+
+    if (orphanedLessons.length > 0) {
       addIssue(
         'error',
         'Database Integrity',
-        `Found ${lessonsWithoutCourse.length} orphaned lessons`,
-        'Lessons without a parent course'
+        `Found ${orphanedLessons.length} orphaned lessons`,
+        'Lessons with invalid courseId references'
       );
     }
 
-    const activitiesWithoutLesson = await prisma.activity.findMany({
-      where: {
-        lesson: null,
-      },
+    // Check for orphaned activities
+    const allActivities = await prisma.activity.findMany({
+      select: { id: true, lessonId: true },
     });
 
-    if (activitiesWithoutLesson.length > 0) {
+    const allLessonIds = new Set(allLessons.map(l => l.id));
+
+    const orphanedActivities = allActivities.filter(activity => !allLessonIds.has(activity.lessonId));
+
+    if (orphanedActivities.length > 0) {
       addIssue(
         'error',
         'Database Integrity',
-        `Found ${activitiesWithoutLesson.length} orphaned activities`,
-        'Activities without a parent lesson'
+        `Found ${orphanedActivities.length} orphaned activities`,
+        'Activities with invalid lessonId references'
       );
     }
 
-    console.log('✅ Database integrity check complete');
+    if (orphanedLessons.length === 0 && orphanedActivities.length === 0) {
+      console.log('✅ Database integrity check complete');
+    }
   } catch (error: any) {
     addIssue('error', 'Database Integrity', 'Failed to check database integrity', error.message);
   }

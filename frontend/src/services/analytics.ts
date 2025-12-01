@@ -125,6 +125,14 @@ class AnalyticsService {
       this.initialize();
     }
 
+    // Respect cookie consent - don't track if analytics is disabled
+    if (!this.analyticsEnabled) {
+      if (import.meta.env.DEV) {
+        console.log('[Analytics] Page view blocked (analytics disabled by consent):', path);
+      }
+      return;
+    }
+
     if (import.meta.env.DEV) {
       console.log('[Analytics] Page view:', path, title);
     }
