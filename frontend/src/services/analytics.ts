@@ -65,12 +65,77 @@ export interface AnalyticsEventData {
 class AnalyticsService {
   private isInitialized = false;
   private analyticsProvider: 'ga4' | 'plausible' | 'none' = 'none';
+  private analyticsEnabled = false;
+  private eventListenersRegistered = false;
+
+  /**
+   * Check if analytics is enabled based on cookie consent
+   */
+  private checkAnalyticsConsent(): boolean {
+    if (typeof window === 'undefined') return false;
+
+    try {
+      const consent = localStorage.getItem('cookie_consent');
+      if (!consent) return false; // No consent given yet
+
+      const consentData = JSON.parse(consent);
+      return consentData.preferences?.analytics === true;
+    } catch {
+      return false;
+    }
+  }
+
+  /**
+   * Register event listeners for consent changes
+   * This must be called regardless of initial consent state
+   */
+  private registerConsentListeners() {
+    if (this.eventListenersRegistered || typeof window === 'undefined') return;
+
+    // Listen for enable analytics event
+    window.addEventListener('enableAnalytics', () => {
+      this.analyticsEnabled = true;
+      // Re-initialize to detect analytics providers
+      this.isInitialized = false;
+      this.initialize();
+      console.log('[Analytics] Analytics enabled by user consent');
+    });
+
+    // Listen for disable analytics event
+    window.addEventListener('disableAnalytics', () => {
+      this.analyticsEnabled = false;
+      console.log('[Analytics] Analytics disabled by user consent');
+    });
+
+    this.eventListenersRegistered = true;
+  }
 
   /**
    * Initialize analytics service
    */
   initialize() {
-    if (this.isInitialized) return;
+    // Always register event listeners first (before any early returns)
+    // This ensures listeners are set up even if analytics is initially disabled
+    this.registerConsentListeners();
+
+    // Check cookie consent
+    this.analyticsEnabled = this.checkAnalyticsConsent();
+
+    // If already initialized and consent state hasn't changed, return early
+    // But only if we're not re-initializing due to consent change
+    if (this.isInitialized && this.analyticsEnabled) {
+      return;
+    }
+
+    // If analytics is disabled, mark as initialized but don't set up providers
+    if (!this.analyticsEnabled) {
+      this.analyticsProvider = 'none';
+      this.isInitialized = true;
+      if (import.meta.env.DEV) {
+        console.log('[Analytics] Analytics disabled by user consent');
+      }
+      return;
+    }
 
     // Check for Google Analytics 4
     if (typeof window !== 'undefined' && (window as any).gtag) {
@@ -99,6 +164,14 @@ class AnalyticsService {
       this.initialize();
     }
 
+    // Respect cookie consent - don't track if analytics is disabled
+    if (!this.analyticsEnabled) {
+      if (import.meta.env.DEV) {
+        console.log('[Analytics] Event blocked (analytics disabled by consent):', eventName);
+      }
+      return;
+    }
+
     // Log in development
     if (import.meta.env.DEV) {
       console.log('[Analytics] Event:', eventName, eventData);
@@ -123,6 +196,14 @@ class AnalyticsService {
   trackPageView(path: string, title?: string) {
     if (!this.isInitialized) {
       this.initialize();
+    }
+
+    // Respect cookie consent - don't track if analytics is disabled
+    if (!this.analyticsEnabled) {
+      if (import.meta.env.DEV) {
+        console.log('[Analytics] Page view blocked (analytics disabled by consent):', path);
+      }
+      return;
     }
 
     if (import.meta.env.DEV) {
