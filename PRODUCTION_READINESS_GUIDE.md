@@ -4,19 +4,34 @@ This guide helps you verify that your SoloSuccess Intel Academy platform is read
 
 ## Quick Start
 
-Run the production readiness check:
+### Generate Complete Production Report
+
+Run the comprehensive production report (recommended):
 
 ```bash
-npm run check:production
+npm run report:production
 ```
 
-This will verify:
-- ✅ Environment variables
-- ✅ Database connection and migrations
-- ✅ YouTube video IDs
-- ✅ External services (Cloudinary, Resend)
-- ✅ Security configuration
-- ✅ Content completeness
+This will:
+- ✅ Run all verification checks
+- ✅ Generate a detailed markdown report
+- ✅ Save to `PRODUCTION_READINESS_REPORT.md`
+- ✅ Provide actionable next steps
+
+### Individual Checks
+
+You can also run individual checks:
+
+```bash
+# Complete production readiness check
+npm run check:production
+
+# Verify content completeness
+npm run verify:content
+
+# Verify YouTube videos
+npm run verify:videos
+```
 
 ## Pre-Deployment Checklist
 
@@ -66,7 +81,26 @@ npm run validate:env
    npm run check-setup
    ```
 
-### 3. YouTube Video Verification
+### 3. Content Verification
+
+Verify all content is complete:
+
+```bash
+npm run verify:content
+```
+
+This will check:
+- ✅ All 7 courses exist
+- ✅ Each course has 12 lessons
+- ✅ All lessons have YouTube video IDs
+- ✅ All lessons have activities
+- ✅ All courses have final projects
+- ✅ All courses have final exams
+- ✅ Activity numbering is sequential
+- ✅ Lesson numbering is sequential
+- ✅ Database integrity (no orphaned records)
+
+### 4. YouTube Video Verification
 
 Verify all YouTube video IDs are valid:
 
@@ -78,19 +112,24 @@ This will:
 - Check all video IDs in the database
 - Validate they're accessible and embeddable
 - Report any invalid videos
+- Provide summary by course
 
 **Important:** Replace any placeholder video IDs with real YouTube video IDs before production.
 
 ### 4. Content Review
 
-Verify all content is complete:
+The content verification script (`npm run verify:content`) will automatically check:
 
-- [ ] All 7 courses have 12 lessons each
-- [ ] Each lesson has activities
-- [ ] All courses have final projects
-- [ ] All courses have final exams
-- [ ] All YouTube video IDs are valid
-- [ ] All activities have content (not just placeholders)
+- [x] All 7 courses exist (automated check)
+- [x] Each course has 12 lessons (automated check)
+- [x] All lessons have YouTube video IDs (automated check)
+- [x] All lessons have activities (automated check)
+- [x] All courses have final projects (automated check)
+- [x] All courses have final exams (automated check)
+- [x] Activity numbering is sequential (automated check)
+- [x] Lesson numbering is sequential (automated check)
+- [ ] All YouTube video IDs are valid (run `npm run verify:videos`)
+- [ ] All activities have real content (manual review recommended)
 
 ### 5. Security Audit
 

@@ -65,40 +65,12 @@ export interface AnalyticsEventData {
 class AnalyticsService {
   private isInitialized = false;
   private analyticsProvider: 'ga4' | 'plausible' | 'none' = 'none';
-  private analyticsEnabled = false;
-
-  /**
-   * Check if analytics is enabled based on cookie consent
-   */
-  private checkAnalyticsConsent(): boolean {
-    if (typeof window === 'undefined') return false;
-
-    try {
-      const consent = localStorage.getItem('cookie_consent');
-      if (!consent) return false; // No consent given yet
-
-      const consentData = JSON.parse(consent);
-      return consentData.preferences?.analytics === true;
-    } catch {
-      return false;
-    }
-  }
 
   /**
    * Initialize analytics service
    */
   initialize() {
     if (this.isInitialized) return;
-
-    // Check cookie consent
-    this.analyticsEnabled = this.checkAnalyticsConsent();
-    
-    if (!this.analyticsEnabled) {
-      this.analyticsProvider = 'none';
-      console.log('[Analytics] Analytics disabled by user consent');
-      this.isInitialized = true;
-      return;
-    }
 
     // Check for Google Analytics 4
     if (typeof window !== 'undefined' && (window as any).gtag) {
@@ -117,17 +89,6 @@ class AnalyticsService {
     }
 
     this.isInitialized = true;
-
-    // Listen for consent changes
-    window.addEventListener('enableAnalytics', () => {
-      this.analyticsEnabled = true;
-      this.initialize();
-    });
-
-    window.addEventListener('disableAnalytics', () => {
-      this.analyticsEnabled = false;
-      this.analyticsProvider = 'none';
-    });
   }
 
   /**
@@ -136,14 +97,6 @@ class AnalyticsService {
   trackEvent(eventName: AnalyticsEvent, eventData?: AnalyticsEventData) {
     if (!this.isInitialized) {
       this.initialize();
-    }
-
-    // Respect cookie consent
-    if (!this.analyticsEnabled) {
-      if (import.meta.env.DEV) {
-        console.log('[Analytics] Event blocked (analytics disabled):', eventName);
-      }
-      return;
     }
 
     // Log in development
@@ -170,14 +123,6 @@ class AnalyticsService {
   trackPageView(path: string, title?: string) {
     if (!this.isInitialized) {
       this.initialize();
-    }
-
-    // Respect cookie consent
-    if (!this.analyticsEnabled) {
-      if (import.meta.env.DEV) {
-        console.log('[Analytics] Page view blocked (analytics disabled):', path);
-      }
-      return;
     }
 
     if (import.meta.env.DEV) {
