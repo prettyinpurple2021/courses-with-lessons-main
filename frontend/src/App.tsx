@@ -10,6 +10,7 @@ import AccessibilityChecker from './components/common/AccessibilityChecker';
 import ErrorBoundary from './components/common/ErrorBoundary';
 import LoadingSpinner from './components/common/LoadingSpinner';
 import PerformanceMonitor from './components/common/PerformanceMonitor';
+import CookieConsent from './components/common/CookieConsent';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import AdminRoute from './components/auth/AdminRoute';
 import Chatbot from './components/ai/Chatbot';
@@ -242,6 +243,7 @@ function App() {
             <Router>
               <AppContent />
               <PerformanceMonitor />
+              <CookieConsent />
               <Chatbot />
             </Router>
           </AuthProvider>
