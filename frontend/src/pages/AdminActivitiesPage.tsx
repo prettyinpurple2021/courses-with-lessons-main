@@ -21,6 +21,8 @@ const AdminActivitiesPage: React.FC = () => {
   const [activities, setActivities] = useState<Activity[]>([]);
   const [lessonTitle, setLessonTitle] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [showGenerateModal, setShowGenerateModal] = useState(false);
   const navigate = useNavigate();
   const toast = useToast();
 
@@ -132,6 +134,47 @@ const AdminActivitiesPage: React.FC = () => {
     return colors[type] || 'bg-steel-grey';
   };
 
+  const handleGenerateActivities = async (dryRun: boolean = false) => {
+    if (!lessonId) return;
+
+    setIsGenerating(true);
+    try {
+      const token = localStorage.getItem('accessToken');
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/admin/lessons/${lessonId}/generate-activities`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ dryRun }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error?.message || 'Failed to generate activities');
+      }
+
+      if (dryRun) {
+        toast.success(`Preview: ${data.data.count} activities would be generated`);
+        console.log('Preview activities:', data.data.activities);
+      } else {
+        toast.success(`Successfully generated ${data.data.count} activities!`);
+        setShowGenerateModal(false);
+        fetchActivities();
+      }
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : 'Failed to generate activities'
+      );
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -157,6 +200,14 @@ const AdminActivitiesPage: React.FC = () => {
               onClick={() => navigate(`/admin/courses/${courseId}/lessons`)}
             >
               ← Back to Lessons
+            </GlassmorphicButton>
+            <GlassmorphicButton
+              variant="secondary"
+              onClick={() => setShowGenerateModal(true)}
+              className="bg-gradient-to-r from-holographic-cyan via-holographic-magenta to-holographic-yellow hover:opacity-90"
+              disabled={isGenerating}
+            >
+              🤖 AI Generate Activities
             </GlassmorphicButton>
             <GlassmorphicButton
               variant="primary"
@@ -229,14 +280,81 @@ const AdminActivitiesPage: React.FC = () => {
             <p className="text-steel-grey text-lg mb-4">
               No activities found for this lesson
             </p>
-            <GlassmorphicButton
-              variant="primary"
-              onClick={() =>
-                navigate(`/admin/courses/${courseId}/lessons/${lessonId}/activities/new`)
-              }
-            >
-              Create First Activity
-            </GlassmorphicButton>
+            <div className="flex gap-4 justify-center">
+              <GlassmorphicButton
+                variant="secondary"
+                onClick={() => setShowGenerateModal(true)}
+                className="bg-gradient-to-r from-holographic-cyan via-holographic-magenta to-holographic-yellow hover:opacity-90"
+              >
+                🤖 AI Generate Activities
+              </GlassmorphicButton>
+              <GlassmorphicButton
+                variant="primary"
+                onClick={() =>
+                  navigate(`/admin/courses/${courseId}/lessons/${lessonId}/activities/new`)
+                }
+              >
+                Create Manually
+              </GlassmorphicButton>
+            </div>
+          </div>
+        )}
+
+        {/* Generate Activities Modal */}
+        {showGenerateModal && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <GlassmorphicCard className="max-w-2xl w-full p-6">
+              <h2 className="text-2xl font-bold text-hot-pink mb-4">
+                🤖 AI Content Generation
+              </h2>
+              <p className="text-steel-grey mb-6">
+                Generate interactive activities for this lesson using AI. The system will create:
+              </p>
+              <ul className="list-disc list-inside text-steel-grey mb-6 space-y-2">
+                <li>Opening Quiz (3-5 questions)</li>
+                <li>Exercise (guided practice)</li>
+                <li>Mid-Lesson Quiz (5-7 questions)</li>
+                <li>Practical Task (real-world application)</li>
+                <li>Closing Quiz (5-8 questions)</li>
+              </ul>
+              <div className="bg-yellow-500/20 border border-yellow-500/50 rounded-lg p-4 mb-6">
+                <p className="text-sm text-yellow-900 dark:text-yellow-200">
+                  <strong>Note:</strong> Make sure GEMINI_API_KEY is configured in your backend .env file.
+                  Generated content will be automatically saved to this lesson.
+                </p>
+              </div>
+              <div className="flex gap-4 justify-end">
+                <GlassmorphicButton
+                  variant="secondary"
+                  onClick={() => setShowGenerateModal(false)}
+                  disabled={isGenerating}
+                >
+                  Cancel
+                </GlassmorphicButton>
+                <GlassmorphicButton
+                  variant="secondary"
+                  onClick={() => handleGenerateActivities(true)}
+                  disabled={isGenerating}
+                >
+                  {isGenerating ? 'Previewing...' : 'Preview First'}
+                </GlassmorphicButton>
+                <GlassmorphicButton
+                  variant="primary"
+                  onClick={() => handleGenerateActivities(false)}
+                  disabled={isGenerating}
+                  className="bg-gradient-to-r from-holographic-cyan via-holographic-magenta to-holographic-yellow"
+                >
+                  {isGenerating ? (
+                    <span className="flex items-center gap-2">
+                      <LoadingSpinner />
+                      Generating...
+                    </span>
+                  ) : (
+                    'Generate & Save'
+                  )}
+                </GlassmorphicButton>
+              </div>
+            </GlassmorphicCard>
           </div>
         )}
       </div>
