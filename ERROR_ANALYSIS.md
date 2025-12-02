@@ -61,16 +61,21 @@ These errors are from browser extensions (password managers, ad blockers, etc.) 
   - User's session has expired (refresh tokens expire after 7 days)
   - User cleared cookies
   - Token was invalidated
+  - User is not logged in (initial page load)
 
 **Solution Applied:**
 - ✅ Updated `authService.ts` to use proper `AppError` classes instead of generic `Error` objects
 - ✅ Improved error handling to return proper HTTP status codes
+- ✅ **NEW**: Suppressed expected 401 errors from refresh token attempts when there's no active session
+- ✅ **NEW**: Added `setInitialAuthCheck()` flag to distinguish between expected and unexpected auth failures
+- ✅ **NEW**: Improved error logging to only show unexpected authentication errors in console
 
 **User Action:**
 - User should log in again to get a new refresh token
 - Frontend automatically redirects to `/login` on 401 errors (already implemented)
+- Expected 401 errors (no session) are now silently handled without console noise
 
-**Status:** Fixed (error handling improved)
+**Status:** Fixed (error handling improved, console noise reduced)
 
 ---
 
@@ -205,6 +210,8 @@ These errors are from browser extensions (password managers, ad blockers, etc.) 
 1. ✅ `frontend/public/vite.svg` - Created favicon
 2. ✅ `frontend/vercel.json` - Added SPA routing configuration
 3. ✅ `backend/src/services/authService.ts` - Improved error handling with proper error classes
+4. ✅ `frontend/src/services/api.ts` - Suppressed expected 401 errors, improved refresh token handling
+5. ✅ `frontend/src/contexts/AuthContext.tsx` - Added initial auth check flag to suppress expected errors
 
 ---
 
@@ -214,6 +221,7 @@ These errors are from browser extensions (password managers, ad blockers, etc.) 
 - Rate limiting (429) is working as designed for security
 - 500 errors need backend log investigation to identify root cause
 - All error handling improvements ensure proper HTTP status codes are returned
+
 
 
 

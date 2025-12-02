@@ -45,6 +45,13 @@ let failedQueue: Array<{
   reject: (reason?: unknown) => void;
 }> = [];
 
+// Track if we're doing an initial auth check (expected to fail if no session)
+let isInitialAuthCheck = false;
+
+export const setInitialAuthCheck = (value: boolean) => {
+  isInitialAuthCheck = value;
+};
+
 const processQueue = (error: Error | null, token: string | null = null) => {
   failedQueue.forEach((prom) => {
     if (error) {
@@ -66,14 +73,43 @@ api.interceptors.response.use(
     const originalRequest = error.config as InternalAxiosRequestConfig & {
       _retry?: boolean;
       _retryCount?: number;
+      _isRefreshRequest?: boolean;
     };
 
-    // Parse and log the error
-    const appError = parseError(error);
-    logError(appError, `API Request: ${originalRequest?.method?.toUpperCase()} ${originalRequest?.url}`);
+    // Check if this is a refresh token request
+    const isRefreshRequest = originalRequest?.url === '/auth/refresh' || originalRequest?._isRefreshRequest;
+    
+    // Suppress expected 401 errors from refresh token attempts when there's no session
+    // This is normal behavior on initial page load when user is not logged in
+    const isExpectedAuthError = 
+      error.response?.status === 401 && 
+      isRefreshRequest && 
+      (isInitialAuthCheck || !accessToken);
+
+    // Only log unexpected errors
+    if (!isExpectedAuthError) {
+      const appError = parseError(error);
+      logError(appError, `API Request: ${originalRequest?.method?.toUpperCase()} ${originalRequest?.url}`);
+    }
 
     // Handle 401 errors with token refresh
     if (error.response?.status === 401 && !originalRequest._retry) {
+      // Don't try to refresh if this IS the refresh request itself
+      if (isRefreshRequest) {
+        // If it's an expected error (no session), silently fail
+        if (isExpectedAuthError) {
+          setAccessToken(null);
+          return Promise.reject(error);
+        }
+        // Otherwise, it's an unexpected refresh failure
+        setAccessToken(null);
+        // Only redirect if we're not on the login page already
+        if (!window.location.pathname.includes('/login')) {
+          window.location.href = '/login';
+        }
+        return Promise.reject(error);
+      }
+
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
@@ -93,6 +129,9 @@ api.interceptors.response.use(
       isRefreshing = true;
 
       try {
+        // Mark the refresh request to prevent infinite loops
+        const refreshRequest = { ...originalRequest };
+        refreshRequest._isRefreshRequest = true;
         const response = await api.post('/auth/refresh');
         const { accessToken: newAccessToken } = response.data.data;
 
@@ -107,8 +146,10 @@ api.interceptors.response.use(
       } catch (refreshError) {
         processQueue(refreshError as Error, null);
         setAccessToken(null);
-        // Redirect to login or dispatch logout action
-        window.location.href = '/login';
+        // Only redirect if we're not on the login page already and it's not an expected error
+        if (!isExpectedAuthError && !window.location.pathname.includes('/login')) {
+          window.location.href = '/login';
+        }
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;

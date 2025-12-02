@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useCallback } from 'react'
 import { useAuthStore } from '../store/authStore';
 import { authService } from '../services/authService';
 import { AuthContextType, LoginCredentials, RegisterCredentials } from '../types/auth';
-import { setAccessToken } from '../services/api';
+import { setAccessToken, setInitialAuthCheck } from '../services/api';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -14,16 +14,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const initAuth = async () => {
       try {
         setLoading(true);
+        // Mark this as an initial auth check to suppress expected 401 errors
+        setInitialAuthCheck(true);
         // Try to refresh token and get user data
         await authService.refreshToken();
         const userData = await authService.getMe();
         setUser(userData);
       } catch (error) {
         // No valid session, clear auth state
+        // This is expected if user is not logged in, so we silently handle it
         clearAuth();
         setAccessToken(null);
       } finally {
         setLoading(false);
+        // Reset the flag after initial check
+        setInitialAuthCheck(false);
       }
     };
 

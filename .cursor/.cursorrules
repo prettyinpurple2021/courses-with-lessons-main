@@ -77,23 +77,27 @@ Sentry offers a consoleLoggingIntegration that can be used to log specific conso
 import * as Sentry from "@sentry/react";
 
 Sentry.init({
-  dsn: "https://bd3cc735dd717f2e0f8dd21bb2443d75@o4509278644011008.ingest.us.sentry.io/4510464445972480",
+  dsn: import.meta.env.VITE_SENTRY_DSN,
 
   enableLogs: true,
 });
 ```
 
+**Note:** Set `VITE_SENTRY_DSN` in your `.env` file. Never commit DSN values to the repository.
+
 ### Logger Integration
 
 ```javascript
 Sentry.init({
-  dsn: "https://bd3cc735dd717f2e0f8dd21bb2443d75@o4509278644011008.ingest.us.sentry.io/4510464445972480",
+  dsn: import.meta.env.VITE_SENTRY_DSN,
   integrations: [
     // send console.log, console.warn, and console.error calls as logs to Sentry
     Sentry.consoleLoggingIntegration({ levels: ["log", "warn", "error"] }),
   ],
 });
 ```
+
+**Note:** Set `VITE_SENTRY_DSN` in your `.env` file. Never commit DSN values to the repository.
 
 ## Logger Examples
 

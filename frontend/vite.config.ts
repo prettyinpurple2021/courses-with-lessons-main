@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 import { visualizer } from 'rollup-plugin-visualizer';
 import viteCompression from 'vite-plugin-compression';
+import { sentryVitePlugin } from '@sentry/vite-plugin';
 
 export default defineConfig({
   plugins: [
@@ -27,7 +28,20 @@ export default defineConfig({
       threshold: 10240,
       deleteOriginFile: false,
     }),
-  ],
+    // Sentry source map upload (only in production builds)
+    process.env.NODE_ENV === 'production' && process.env.SENTRY_AUTH_TOKEN
+      ? sentryVitePlugin({
+          org: 'solosuccess-ai',
+          project: 'courses-with-lessons-main',
+          authToken: process.env.SENTRY_AUTH_TOKEN,
+          sourcemaps: {
+            assets: './dist/**',
+            ignore: ['node_modules'],
+            rewriteSources: (source) => source.replace(/^\/@fs\//, ''),
+          },
+        })
+      : null,
+  ].filter(Boolean),
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -79,8 +93,8 @@ export default defineConfig({
     },
     // Optimize chunk size
     chunkSizeWarningLimit: 1000,
-    // Enable source maps for production debugging
-    sourcemap: false,
+    // Enable source maps for production debugging (required for Sentry)
+    sourcemap: true,
     // Minify with terser for better compression
     minify: 'terser',
     terserOptions: {
