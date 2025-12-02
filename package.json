@@ -50,6 +50,8 @@
     "npm": ">=9.0.0"
   },
   "dependencies": {
+    "@sentry/react": "^10.27.0",
+    "@sentry/webpack-plugin": "^4.6.1",
     "redis": "^5.9.0"
   }
 }

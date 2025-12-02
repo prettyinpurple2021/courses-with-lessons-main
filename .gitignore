@@ -48,3 +48,6 @@ Thumbs.db
 .tmp/
 cloudflare/worker/wrangler.env.toml
 .wrangler/
+
+# Sentry Config File
+.env.sentry-build-plugin
