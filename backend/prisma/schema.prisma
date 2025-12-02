@@ -7,427 +7,377 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// User Model
 model User {
-  id            String    @id @default(uuid())
-  email         String    @unique
-  password      String
-  firstName     String
-  lastName      String
-  avatar        String?
-  bio           String?
-  role          String    @default("student") // student, admin
-  emailNotifications Boolean @default(true)
-  courseUpdates Boolean   @default(true)
-  communityDigest Boolean @default(true)
-  achievementAlerts Boolean @default(true)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  
+  id                      String                   @id @default(uuid())
+  email                   String                   @unique
+  password                String
+  firstName               String
+  lastName                String
+  avatar                  String?
+  bio                     String?
+  emailNotifications      Boolean                  @default(true)
+  courseUpdates           Boolean                  @default(true)
+  communityDigest         Boolean                  @default(true)
+  achievementAlerts       Boolean                  @default(true)
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime                 @updatedAt
+  role                    String                   @default("student")
+  achievements            Achievement[]
+  activitySubmissions     ActivitySubmission[]
+  certificates            Certificate[]
+  enrollments             Enrollment[]
+  examResults             FinalExamResult[]
+  projectSubmissions      FinalProjectSubmission[]
+  forumPosts              ForumPost[]
+  forumThreads            ForumThread[]
+  lessonProgress          LessonProgress[]
+  notes                   Note[]
+  oauthAuthorizationCodes OAuthAuthorizationCode[]
+  soloSuccessIntegration  SoloSuccessIntegration?
+
   @@index([email])
   @@index([createdAt])
-  
-  enrollments   Enrollment[]
-  achievements  Achievement[]
-  notes         Note[]
-  activitySubmissions ActivitySubmission[]
-  projectSubmissions FinalProjectSubmission[]
-  examResults   FinalExamResult[]
-  forumPosts    ForumPost[]
-  forumThreads  ForumThread[]
-  certificates  Certificate[]
-  lessonProgress LessonProgress[]
-  soloSuccessIntegration SoloSuccessIntegration?
-  oauthAuthorizationCodes OAuthAuthorizationCode[]
 }
 
-// Course Model
 model Course {
-  id            String    @id @default(uuid())
-  courseNumber  Int       @unique
-  title         String
-  description   String
-  thumbnail     String
-  published     Boolean   @default(false)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  
+  id           String        @id @default(uuid())
+  courseNumber Int           @unique
+  title        String
+  description  String
+  thumbnail    String
+  published    Boolean       @default(false)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  certificates Certificate[]
+  enrollments  Enrollment[]
+  finalExam    FinalExam?
+  finalProject FinalProject?
+  lessons      Lesson[]
+
   @@index([courseNumber])
   @@index([published])
-  
-  lessons       Lesson[]
-  finalProject  FinalProject?
-  finalExam     FinalExam?
-  enrollments   Enrollment[]
-  certificates  Certificate[]
 }
 
-// Lesson Model
 model Lesson {
-  id            String    @id @default(uuid())
-  courseId      String
-  lessonNumber  Int
-  title         String
-  description   String
+  id             String           @id @default(uuid())
+  courseId       String
+  lessonNumber   Int
+  title          String
+  description    String
   youtubeVideoId String
-  duration      Int
-  
-  course        Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  activities    Activity[]
-  resources     Resource[]
-  notes         Note[]
-  progress      LessonProgress[]
-  
+  duration       Int
+  activities     Activity[]
+  course         Course           @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  progress       LessonProgress[]
+  notes          Note[]
+  resources      Resource[]
+
   @@unique([courseId, lessonNumber])
 }
 
-// Activity Model
 model Activity {
-  id            String    @id @default(uuid())
-  lessonId      String
+  id             String               @id @default(uuid())
+  lessonId       String
   activityNumber Int
-  title         String
-  description   String
-  type          String
-  content       Json
-  required      Boolean   @default(true)
-  
-  lesson        Lesson    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
-  submissions   ActivitySubmission[]
-  
+  title          String
+  description    String
+  type           String
+  content        Json
+  required       Boolean              @default(true)
+  lesson         Lesson               @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  submissions    ActivitySubmission[]
+
   @@unique([lessonId, activityNumber])
 }
 
-// ActivitySubmission Model
 model ActivitySubmission {
-  id            String    @id @default(uuid())
-  userId        String
-  activityId    String
-  response      Json
-  completed     Boolean   @default(false)
-  submittedAt   DateTime  @default(now())
-  feedback      String?
-  
-  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  activity      Activity  @relation(fields: [activityId], references: [id], onDelete: Cascade)
-  
+  id          String   @id @default(uuid())
+  userId      String
+  activityId  String
+  response    Json
+  completed   Boolean  @default(false)
+  submittedAt DateTime @default(now())
+  feedback    String?
+  activity    Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@unique([userId, activityId])
   @@index([userId])
   @@index([activityId])
   @@index([userId, completed])
 }
 
-// FinalProject Model
 model FinalProject {
-  id            String    @id @default(uuid())
-  courseId      String    @unique
-  title         String
-  description   String
-  instructions  String
-  requirements  Json
-  
-  course        Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  submissions   FinalProjectSubmission[]
+  id           String                   @id @default(uuid())
+  courseId     String                   @unique
+  title        String
+  description  String
+  instructions String
+  requirements Json
+  course       Course                   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  submissions  FinalProjectSubmission[]
 }
 
-// FinalProjectSubmission Model
 model FinalProjectSubmission {
-  id            String    @id @default(uuid())
-  userId        String
-  projectId     String
-  submission    Json
-  submittedAt   DateTime  @default(now())
-  status        String
-  feedback      String?
-  
-  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  project       FinalProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  
+  id          String       @id @default(uuid())
+  userId      String
+  projectId   String
+  submission  Json
+  submittedAt DateTime     @default(now())
+  status      String
+  feedback    String?
+  project     FinalProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@unique([userId, projectId])
 }
 
-// FinalExam Model
 model FinalExam {
-  id            String    @id @default(uuid())
-  courseId      String    @unique
-  title         String
-  description   String
-  timeLimit     Int
-  passingScore  Int
-  
-  course        Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  questions     ExamQuestion[]
-  results       FinalExamResult[]
+  id           String            @id @default(uuid())
+  courseId     String            @unique
+  title        String
+  description  String
+  timeLimit    Int
+  passingScore Int
+  questions    ExamQuestion[]
+  course       Course            @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  results      FinalExamResult[]
 }
 
-// ExamQuestion Model
 model ExamQuestion {
-  id            String    @id @default(uuid())
-  examId        String
-  text          String
-  type          String
-  order         Int
-  points        Int
-  
-  exam          FinalExam @relation(fields: [examId], references: [id], onDelete: Cascade)
-  options       ExamQuestionOption[]
+  id      String               @id @default(uuid())
+  examId  String
+  text    String
+  type    String
+  order   Int
+  points  Int
+  exam    FinalExam            @relation(fields: [examId], references: [id], onDelete: Cascade)
+  options ExamQuestionOption[]
 }
 
-// ExamQuestionOption Model
 model ExamQuestionOption {
-  id            String    @id @default(uuid())
-  questionId    String
-  text          String
-  isCorrect     Boolean
-  order         Int
-  
-  question      ExamQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  id         String       @id @default(uuid())
+  questionId String
+  text       String
+  isCorrect  Boolean
+  order      Int
+  question   ExamQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
 }
 
-// FinalExamResult Model
 model FinalExamResult {
-  id            String    @id @default(uuid())
-  userId        String
-  examId        String
-  score         Int
-  answers       Json
-  passed        Boolean
-  submittedAt   DateTime  @default(now())
-  
-  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  exam          FinalExam @relation(fields: [examId], references: [id], onDelete: Cascade)
-  
+  id          String    @id @default(uuid())
+  userId      String
+  examId      String
+  score       Int
+  answers     Json
+  passed      Boolean
+  submittedAt DateTime  @default(now())
+  exam        FinalExam @relation(fields: [examId], references: [id], onDelete: Cascade)
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@unique([userId, examId])
 }
 
-// Enrollment Model
 model Enrollment {
-  id            String    @id @default(uuid())
-  userId        String
-  courseId      String
-  enrolledAt    DateTime  @default(now())
-  completedAt   DateTime?
-  currentLesson Int       @default(1)
-  unlockedCourses Int     @default(1)
-  
-  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  course        Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  
+  id              String    @id @default(uuid())
+  userId          String
+  courseId        String
+  enrolledAt      DateTime  @default(now())
+  completedAt     DateTime?
+  currentLesson   Int       @default(1)
+  unlockedCourses Int       @default(1)
+  course          Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@unique([userId, courseId])
   @@index([userId])
   @@index([courseId])
   @@index([userId, completedAt])
 }
 
-// LessonProgress Model
 model LessonProgress {
-  id            String    @id @default(uuid())
-  userId        String
-  lessonId      String
-  completed     Boolean   @default(false)
-  videoPosition Int       @default(0)
-  currentActivity Int     @default(1)
-  completedAt   DateTime?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  
-  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  lesson        Lesson    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
-  
+  id              String    @id @default(uuid())
+  userId          String
+  lessonId        String
+  completed       Boolean   @default(false)
+  videoPosition   Int       @default(0)
+  currentActivity Int       @default(1)
+  completedAt     DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  lesson          Lesson    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@unique([userId, lessonId])
   @@index([userId])
   @@index([lessonId])
   @@index([userId, completed])
 }
 
-// Achievement Model
 model Achievement {
-  id            String    @id @default(uuid())
-  userId        String
-  title         String
-  description   String
-  icon          String
-  rarity        String
-  unlockedAt    DateTime  @default(now())
-  
-  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id          String   @id @default(uuid())
+  userId      String
+  title       String
+  description String
+  icon        String
+  rarity      String
+  unlockedAt  DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-// Certificate Model
 model Certificate {
-  id            String    @id @default(uuid())
-  userId        String
-  courseId      String
-  issuedAt      DateTime  @default(now())
-  verificationCode String @unique
-  
-  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  course        Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
-  
+  id               String   @id @default(uuid())
+  userId           String
+  courseId         String
+  issuedAt         DateTime @default(now())
+  verificationCode String   @unique
+  course           Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@index([userId])
   @@index([courseId])
   @@index([verificationCode])
 }
 
-// Note Model
 model Note {
-  id            String    @id @default(uuid())
-  userId        String
-  lessonId      String
-  content       String
-  timestamp     Int?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  
-  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  lesson        Lesson    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  id        String   @id @default(uuid())
+  userId    String
+  lessonId  String
+  content   String
+  timestamp Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  lesson    Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-// Resource Model
 model Resource {
-  id            String    @id @default(uuid())
-  lessonId      String
-  title         String
-  description   String?
-  fileUrl       String
-  fileType      String
-  fileSize      Int
-  
-  lesson        Lesson    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  id          String  @id @default(uuid())
+  lessonId    String
+  title       String
+  description String?
+  fileUrl     String
+  fileType    String
+  fileSize    Int
+  lesson      Lesson  @relation(fields: [lessonId], references: [id], onDelete: Cascade)
 }
 
-// ForumCategory Model
 model ForumCategory {
-  id            String    @id @default(uuid())
-  name          String
-  description   String
-  order         Int
-  
-  threads       ForumThread[]
+  id          String        @id @default(uuid())
+  name        String
+  description String
+  order       Int
+  threads     ForumThread[]
 }
 
-// ForumThread Model
 model ForumThread {
-  id            String    @id @default(uuid())
-  categoryId    String
-  authorId      String
-  title         String
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  isPinned      Boolean   @default(false)
-  isLocked      Boolean   @default(false)
-  
-  category      ForumCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
-  author        User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  posts         ForumPost[]
-  
+  id         String        @id @default(uuid())
+  categoryId String
+  authorId   String
+  title      String
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  isPinned   Boolean       @default(false)
+  isLocked   Boolean       @default(false)
+  posts      ForumPost[]
+  author     User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  category   ForumCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
   @@index([categoryId])
   @@index([authorId])
   @@index([createdAt])
   @@index([isPinned, updatedAt])
 }
 
-// ForumPost Model
 model ForumPost {
-  id            String    @id @default(uuid())
-  threadId      String
-  authorId      String
-  content       String
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  
-  thread        ForumThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
-  author        User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  id        String      @id @default(uuid())
+  threadId  String
+  authorId  String
+  content   String
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  author    User        @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  thread    ForumThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
 }
 
-// Event Model
 model Event {
-  id            String    @id @default(uuid())
+  id            String              @id @default(uuid())
   title         String
   description   String
-  type          String    // webinar, workshop, networking
+  type          String
   startTime     DateTime
   endTime       DateTime
-  location      String?   // Virtual link or physical location
+  location      String?
   maxAttendees  Int?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
   registrations EventRegistration[]
 }
 
-// EventRegistration Model
 model EventRegistration {
-  id            String    @id @default(uuid())
-  userId        String
-  eventId       String
-  registeredAt  DateTime  @default(now())
-  attended      Boolean   @default(false)
-  
-  event         Event     @relation(fields: [eventId], references: [id], onDelete: Cascade)
-  
+  id           String   @id @default(uuid())
+  userId       String
+  eventId      String
+  registeredAt DateTime @default(now())
+  attended     Boolean  @default(false)
+  event        Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
   @@unique([userId, eventId])
 }
 
-// OAuth Client Model
 model OAuthClient {
-  id            String    @id @default(uuid())
-  clientId      String    @unique
-  clientSecret  String    // Hashed with bcrypt
-  name          String
-  redirectUri   String
-  webhookUrl    String?
-  webhookSecret String?
-  isActive      Boolean   @default(true)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  
-  @@index([clientId])
-  @@index([isActive])
-  
+  id                 String                   @id @default(uuid())
+  clientId           String                   @unique
+  clientSecret       String
+  name               String
+  redirectUri        String
+  webhookUrl         String?
+  webhookSecret      String?
+  isActive           Boolean                  @default(true)
+  createdAt          DateTime                 @default(now())
+  updatedAt          DateTime                 @updatedAt
   authorizationCodes OAuthAuthorizationCode[]
   integrations       SoloSuccessIntegration[]
+
+  @@index([clientId])
+  @@index([isActive])
 }
 
-// OAuth Authorization Code Model
 model OAuthAuthorizationCode {
-  id            String    @id @default(uuid())
-  code          String    @unique
-  clientId      String
-  userId        String
-  redirectUri   String
-  expiresAt     DateTime
-  used          Boolean   @default(false)
-  createdAt     DateTime  @default(now())
-  
-  client        OAuthClient @relation(fields: [clientId], references: [id], onDelete: Cascade)
-  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
+  id          String      @id @default(uuid())
+  code        String      @unique
+  clientId    String
+  userId      String
+  redirectUri String
+  expiresAt   DateTime
+  used        Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  client      OAuthClient @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@index([code])
   @@index([clientId])
   @@index([userId])
   @@index([expiresAt])
 }
 
-// SoloSuccess Integration Model
 model SoloSuccessIntegration {
-  id                String    @id @default(uuid())
-  userId            String    @unique
+  id                String      @id @default(uuid())
+  userId            String      @unique
   solosuccessUserId String
   oauthClientId     String
-  accessToken       String?   // Encrypted
-  refreshToken      String?   // Encrypted
+  accessToken       String?
+  refreshToken      String?
   tokenExpiry       DateTime?
-  subscriptionTier  String    @default("free") // free, accelerator, premium
+  subscriptionTier  String      @default("free")
   lastSyncAt        DateTime?
-  syncStatus        String    @default("pending") // pending, synced, error
-  isActive          Boolean   @default(true)
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
-  
-  user              User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  syncStatus        String      @default("pending")
+  isActive          Boolean     @default(true)
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
   oauthClient       OAuthClient @relation(fields: [oauthClientId], references: [id], onDelete: Cascade)
-  
+  user              User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@index([userId])
   @@index([solosuccessUserId])
   @@index([oauthClientId])
