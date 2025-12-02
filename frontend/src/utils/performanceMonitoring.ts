@@ -60,9 +60,22 @@ function sendToAnalytics(metric: PerformanceMetric) {
       },
       body: JSON.stringify(metric),
       keepalive: true, // Ensure request completes even if page is closing
-    }).catch((error) => {
-      console.error('Failed to send performance metric:', error);
-    });
+    })
+      .then((response) => {
+        // Silently handle rate limit errors (429) - they're expected
+        if (!response.ok && response.status !== 429) {
+          // Only log non-rate-limit errors in development
+          if (process.env.NODE_ENV === 'development') {
+            console.warn('Performance metric failed:', response.status, response.statusText);
+          }
+        }
+      })
+      .catch((error) => {
+        // Only log network errors in development, not rate limits
+        if (process.env.NODE_ENV === 'development' && !error.message?.includes('429')) {
+          console.error('Failed to send performance metric:', error);
+        }
+      });
   }
 }
 
