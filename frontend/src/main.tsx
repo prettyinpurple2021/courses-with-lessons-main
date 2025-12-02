@@ -3,11 +3,15 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import './styles/index.css';
 import { initAllPerformanceMonitoring } from './utils/performanceMonitoring';
+import { inject } from '@vercel/analytics';
 
 // Initialize performance monitoring
 if (process.env.NODE_ENV === 'production') {
   initAllPerformanceMonitoring();
 }
+
+// Initialize Vercel Web Analytics
+inject();
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
