@@ -28,7 +28,7 @@ export const adminService = {
    */
   async login(email: string, password: string): Promise<AdminLoginResponse> {
     const response = await api.post('/admin/login', { email, password });
-    return response.data;
+    return response.data.data;
   },
 
   /**
