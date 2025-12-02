@@ -102,16 +102,6 @@ Comprehensive checklist for launching SoloSuccess Intel Academy.
 
 ### Monitoring and Logging
 
-#### Error Tracking (Sentry)
-
-- [ ] Sentry account created
-- [ ] Project created for frontend
-- [ ] Project created for backend
-- [ ] DSN configured in environment variables
-- [ ] Source maps uploaded
-- [ ] Error alerts configured
-- [ ] Team members added
-- [ ] Test error sent and received
 
 #### Performance Monitoring
 

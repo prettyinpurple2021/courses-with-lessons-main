@@ -148,13 +148,6 @@ const optionalVars: EnvVar[] = [
     description: 'Cookie domain (e.g., .yourdomain.com)'
   },
   {
-    name: 'SENTRY_DSN',
-    required: false,
-    validator: (v) => v.startsWith('https://'),
-    errorMessage: 'Must be a valid Sentry DSN URL',
-    description: 'Sentry error tracking DSN'
-  },
-  {
     name: 'PORT',
     required: false,
     validator: (v) => {
@@ -226,9 +219,6 @@ function main() {
       if (envVar.name === 'COOKIE_DOMAIN' && process.env.NODE_ENV === 'production') {
         warnings.push('COOKIE_DOMAIN is recommended for production');
       }
-      if (envVar.name === 'SENTRY_DSN' && process.env.NODE_ENV === 'production') {
-        warnings.push('SENTRY_DSN is recommended for production error tracking');
-      }
     } else if (result.valid) {
       const displayValue = envVar.name.includes('SECRET') || envVar.name.includes('KEY') || envVar.name.includes('PASSWORD')
         ? '*'.repeat(Math.min(value.length, 20))
@@ -260,9 +250,6 @@ function main() {
       errors.push('FRONTEND_URL should not include localhost in production');
     }
 
-    if (!process.env.SENTRY_DSN) {
-      warnings.push('SENTRY_DSN is recommended for production error tracking');
-    }
   }
 
   // Summary

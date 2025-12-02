@@ -100,9 +100,6 @@ REDIS_URL=redis://YOUR_REDIS_HOST:6379
 # ============================================
 # ERROR TRACKING (Highly Recommended)
 # ============================================
-# Sign up at https://sentry.io/
-# Get DSN from your Sentry project settings
-SENTRY_DSN=https://your-sentry-dsn@sentry.io/project-id
 ```
 
 ### Frontend Environment Variables
@@ -199,15 +196,7 @@ node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
 2. Get the connection URL
 3. Update `REDIS_URL`
 
-### 8. Set Up Sentry (Recommended)
-
-1. Sign up at https://sentry.io/
-2. Create a new project
-3. Select Node.js as the platform
-4. Copy the DSN
-5. Update `SENTRY_DSN`
-
-### 9. Configure Domain URLs
+### 8. Configure Domain URLs
 
 Replace all instances of `yourdomain.com` with your actual production domain:
 

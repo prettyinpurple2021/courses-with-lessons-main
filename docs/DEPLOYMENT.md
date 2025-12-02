@@ -134,8 +134,7 @@ flyctl secrets set GOOGLE_AI_API_KEY="your-google-ai-key" --app intel-academy-ap
 #### Optional (Monitoring)
 
 ```powershell
-# Sentry (if using)
-flyctl secrets set SENTRY_DSN="your-sentry-dsn" --app intel-academy-api
+# Add your preferred monitoring solution here
 ```
 
 **Note:** `DATABASE_URL` and `REDIS_URL` are automatically set when you attach PostgreSQL and Redis add-ons.
@@ -322,13 +321,6 @@ flyctl logs --app intel-academy-api
 
 **Frontend logs:**
 - Check Vercel dashboard → Deployments → View Function Logs
-
-### Error Tracking
-
-Configure Sentry (optional):
-1. Create account at sentry.io
-2. Create new Node.js project
-3. Add `SENTRY_DSN` to Fly.io secrets
 
 ---
 

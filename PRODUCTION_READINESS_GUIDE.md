@@ -59,7 +59,6 @@ npm run validate:env
 - `GEMINI_API_KEY` - Google Gemini API key
 
 **Optional (Recommended):**
-- `SENTRY_DSN` - Error tracking (highly recommended)
 - `REDIS_URL` - Redis connection string
 - `COOKIE_DOMAIN` - Cookie domain for production
 
@@ -196,7 +195,6 @@ Run Lighthouse audit:
 
 Set up monitoring:
 
-- [ ] Sentry DSN configured
 - [ ] Error tracking tested
 - [ ] Uptime monitoring configured
 - [ ] Analytics configured (GA4 or Plausible)
@@ -320,7 +318,7 @@ After deploying, verify:
    - User management
 
 6. **Monitoring:**
-   - Check Sentry for errors
+   - Check server logs for errors
    - Verify analytics tracking
    - Check uptime monitoring
 

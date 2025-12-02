@@ -86,7 +86,6 @@ services:
       CORS_ORIGIN: ${CORS_ORIGIN}
       FRONTEND_URL: ${FRONTEND_URL}
       COOKIE_DOMAIN: ${COOKIE_DOMAIN:-}
-      SENTRY_DSN: ${SENTRY_DSN:-}
     ports:
       - "${BACKEND_PORT:-3000}:3000"
     depends_on:

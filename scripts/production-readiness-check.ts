@@ -55,7 +55,6 @@ async function checkEnvironmentVariables() {
   ];
 
   const optional = [
-    { name: 'SENTRY_DSN', validator: (v: string) => v.startsWith('https://') },
     { name: 'REDIS_URL', validator: (v: string) => v.startsWith('redis://') },
     { name: 'COOKIE_DOMAIN', validator: () => true },
   ];
@@ -272,12 +271,6 @@ async function checkSecurity() {
     addResult('HTTPS Configuration', 'fail', 'CORS origin does not use HTTPS', 'Production must use HTTPS');
   }
 
-  // Check Sentry
-  if (process.env.SENTRY_DSN) {
-    addResult('Error Tracking', 'pass', 'Sentry configured');
-  } else {
-    addResult('Error Tracking', 'warning', 'Sentry not configured', 'Recommended for production');
-  }
 }
 
 async function checkContent() {
