@@ -14,14 +14,52 @@ jobs:
     steps:
       - name: Check backend health
         id: backend
+        env:
+          BACKEND_URL: ${{ secrets.BACKEND_URL }}
         run: |
-          BACKEND_URL=${{ secrets.PRODUCTION_BACKEND_URL || 'https://your-app.fly.dev' }}
-          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" "$BACKEND_URL/api/health")
-          if [ "$RESPONSE" != "200" ]; then
-            echo "Backend health check failed with status: $RESPONSE"
+          # Validate BACKEND_URL is set
+          if [ -z "$BACKEND_URL" ]; then
+            echo "::error::BACKEND_URL secret is not set. Please configure it in Settings → Secrets → Actions."
             exit 1
           fi
-          echo "Backend is healthy"
+
+          ENDPOINT="$BACKEND_URL/api/health"
+          MAX_ATTEMPTS=4
+          TIMEOUT=10
+          RESPONSE_PREVIEW_LENGTH=500
+          BACKOFF_MULTIPLIER=2
+          ATTEMPT=1
+
+          while [ $ATTEMPT -le $MAX_ATTEMPTS ]; do
+            echo "Attempt $ATTEMPT of $MAX_ATTEMPTS: checking $ENDPOINT"
+            TMPFILE=$(mktemp)
+            HTTP_CODE=$(curl -s -o "$TMPFILE" -w "%{http_code}" --max-time $TIMEOUT "$ENDPOINT") || HTTP_CODE="000"
+
+            if [ "$HTTP_CODE" = "200" ]; then
+              echo "Backend is healthy (HTTP $HTTP_CODE)"
+              rm -f "$TMPFILE"
+              exit 0
+            fi
+
+            echo "Health check failed with HTTP $HTTP_CODE"
+            echo "Response body (truncated):"
+            head -c $RESPONSE_PREVIEW_LENGTH "$TMPFILE" 2>/dev/null || true
+
+            if [ $ATTEMPT -eq $MAX_ATTEMPTS ]; then
+              echo ""
+              echo "Final failure after $MAX_ATTEMPTS attempts."
+              echo "Full response body:"
+              cat "$TMPFILE" 2>/dev/null || true
+              rm -f "$TMPFILE"
+              exit 1
+            fi
+
+            rm -f "$TMPFILE"
+            ATTEMPT=$((ATTEMPT + 1))
+            SLEEP_TIME=$((ATTEMPT * BACKOFF_MULTIPLIER))
+            echo "Retrying in $SLEEP_TIME seconds..."
+            sleep $SLEEP_TIME
+          done
 
       - name: Check frontend health
         id: frontend
