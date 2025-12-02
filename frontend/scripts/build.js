@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 /**
  * Cross-platform build script that ensures TypeScript is available
+ * Usage: node scripts/build.js [mode]
+ * Example: node scripts/build.js analyze
  */
 import { execSync } from 'child_process';
 import { existsSync } from 'fs';
@@ -11,12 +13,15 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const rootDir = join(__dirname, '..');
 
+// Get optional mode from command line arguments
+const mode = process.argv[2];
+const viteModeArg = mode ? `--mode ${mode}` : '';
+
 // Check for TypeScript binary
 const tscPath = join(rootDir, 'node_modules', '.bin', 'tsc');
 const tscPathWin = tscPath + '.cmd'; // Windows
 
-let tscCommand = 'tsc';
-
+// Verify TypeScript binary exists
 if (!existsSync(tscPath) && !existsSync(tscPathWin)) {
   console.error('Error: TypeScript binary not found.');
   console.error('Please ensure TypeScript is installed: npm install');
@@ -27,7 +32,6 @@ if (!existsSync(tscPath) && !existsSync(tscPathWin)) {
 // Fallback to direct path if npx doesn't work
 let tscCommand = 'npx tsc';
 
-// Verify tsc is available
 try {
   execSync('npx --version', { stdio: 'pipe', cwd: rootDir });
 } catch {
@@ -46,8 +50,9 @@ try {
   console.log('Running TypeScript compiler...');
   execSync(tscCommand, { stdio: 'inherit', cwd: rootDir });
   
-  console.log('Running Vite build...');
-  execSync('npx vite build', { stdio: 'inherit', cwd: rootDir });
+  console.log(`Running Vite build${mode ? ` in ${mode} mode` : ''}...`);
+  const viteCommand = `npx vite build ${viteModeArg}`.trim();
+  execSync(viteCommand, { stdio: 'inherit', cwd: rootDir });
   
   console.log('Build completed successfully!');
 } catch (error) {
