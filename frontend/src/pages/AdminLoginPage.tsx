@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useToast } from '../hooks/useToast';
+import { adminService } from '../services/adminService';
+import { setAccessToken } from '../services/api';
 import GlassmorphicCard from '../components/common/GlassmorphicCard';
 import GlassmorphicButton from '../components/common/GlassmorphicButton';
 
@@ -18,35 +20,24 @@ const AdminLoginPage: React.FC = () => {
     setIsLoading(true);
 
     try {
-      // Use admin login endpoint
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error?.message || 'Admin login failed');
-      }
+      // Use admin service which handles API URL correctly
+      const result = await adminService.login(email, password);
 
       // Store token and user data
-      localStorage.setItem('accessToken', data.data.accessToken);
-      localStorage.setItem('user', JSON.stringify(data.data.user));
+      setAccessToken(result.accessToken);
+      localStorage.setItem('accessToken', result.accessToken);
+      localStorage.setItem('user', JSON.stringify(result.user));
 
       // Update auth context
       await login({ email, password });
 
       toast.success('Admin login successful');
       navigate('/admin/dashboard');
-    } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : 'Admin login failed'
-      );
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.error?.message || 
+                          error.message || 
+                          'Admin login failed';
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }
