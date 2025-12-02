@@ -11,6 +11,7 @@ const AdminLoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [rateLimitError, setRateLimitError] = useState<string | null>(null);
   const navigate = useNavigate();
   const { setUser } = useAuthStore();
   const toast = useToast();
@@ -50,6 +51,7 @@ const AdminLoginPage: React.FC = () => {
       setUser(result.user);
 
       toast.success('Admin login successful');
+      setRateLimitError(null); // Clear rate limit error on success
       navigate('/admin/dashboard');
     } catch (error: any) {
       console.error('Admin login error:', error);
@@ -63,16 +65,31 @@ const AdminLoginPage: React.FC = () => {
         const data = error.response.data;
         
         if (status === 429) {
-          errorMessage = 'Too many login attempts. Please wait a moment and try again.';
+          // Extract retry-after header if available
+          const retryAfter = error.response.headers['retry-after'] || error.response.headers['x-ratelimit-reset'];
+          if (retryAfter) {
+            const waitTime = parseInt(retryAfter);
+            const minutes = Math.ceil(waitTime / 60);
+            errorMessage = `Too many login attempts. Please wait ${minutes} minute${minutes > 1 ? 's' : ''} before trying again.`;
+            setRateLimitError(`Rate limit exceeded. Please wait ${minutes} minute${minutes > 1 ? 's' : ''} before trying again.`);
+          } else {
+            errorMessage = 'Too many login attempts. Please wait 15 minutes before trying again.';
+            setRateLimitError('Rate limit exceeded. Please wait 15 minutes before trying again.');
+          }
         } else if (status === 401) {
+          setRateLimitError(null); // Clear rate limit error on other errors
           errorMessage = data?.error?.message || 'Invalid email or password';
         } else if (status === 403) {
+          setRateLimitError(null);
           errorMessage = 'Access denied. Admin privileges required.';
         } else if (data?.error?.message) {
+          setRateLimitError(null);
           errorMessage = data.error.message;
         } else if (data?.message) {
+          setRateLimitError(null);
           errorMessage = data.message;
         } else {
+          setRateLimitError(null);
           errorMessage = `Login failed (${status}). Please try again.`;
         }
       } else if (error.message) {
@@ -103,6 +120,17 @@ const AdminLoginPage: React.FC = () => {
             </p>
           </div>
 
+          {rateLimitError && (
+            <div className="mb-6 p-4 rounded-lg bg-yellow-500/20 border border-yellow-500/50">
+              <p className="text-sm text-yellow-900 dark:text-yellow-200 font-semibold">
+                ⚠️ {rateLimitError}
+              </p>
+              <p className="text-xs text-yellow-800 dark:text-yellow-300 mt-2">
+                This is a security feature to prevent brute force attacks. The limit will reset automatically.
+              </p>
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label
@@ -115,7 +143,10 @@ const AdminLoginPage: React.FC = () => {
                 id="email"
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setRateLimitError(null); // Clear rate limit error when user types
+                }}
                 required
                 className="w-full px-4 py-3 rounded-lg glassmorphic-input focus:outline-none focus:ring-2 focus:ring-hot-pink"
                 placeholder="admin@solosuccess.com"
@@ -133,7 +164,10 @@ const AdminLoginPage: React.FC = () => {
                 id="password"
                 type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  setRateLimitError(null); // Clear rate limit error when user types
+                }}
                 required
                 className="w-full px-4 py-3 rounded-lg glassmorphic-input focus:outline-none focus:ring-2 focus:ring-hot-pink"
                 placeholder="Enter your password"
@@ -144,11 +178,11 @@ const AdminLoginPage: React.FC = () => {
               type="submit"
               variant="primary"
               size="lg"
-              disabled={isLoading}
+              disabled={isLoading || !!rateLimitError}
               loading={isLoading}
               className="w-full"
             >
-              {isLoading ? 'Signing in...' : 'Sign In'}
+              {isLoading ? 'Signing in...' : rateLimitError ? 'Rate Limited' : 'Sign In'}
             </GlassmorphicButton>
           </form>
 

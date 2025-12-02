@@ -4,6 +4,7 @@ import { authenticate } from '../middleware/auth.js';
 import { requireAdmin } from '../middleware/adminAuth.js';
 import { validate } from '../middleware/validation.js';
 import { asyncHandler } from '../middleware/errorHandler.js';
+import { authLimiter } from '../middleware/rateLimiter.js';
 import { body } from 'express-validator';
 
 const router = Router();
@@ -12,9 +13,10 @@ const router = Router();
  * Admin authentication routes
  */
 
-// Admin login
+// Admin login (with rate limiting)
 router.post(
   '/login',
+  authLimiter, // Apply stricter rate limiting for admin login
   validate([
     body('email').isEmail().withMessage('Valid email is required'),
     body('password').notEmpty().withMessage('Password is required'),
