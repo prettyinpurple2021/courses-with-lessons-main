@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
+import { useAuthStore } from '../store/authStore';
 import { useToast } from '../hooks/useToast';
 import { adminService } from '../services/adminService';
 import { setAccessToken } from '../services/api';
@@ -12,7 +12,7 @@ const AdminLoginPage: React.FC = () => {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { setUser } = useAuthStore();
   const toast = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -28,8 +28,9 @@ const AdminLoginPage: React.FC = () => {
       localStorage.setItem('accessToken', result.accessToken);
       localStorage.setItem('user', JSON.stringify(result.user));
 
-      // Update auth context
-      await login({ email, password });
+      // Update auth context directly with admin user data
+      // Don't call regular login() as it would overwrite the admin token
+      setUser(result.user);
 
       toast.success('Admin login successful');
       navigate('/admin/dashboard');
