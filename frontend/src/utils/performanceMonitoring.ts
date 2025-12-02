@@ -52,7 +52,6 @@ function sendToAnalytics(metric: PerformanceMetric) {
   }
 
   // Example: Send to custom analytics endpoint
-  // Only send in production to avoid spamming the API during development
   if (process.env.NODE_ENV === 'production') {
     fetch(`${API_BASE_URL}/analytics/performance`, {
       method: 'POST',
@@ -61,22 +60,9 @@ function sendToAnalytics(metric: PerformanceMetric) {
       },
       body: JSON.stringify(metric),
       keepalive: true, // Ensure request completes even if page is closing
-    })
-      .then((response) => {
-        // Silently handle rate limit errors (429) - they're expected and don't need logging
-        // Only log other errors that might indicate a real problem
-        if (!response.ok && response.status !== 429) {
-          // Log non-rate-limit errors for debugging (but don't spam console)
-          console.warn(`Performance metric failed: ${response.status} ${response.statusText}`);
-        }
-      })
-      .catch((error) => {
-        // Only log network errors that aren't rate limits
-        // Rate limits are expected and don't need console spam
-        if (!error.message?.includes('429') && !error.message?.includes('rate limit')) {
-          console.error('Failed to send performance metric:', error);
-        }
-      });
+    }).catch((error) => {
+      console.error('Failed to send performance metric:', error);
+    });
   }
 }
 
@@ -167,7 +153,6 @@ export function trackCustomMetric(name: string, value: number, metadata?: Record
   }
 
   // Send to analytics with metadata
-  // Only send in production to avoid spamming the API during development
   if (process.env.NODE_ENV === 'production') {
     fetch(`${API_BASE_URL}/analytics/performance`, {
       method: 'POST',
@@ -180,19 +165,9 @@ export function trackCustomMetric(name: string, value: number, metadata?: Record
         metadata,
       }),
       keepalive: true,
-    })
-      .then((response) => {
-        // Silently handle rate limit errors (429) - they're expected
-        if (!response.ok && response.status !== 429) {
-          console.warn(`Custom metric failed: ${response.status} ${response.statusText}`);
-        }
-      })
-      .catch((error) => {
-        // Only log network errors that aren't rate limits
-        if (!error.message?.includes('429') && !error.message?.includes('rate limit')) {
-          console.error('Failed to send custom metric:', error);
-        }
-      });
+    }).catch((error) => {
+      console.error('Failed to send custom metric:', error);
+    });
   }
 }
 
