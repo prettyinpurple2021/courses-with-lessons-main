@@ -56,6 +56,14 @@ export const parseError = (error: unknown): AppError => {
           statusCode,
           details: axiosError.response.data,
         };
+      case 429:
+        return {
+          type: ErrorType.UNKNOWN_ERROR,
+          message: message || 'Too many requests. Please wait a moment and try again.',
+          timestamp,
+          statusCode,
+          details: axiosError.response.data,
+        };
       case 500:
       case 502:
       case 503:

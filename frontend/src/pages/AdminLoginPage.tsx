@@ -35,9 +35,38 @@ const AdminLoginPage: React.FC = () => {
       toast.success('Admin login successful');
       navigate('/admin/dashboard');
     } catch (error: any) {
-      const errorMessage = error.response?.data?.error?.message || 
-                          error.message || 
-                          'Admin login failed';
+      console.error('Admin login error:', error);
+      
+      // Handle different error types
+      let errorMessage = 'Admin login failed';
+      
+      if (error.response) {
+        // HTTP error response
+        const status = error.response.status;
+        const data = error.response.data;
+        
+        if (status === 429) {
+          errorMessage = 'Too many login attempts. Please wait a moment and try again.';
+        } else if (status === 401) {
+          errorMessage = data?.error?.message || 'Invalid email or password';
+        } else if (status === 403) {
+          errorMessage = 'Access denied. Admin privileges required.';
+        } else if (data?.error?.message) {
+          errorMessage = data.error.message;
+        } else if (data?.message) {
+          errorMessage = data.message;
+        } else {
+          errorMessage = `Login failed (${status}). Please try again.`;
+        }
+      } else if (error.message) {
+        // Network or other error
+        if (error.message.includes('Network Error') || error.message.includes('Failed to fetch')) {
+          errorMessage = 'Network error. Please check your connection and try again.';
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
       toast.error(errorMessage);
     } finally {
       setIsLoading(false);
