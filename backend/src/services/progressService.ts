@@ -113,7 +113,7 @@ export async function batchUpdateProgress(
       await updateLessonProgress(userId, update.lessonId, update);
       success++;
     } catch (error) {
-      console.error(`Failed to update progress for lesson ${update.lessonId}:`, error);
+      console.error('Failed to update progress for lesson %s:', update.lessonId, error);
       failed++;
     }
   }
