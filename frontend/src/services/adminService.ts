@@ -46,6 +46,7 @@ export const adminService = {
    */
   async getDashboardStats(): Promise<DashboardStats> {
     const response = await api.get('/admin/dashboard/stats');
-    return response.data;
+    // Backend returns { success: true, data: { totalUsers, totalCourses, ... } }
+    return response.data.data;
   },
 };
