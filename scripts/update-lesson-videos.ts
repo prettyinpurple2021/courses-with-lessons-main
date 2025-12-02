@@ -40,18 +40,18 @@ const courseVideos: Record<number, string[]> = {
     'rA4uKIy5gO0', // Entrepreneurship : Concept and Objective, Entrepreneur
   ],
   2: [ // Marketing Mastery
-    'UnlB4swyF_U', // Marketing Mix: 4Ps
-    'm-sb8Q0jOVI', // Digital Marketing In 5 Minutes
-    'Z5vxCMaE9ww', // What is Marketing?
-    'XoJS9fZ7jng', // Content Marketing Strategy
-    'hFZFjoX2cGg', // Social Media Marketing
-    'bIk2zO0xSoU', // Email Marketing
-    'fVeQJYV9-sg', // SEO Tutorial
-    'XoJS9fZ7jng', // Brand Positioning
-    'hFZFjoX2cGg', // Customer Acquisition
-    'bIk2zO0xSoU', // Marketing Analytics
-    'fVeQJYV9-sg', // Marketing Funnel
-    'UnlB4swyF_U', // Marketing Strategy
+    'aozlwC3XwfY', // Marketing Fundamentals
+    '39tQ-GLB6ZE', // Digital Marketing Basics
+    '4P2bvx5sR8c', // Marketing Strategy & Planning
+    'eHJnEHyyN1Y', // Content Marketing Essentials
+    'Vb3-UexWaP8', // Social Media Marketing
+    '6x4DlPPZQU0', // Email Marketing & Automation
+    'puHp_ft59jQ', // SEO & Search Marketing
+    'UEngvxZ11sw', // Brand Positioning & Identity
+    '9VlvbpXwLJs', // Marketing Analytics & Metrics
+    'pC5l5j2u9SQ', // Customer Acquisition Strategies
+    'xQuKdFNK7tk', // Sales Funnel Optimization
+    'rA4uKIy5gO0', // Advanced Marketing Mastery
   ],
   3: [ // Financial Intelligence
     'A9Xq3FGjpZA', // Explaining Basic Financial Concepts
