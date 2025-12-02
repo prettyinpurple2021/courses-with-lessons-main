@@ -15,13 +15,30 @@ const AdminLoginPage: React.FC = () => {
   const { setUser } = useAuthStore();
   const toast = useToast();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    e.stopPropagation();
+    
+    const form = e.currentTarget;
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+    
+    console.log('Form submitted', { email, password: '***' });
+    
+    if (!email || !password) {
+      toast.error('Please fill in all fields');
+      return;
+    }
+    
     setIsLoading(true);
 
     try {
+      console.log('Calling admin service login...');
       // Use admin service which handles API URL correctly
       const result = await adminService.login(email, password);
+      console.log('Login successful', result);
 
       // Store token and user data
       setAccessToken(result.accessToken);

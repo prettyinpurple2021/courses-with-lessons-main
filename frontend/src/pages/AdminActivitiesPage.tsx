@@ -160,7 +160,6 @@ const AdminActivitiesPage: React.FC = () => {
 
       if (dryRun) {
         toast.success(`Preview: ${data.data.count} activities would be generated`);
-        console.log('Preview activities:', data.data.activities);
       } else {
         toast.success(`Successfully generated ${data.data.count} activities!`);
         setShowGenerateModal(false);
