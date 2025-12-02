@@ -86,9 +86,11 @@ api.interceptors.response.use(
       isRefreshRequest && 
       (isInitialAuthCheck || !accessToken);
 
+    // Parse error for potential use in retry logic (always parse, but only log if unexpected)
+    const appError = parseError(error);
+    
     // Only log unexpected errors
     if (!isExpectedAuthError) {
-      const appError = parseError(error);
       logError(appError, `API Request: ${originalRequest?.method?.toUpperCase()} ${originalRequest?.url}`);
     }
 
