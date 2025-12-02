@@ -29,7 +29,7 @@ export const adminService = {
   async login(email: string, password: string): Promise<AdminLoginResponse> {
     const response = await api.post('/admin/login', { email, password });
     // Backend returns { success: true, data: { user: ..., accessToken: ... } }
-    return response.data.data || response.data;
+    return response.data.data;
   },
 
   /**
