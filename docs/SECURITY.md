@@ -210,7 +210,7 @@ JWT_REFRESH_SECRET=<strong-random-secret>
 
 ### SSL/TLS Certificate
 
-1. Obtain SSL certificate (Let's Encrypt, Cloudflare, etc.)
+1. Obtain SSL certificate (Let's Encrypt, etc.)
 2. Configure reverse proxy (Nginx, Caddy) for HTTPS
 3. Redirect HTTP to HTTPS
 4. Enable HSTS headers

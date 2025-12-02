@@ -152,7 +152,7 @@ Comprehensive checklist for launching SoloSuccess Intel Academy.
 - [ ] API rate limiting enabled
 - [ ] Login rate limiting configured
 - [ ] File upload limits set
-- [ ] DDoS protection enabled (Cloudflare)
+- [ ] DDoS protection enabled
 
 #### Authentication
 
