@@ -125,19 +125,22 @@ jobs:
           name: backend-build
           path: backend/dist
 
-      - name: Deploy frontend to Vercel/Netlify
+      - name: Deploy frontend to Vercel
         run: |
-          echo "Deploying frontend to production..."
-          # Add your deployment command here
-          # Example for Vercel: npx vercel --prod --token=${{ secrets.VERCEL_TOKEN }}
-          # Example for Netlify: npx netlify deploy --prod --auth=${{ secrets.NETLIFY_TOKEN }}
+          echo "Deploying frontend to Vercel production..."
+          npm install -g vercel
+          cd frontend
+          vercel --prod --token=${{ secrets.VERCEL_TOKEN }} --yes
 
-      - name: Deploy backend to Railway/Render
+      - name: Deploy backend to Fly.io
         run: |
-          echo "Deploying backend to production..."
-          # Add your deployment command here
-          # Example for Railway: railway up --service backend --environment production
-          # Example for Render: render deploy --service backend --env production
+          echo "Deploying backend to Fly.io production..."
+          curl -L https://fly.io/install.sh | sh
+          export FLYCTL_INSTALL="/home/runner/.fly"
+          export PATH="$FLYCTL_INSTALL/bin:$PATH"
+          flyctl auth token ${{ secrets.FLY_API_TOKEN }}
+          cd backend
+          flyctl deploy --app ${{ secrets.FLY_APP_NAME }}
 
       - name: Run database migrations
         run: |

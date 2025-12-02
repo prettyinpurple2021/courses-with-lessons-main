@@ -15,7 +15,8 @@ jobs:
       - name: Check backend health
         id: backend
         run: |
-          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" https://api.solosuccess-academy.com/api/health)
+          BACKEND_URL=${{ secrets.PRODUCTION_BACKEND_URL || 'https://your-app.fly.dev' }}
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" "$BACKEND_URL/api/health")
           if [ "$RESPONSE" != "200" ]; then
             echo "Backend health check failed with status: $RESPONSE"
             exit 1
@@ -25,7 +26,8 @@ jobs:
       - name: Check frontend health
         id: frontend
         run: |
-          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" https://solosuccess-academy.com/health)
+          FRONTEND_URL=${{ secrets.PRODUCTION_FRONTEND_URL || 'https://your-app.vercel.app' }}
+          RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" "$FRONTEND_URL")
           if [ "$RESPONSE" != "200" ]; then
             echo "Frontend health check failed with status: $RESPONSE"
             exit 1
