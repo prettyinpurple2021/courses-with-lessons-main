@@ -94,6 +94,7 @@ const AdminLoginPage: React.FC = () => {
         }
       } else if (error.message) {
         // Network or other error
+        setRateLimitError(null); // Clear rate limit error on network/other errors
         if (error.message.includes('Network Error') || error.message.includes('Failed to fetch')) {
           errorMessage = 'Network error. Please check your connection and try again.';
         } else {
