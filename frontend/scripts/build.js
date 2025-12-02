@@ -5,7 +5,6 @@
  * Example: node scripts/build.js analyze
  */
 import { execSync } from 'child_process';
-import { existsSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 
@@ -17,34 +16,10 @@ const rootDir = join(__dirname, '..');
 const mode = process.argv[2];
 const viteModeArg = mode ? `--mode ${mode}` : '';
 
-// Check for TypeScript binary
-const tscPath = join(rootDir, 'node_modules', '.bin', 'tsc');
-const tscPathWin = tscPath + '.cmd'; // Windows
-
-// Verify TypeScript binary exists
-if (!existsSync(tscPath) && !existsSync(tscPathWin)) {
-  console.error('Error: TypeScript binary not found.');
-  console.error('Please ensure TypeScript is installed: npm install');
-  process.exit(1);
-}
-
 // Use npx for cross-platform compatibility (handles Windows .cmd files automatically)
-// Fallback to direct path if npx doesn't work
-let tscCommand = 'npx tsc';
-
-try {
-  execSync('npx --version', { stdio: 'pipe', cwd: rootDir });
-} catch {
-  // Fallback to direct path
-  if (process.platform === 'win32' && existsSync(tscPathWin)) {
-    tscCommand = `node "${tscPathWin}"`;
-  } else if (existsSync(tscPath)) {
-    tscCommand = `node "${tscPath}"`;
-  } else {
-    console.error('Error: TypeScript binary not found and npx is not available.');
-    process.exit(1);
-  }
-}
+// npx will find TypeScript regardless of where it's installed (workspace hoisting)
+// It searches node_modules/.bin in current directory and parent directories
+const tscCommand = 'npx tsc';
 
 try {
   console.log('Running TypeScript compiler...');
