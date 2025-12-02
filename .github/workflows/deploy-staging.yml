@@ -55,7 +55,6 @@ jobs:
           curl -L https://fly.io/install.sh | sh
           export FLYCTL_INSTALL="/home/runner/.fly"
           export PATH="$FLYCTL_INSTALL/bin:$PATH"
-          flyctl auth token
           cd backend
           flyctl deploy --app ${{ secrets.FLY_STAGING_APP_NAME }}
 
