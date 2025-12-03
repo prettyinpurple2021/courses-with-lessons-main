@@ -165,7 +165,69 @@ async function main() {
   }
 
   console.log('✅ Forum categories created');
+
+  // Validate that exams have questions (critical for production)
+  await validateExamQuestions();
+  
   console.log('🎉 Seed completed successfully!');
+}
+
+/**
+ * Validates that all final exams have questions.
+ * Fails in production mode if exams are empty to prevent broken database state.
+ */
+async function validateExamQuestions() {
+  const isProduction = process.env.NODE_ENV === 'production';
+  const skipValidation = process.env.SKIP_EXAM_VALIDATION === 'true';
+
+  if (skipValidation) {
+    console.log('⚠️  Skipping exam validation (SKIP_EXAM_VALIDATION=true)');
+    return;
+  }
+
+  console.log('\n🔍 Validating exam questions...');
+
+  const exams = await prisma.finalExam.findMany({
+    include: {
+      questions: true,
+    },
+  });
+
+  const emptyExams = exams.filter(exam => exam.questions.length === 0);
+
+  if (emptyExams.length > 0) {
+    const errorMessage = `
+❌ VALIDATION FAILED: ${emptyExams.length} exam(s) have no questions!
+
+This leaves the database in a non-functional state where students cannot complete courses.
+
+Affected exams:
+${emptyExams.map(exam => `  - ${exam.title}`).join('\n')}
+
+🔧 TO FIX THIS:
+
+Option 1 (Recommended): Run the complete production setup:
+  npm run content:setup-production
+
+Option 2: Add exam questions manually:
+  npm run content:add-exam-questions
+
+Option 3: Skip validation (development only):
+  SKIP_EXAM_VALIDATION=true npm run prisma:seed --workspace=backend
+
+⚠️  WARNING: Do NOT skip validation in production!
+`;
+
+    if (isProduction) {
+      console.error(errorMessage);
+      throw new Error('Seed validation failed: Exams must have questions in production mode');
+    } else {
+      console.warn(errorMessage);
+      console.warn('⚠️  Continuing in development mode, but this should be fixed before production deployment.');
+    }
+  } else {
+    console.log('✅ All exams have questions');
+  }
 }
 
 main()

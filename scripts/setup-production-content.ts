@@ -15,7 +15,8 @@ import { existsSync } from 'fs';
 import { join } from 'path';
 
 const scripts = {
-  seed: 'npm run prisma:seed --workspace=backend',
+  // Skip exam validation during seed since we'll add questions in step 3
+  seed: 'SKIP_EXAM_VALIDATION=true npm run prisma:seed --workspace=backend',
   updateVideos: 'npm run content:update-videos',
   addExamQuestions: 'npm run content:add-exam-questions',
 };

@@ -14,6 +14,7 @@
     "prisma:migrate:deploy": "prisma migrate deploy",
     "prisma:studio": "prisma studio",
     "prisma:seed": "tsx src/prisma/seed.ts",
+    "prisma:seed:dev": "SKIP_EXAM_VALIDATION=true tsx src/prisma/seed.ts",
     "backup:db": "tsx src/scripts/backup-database.ts",
     "create-admin": "tsx src/scripts/create-admin.ts",
     "list-lessons": "tsx src/scripts/list-lessons.ts",
