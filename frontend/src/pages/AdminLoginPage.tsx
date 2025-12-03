@@ -52,7 +52,8 @@ const AdminLoginPage: React.FC = () => {
 
       toast.success('Admin login successful');
       setRateLimitError(null); // Clear rate limit error on success
-      navigate('/admin/dashboard');
+      // Use push to allow back button navigation
+      navigate('/admin/dashboard', { replace: false });
     } catch (error: any) {
       console.error('Admin login error:', error);
       

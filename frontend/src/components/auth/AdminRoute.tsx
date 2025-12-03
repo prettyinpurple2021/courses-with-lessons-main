@@ -10,6 +10,7 @@ import LoadingSpinner from '../common/LoadingSpinner';
  */
 const AdminRoute: React.FC = () => {
   const { isAuthenticated } = useAuth();
+  const location = useLocation();
   const [isVerifying, setIsVerifying] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
 
@@ -43,11 +44,13 @@ const AdminRoute: React.FC = () => {
   }
 
   if (!isAuthenticated) {
-    return <Navigate to="/admin/login" replace />;
+    // Use push instead of replace to allow back button navigation
+    return <Navigate to="/admin/login" state={{ from: location }} />;
   }
 
   if (!isAdmin) {
-    return <Navigate to="/" replace />;
+    // Use push instead of replace to allow back button navigation
+    return <Navigate to="/" />;
   }
 
   return <Outlet />;
