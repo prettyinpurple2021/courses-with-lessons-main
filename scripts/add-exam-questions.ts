@@ -1325,7 +1325,7 @@ async function addQuestionsToExam(courseNumber: number, examId: string) {
   // Add new questions
   for (let i = 0; i < questions.length; i++) {
     const q = questions[i];
-    const question = await prisma.examQuestion.create({
+    await prisma.examQuestion.create({
       data: {
         examId,
         text: q.text,

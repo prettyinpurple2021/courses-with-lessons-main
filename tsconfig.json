@@ -13,7 +13,8 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true
   },
   "exclude": [
     "node_modules",
@@ -21,6 +22,7 @@
     "backend",
     "dist",
     "build",
-    "e2e"
+    "e2e",
+    "check_course2_videos.js"
   ]
 }

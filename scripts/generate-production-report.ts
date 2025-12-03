@@ -46,7 +46,6 @@ function runScript(scriptName: string, description: string): ReportSection {
 
     // Extract errors and warnings
     const lines = output.split('\n');
-    let currentSection: string[] = [];
     let inErrorSection = false;
     let inWarningSection = false;
 
@@ -54,13 +53,11 @@ function runScript(scriptName: string, description: string): ReportSection {
       if (line.includes('ERRORS') || line.includes('❌')) {
         inErrorSection = true;
         inWarningSection = false;
-        currentSection = errors;
         continue;
       }
       if (line.includes('WARNINGS') || line.includes('⚠️')) {
         inWarningSection = true;
         inErrorSection = false;
-        currentSection = warnings;
         continue;
       }
       if (inErrorSection && line.trim().startsWith('-')) {

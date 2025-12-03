@@ -227,7 +227,7 @@ async function checkExternalServices() {
   const cloudinaryName = process.env.CLOUDINARY_CLOUD_NAME;
   if (cloudinaryName) {
     try {
-      const response = await axios.get(`https://res.cloudinary.com/${cloudinaryName}/image/upload/v1/test`, {
+      await axios.get(`https://res.cloudinary.com/${cloudinaryName}/image/upload/v1/test`, {
         timeout: 3000,
         validateStatus: () => true, // Don't throw on 404
       });
@@ -257,7 +257,14 @@ async function checkSecurity() {
   const jwtSecret = process.env.JWT_SECRET;
   const jwtRefreshSecret = process.env.JWT_REFRESH_SECRET;
 
-  if (jwtSecret && jwtSecret.length >= 32 && !jwtSecret.includes('change-this')) {
+  if (
+    jwtSecret &&
+    jwtSecret.length >= 32 &&
+    !jwtSecret.includes('change-this') &&
+    jwtRefreshSecret &&
+    jwtRefreshSecret.length >= 32 &&
+    !jwtRefreshSecret.includes('change-this')
+  ) {
     addResult('JWT Secrets', 'pass', 'Secrets are strong');
   } else {
     addResult('JWT Secrets', 'fail', 'JWT secrets are weak or default', 'Generate strong random secrets');
