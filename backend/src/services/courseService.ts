@@ -207,8 +207,17 @@ export async function getCourseByIdWithStatus(
 
   // Calculate progress if enrolled
   let progress = 0;
+  let completedLessonsCount = 0;
   if (isEnrolled) {
     progress = await calculateCourseProgress(userId, courseId);
+    // Calculate actual number of completed lessons (separate from overall progress)
+    completedLessonsCount = await prisma.lessonProgress.count({
+      where: {
+        userId,
+        lessonId: { in: course.lessons.map((l: { id: string }) => l.id) },
+        completed: true,
+      },
+    });
   }
 
   // Get user's highest unlocked course for lock status
@@ -230,6 +239,7 @@ export async function getCourseByIdWithStatus(
     isCompleted,
     isLocked,
     progress,
+    completedLessons: completedLessonsCount,
     lessonCount: course.lessons.length,
   };
 }

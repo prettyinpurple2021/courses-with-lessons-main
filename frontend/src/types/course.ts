@@ -9,6 +9,7 @@ export interface Course {
   isEnrolled: boolean;
   isCompleted: boolean;
   progress?: number;
+  completedLessons?: number;
   lessonCount: number;
 }
 
