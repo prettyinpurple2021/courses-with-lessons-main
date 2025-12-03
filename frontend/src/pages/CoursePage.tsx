@@ -225,7 +225,12 @@ export default function CoursePage() {
           <div className="space-y-4">
             {course.lessons.map((lesson) => {
               const isExpanded = expandedModules.has(lesson.lessonNumber);
-              const isLocked = course.isEnrolled && lesson.lessonNumber > (course.progress || 0) / (100 / course.lessons.length);
+              // Lesson is locked if:
+              // 1. User is not enrolled, OR
+              // 2. User is enrolled but lesson number is greater than completed lessons + 1
+              // First lesson (lessonNumber 1) should always be unlocked if enrolled
+              const completedLessons = course.progress ? Math.floor((course.progress / 100) * course.lessons.length) : 0;
+              const isLocked = !course.isEnrolled || (course.isEnrolled && lesson.lessonNumber > completedLessons + 1);
 
               return (
                 <div key={lesson.id} className="border border-white/20 rounded-lg overflow-hidden">

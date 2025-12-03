@@ -28,7 +28,8 @@ export async function getCourseById(req: Request, res: Response, next: NextFunct
     const { id } = req.params;
     const userId = req.user!.userId;
 
-    const course = await courseService.getCourseById(id);
+    // Use the new function that includes enrollment status and progress
+    const course = await courseService.getCourseByIdWithStatus(id, userId);
 
     if (!course) {
       res.status(404).json({

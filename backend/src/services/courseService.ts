@@ -151,6 +151,90 @@ export async function getCourseById(courseId: string): Promise<CourseDetails | n
 }
 
 /**
+ * Get course by ID with enrollment status and progress for a user
+ */
+export async function getCourseByIdWithStatus(
+  courseId: string,
+  userId: string
+): Promise<any | null> {
+  const course = await prisma.course.findUnique({
+    where: { id: courseId },
+    include: {
+      lessons: {
+        orderBy: { lessonNumber: 'asc' },
+        select: {
+          id: true,
+          lessonNumber: true,
+          title: true,
+          description: true,
+          youtubeVideoId: true,
+          duration: true,
+        },
+      },
+      finalProject: {
+        select: {
+          id: true,
+          title: true,
+          description: true,
+        },
+      },
+      finalExam: {
+        select: {
+          id: true,
+          title: true,
+          description: true,
+          timeLimit: true,
+          passingScore: true,
+        },
+      },
+      enrollments: {
+        where: { userId },
+        select: {
+          completedAt: true,
+        },
+      },
+    },
+  });
+
+  if (!course) {
+    return null;
+  }
+
+  // Check enrollment status
+  const enrollment = course.enrollments[0];
+  const isEnrolled = !!enrollment;
+  const isCompleted = !!enrollment?.completedAt;
+
+  // Calculate progress if enrolled
+  let progress = 0;
+  if (isEnrolled) {
+    progress = await calculateCourseProgress(userId, courseId);
+  }
+
+  // Get user's highest unlocked course for lock status
+  const userEnrollment = await prisma.enrollment.findFirst({
+    where: { userId },
+    orderBy: { unlockedCourses: 'desc' },
+    select: { unlockedCourses: true },
+  });
+
+  const highestUnlockedCourse = userEnrollment?.unlockedCourses || 1;
+  const isLocked = course.courseNumber > highestUnlockedCourse;
+
+  // Destructure to exclude enrollments
+  const { enrollments, ...courseData } = course;
+
+  return {
+    ...courseData,
+    isEnrolled,
+    isCompleted,
+    isLocked,
+    progress,
+    lessonCount: course.lessons.length,
+  };
+}
+
+/**
  * Check if user can access a specific course
  */
 export async function canAccessCourse(userId: string, courseId: string): Promise<boolean> {
