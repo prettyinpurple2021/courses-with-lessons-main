@@ -67,6 +67,13 @@ class AnalyticsService {
   private analyticsProvider: 'ga4' | 'plausible' | 'none' = 'none';
 
   /**
+   * Check if analytics is enabled
+   */
+  get analyticsEnabled(): boolean {
+    return this.analyticsProvider !== 'none';
+  }
+
+  /**
    * Initialize analytics service
    */
   initialize() {

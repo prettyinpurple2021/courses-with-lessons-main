@@ -37,6 +37,8 @@ interface YTPlayer {
   getDuration(): number;
   getVolume(): number;
   setVolume(volume: number): void;
+  getPlaybackRate(): number;
+  setPlaybackRate(rate: number): void;
   getPlayerState(): number;
   destroy(): void;
 }

@@ -27,6 +27,7 @@
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:debug": "playwright test --debug",
     "test:e2e:report": "playwright show-report",
+    "test:smoke": "tsx scripts/smoke-tests.ts",
     "check:production": "tsx scripts/production-readiness-check.ts",
     "verify:videos": "tsx scripts/verify-youtube-videos.ts",
     "verify:content": "tsx scripts/verify-content-completeness.ts",
@@ -34,7 +35,8 @@
     "content:update-videos": "tsx scripts/update-lesson-videos.ts",
     "content:add-exam-questions": "tsx scripts/add-exam-questions.ts",
     "content:setup-production": "tsx scripts/setup-production-content.ts",
-    "content:fix-state": "tsx scripts/fix-production-state.ts"
+    "content:fix-state": "tsx scripts/fix-production-state.ts",
+    "deploy:frontend": "powershell -ExecutionPolicy Bypass -File scripts/deploy-frontend.ps1"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.11.0",

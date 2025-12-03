@@ -108,7 +108,6 @@ const QuizActivity: React.FC<QuizActivityProps> = ({ activity, onSubmit, isSubmi
             (qf) => qf.questionNumber === qIndex + 1
           );
           const userAnswer = answers[qIndex];
-          const isCorrect = userAnswer === question.correctAnswer;
           const showFeedback = activity.isCompleted && questionFeedback;
 
           return (
