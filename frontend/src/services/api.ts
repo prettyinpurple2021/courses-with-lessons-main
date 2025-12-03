@@ -16,27 +16,19 @@ export const api = axios.create({
   timeout: 30000, // 30 second timeout
 });
 
-// Store access token in memory
+// Store access token in memory only (not localStorage for security and cross-device compatibility)
+// Access tokens are short-lived (15min-1hr) and will be refreshed automatically via httpOnly cookie
+// This ensures:
+// 1. Security: Tokens not accessible to JavaScript/XSS attacks
+// 2. Cross-device: User data is in database, refresh token cookie handles persistence per device
+// 3. Production-ready: Follows OAuth 2.0 best practices
 let accessToken: string | null = null;
-
-// Initialize token from localStorage on module load
-if (typeof window !== 'undefined') {
-  const storedToken = localStorage.getItem('accessToken');
-  if (storedToken) {
-    accessToken = storedToken;
-  }
-}
 
 export const setAccessToken = (token: string | null) => {
   accessToken = token;
-  // Also sync with localStorage for persistence
-  if (typeof window !== 'undefined') {
-    if (token) {
-      localStorage.setItem('accessToken', token);
-    } else {
-      localStorage.removeItem('accessToken');
-    }
-  }
+  // Do NOT store in localStorage - access tokens should be in memory only
+  // Refresh tokens are stored securely in httpOnly cookies by the backend
+  // User data is stored in the database, ensuring cross-device access
 };
 
 export const getAccessToken = () => accessToken;

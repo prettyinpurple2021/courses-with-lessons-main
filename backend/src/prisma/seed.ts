@@ -69,7 +69,7 @@ async function main() {
           lessonNumber: lessonNum,
           title: `Lesson ${lessonNum}: ${courseData.title} - Part ${lessonNum}`,
           description: `Comprehensive lesson covering key concepts of ${courseData.title}.`,
-          youtubeVideoId: 'dQw4w9WgXcQ',
+          youtubeVideoId: 'dQw4w9WgXcQ', // Placeholder - run `npm run content:update-videos` to replace with real videos
           duration: 1800,
         },
       });
@@ -134,7 +134,7 @@ async function main() {
       },
     });
 
-    // Create final exam
+    // Create final exam (without questions - use scripts/add-exam-questions.ts to add real questions)
     const finalExam = await prisma.finalExam.create({
       data: {
         courseId: course.id,
@@ -145,32 +145,11 @@ async function main() {
       },
     });
 
-    // Create 20 exam questions
-    for (let qNum = 1; qNum <= 20; qNum++) {
-      const question = await prisma.examQuestion.create({
-        data: {
-          examId: finalExam.id,
-          text: `Question ${qNum}: What is a key concept from ${courseData.title}?`,
-          type: 'multiple_choice',
-          order: qNum,
-          points: 5,
-        },
-      });
+    // NOTE: Exam questions are NOT created here. 
+    // Run `npm run content:add-exam-questions` after seeding to add real exam questions.
+    // Placeholder questions were removed to prevent production issues.
 
-      // Create 4 options per question
-      for (let optNum = 1; optNum <= 4; optNum++) {
-        await prisma.examQuestionOption.create({
-          data: {
-            questionId: question.id,
-            text: `Option ${String.fromCharCode(64 + optNum)}`,
-            isCorrect: optNum === 1,
-            order: optNum,
-          },
-        });
-      }
-    }
-
-    console.log(`✅ Course ${courseData.courseNumber} created with 12 lessons, activities, final project, and final exam`);
+    console.log(`✅ Course ${courseData.courseNumber} created with 12 lessons, activities, final project, and final exam (no questions yet)`);
   }
 
   // Create forum categories

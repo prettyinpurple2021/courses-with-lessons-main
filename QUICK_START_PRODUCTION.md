@@ -1,135 +1,138 @@
-# Quick Start: Production Readiness
+# Quick Start: Production Setup
 
-## 🚀 One Command to Check Everything
+This guide helps you quickly set up your SoloSuccess Intel Academy for production deployment.
+
+## 🚀 Quick Setup (5 Steps)
+
+### Step 1: Configure Environment Variables
+
+Set up your production environment variables in your hosting platform (Fly.io, Vercel, etc.):
+
+**Backend (Fly.io):**
+```bash
+fly secrets set NODE_ENV=production
+fly secrets set DATABASE_URL=postgresql://...
+fly secrets set JWT_SECRET=your-secure-secret-min-32-chars
+fly secrets set JWT_REFRESH_SECRET=your-secure-refresh-secret-min-32-chars
+fly secrets set CORS_ORIGIN=https://yourdomain.com
+fly secrets set FRONTEND_URL=https://yourdomain.com
+fly secrets set CLOUDINARY_CLOUD_NAME=your-cloud-name
+fly secrets set CLOUDINARY_API_KEY=your-api-key
+fly secrets set CLOUDINARY_API_SECRET=your-api-secret
+fly secrets set RESEND_API_KEY=re_your-api-key
+fly secrets set YOUTUBE_API_KEY=your-youtube-api-key
+```
+
+**Frontend (Vercel):**
+```bash
+# Set in Vercel dashboard: Settings > Environment Variables
+VITE_API_BASE_URL=https://api.yourdomain.com/api
+```
+
+See [PRODUCTION_ENV_SETUP.md](./PRODUCTION_ENV_SETUP.md) for complete details.
+
+### Step 2: Deploy Backend
 
 ```bash
+cd backend
+fly deploy
+```
+
+### Step 3: Run Database Migrations
+
+```bash
+npm run prisma:migrate:deploy --workspace=backend
+```
+
+**Note:** If you get a Prisma client generation error, try:
+```bash
+cd backend
+rm -rf node_modules/.cache/prisma
+npm run prisma:generate
+npm run prisma:migrate:deploy
+```
+
+### Step 4: Set Up Production Content ⚠️ CRITICAL
+
+**This is the most important step!** Without this, your site will have placeholder videos and empty exams.
+
+```bash
+# One command to set up everything:
+npm run content:setup-production
+```
+
+This will:
+- ✅ Seed database with courses and lesson structures
+- ✅ Replace placeholder videos with real YouTube educational videos
+- ✅ Add comprehensive exam questions (20 per course) to all 7 final exams
+
+**Alternative (manual):**
+```bash
+npm run prisma:seed --workspace=backend
+npm run content:update-videos
+npm run content:add-exam-questions
+```
+
+### Step 5: Deploy Frontend
+
+```bash
+cd frontend
+vercel --prod
+```
+
+## ✅ Verification
+
+After deployment, verify everything is working:
+
+```bash
+# Check environment variables
+npm run check:production
+
+# Verify content completeness
+npm run verify:content
+
+# Generate production report
 npm run report:production
 ```
 
-This single command will:
-1. ✅ Check all environment variables
-2. ✅ Verify database setup
-3. ✅ Validate YouTube videos
-4. ✅ Check content completeness
-5. ✅ Verify security configuration
-6. ✅ Generate a comprehensive report
+## 🛑 Common Issues
 
-The report will be saved to `PRODUCTION_READINESS_REPORT.md` with:
-- Summary of all checks
-- Detailed error and warning lists
-- Action items
-- Next steps
+### Issue: Placeholder Videos Showing
+**Solution:** Run `npm run content:update-videos`
 
-## 📋 Individual Checks
+### Issue: Empty Exams
+**Solution:** Run `npm run content:add-exam-questions`
 
-If you want to run checks individually:
+### Issue: CORS Errors
+**Solution:** Ensure `CORS_ORIGIN` and `FRONTEND_URL` use HTTPS (not localhost)
 
-```bash
-# Complete production readiness
-npm run check:production
+### Issue: Database Connection Failed
+**Solution:** Verify `DATABASE_URL` is correct and database is accessible from Fly.io
 
-# Verify content is complete
-npm run verify:content
+## 📚 Additional Resources
 
-# Verify YouTube videos
-npm run verify:videos
-```
+- **[PRODUCTION_ENV_SETUP.md](./PRODUCTION_ENV_SETUP.md)** - Complete environment variable guide
+- **[PRODUCTION_READINESS_CHECKLIST.md](./PRODUCTION_READINESS_CHECKLIST.md)** - Full production readiness checklist
+- **[docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md)** - Detailed deployment guide
 
-## 🎯 What Gets Checked
+## 🎯 What Gets Set Up?
 
-### Production Readiness Check
-- Environment variables (all required vars set)
-- Database connection
-- YouTube API validation
-- External services (Cloudinary, Resend)
-- Security configuration
-- JWT secrets strength
+After running `npm run content:setup-production`, your database will contain:
 
-### Content Completeness Check
-- All 7 courses exist
-- Each course has 12 lessons
-- All lessons have YouTube video IDs
-- All lessons have activities
-- All courses have final projects
-- All courses have final exams
-- Sequential numbering (lessons & activities)
-- Database integrity
+- ✅ **7 Courses** - Complete course structures
+- ✅ **84 Lessons** - 12 lessons per course with real YouTube videos
+- ✅ **Activities** - Quizzes, exercises, reflections, and practical tasks
+- ✅ **Resources** - Downloadable materials for each lesson
+- ✅ **Final Projects** - Project requirements for each course
+- ✅ **Final Exams** - 7 exams with 20 comprehensive questions each (140 total questions)
 
-### YouTube Video Verification
-- All video IDs are valid
-- Videos are accessible and embeddable
-- Videos are not private
-- Summary by course
+## ⚠️ Important Notes
 
-## 📊 Understanding the Report
-
-### Status Icons
-- ✅ **Pass** - Everything is good
-- ⚠️ **Warning** - Should be fixed but not blocking
-- ❌ **Error** - Must fix before production
-
-### Report Sections
-1. **Summary** - Overall status and counts
-2. **Detailed Checks** - Full output from each check
-3. **Action Items** - What needs to be done
-4. **Next Steps** - Recommended workflow
-
-## 🔧 Fixing Issues
-
-### Common Issues and Solutions
-
-#### Missing Environment Variables
-```bash
-cd backend
-cp .env.example .env
-# Edit .env with your values
-npm run validate:env
-```
-
-#### Invalid YouTube Videos
-1. Run `npm run verify:videos` to see which videos are invalid
-2. Use admin panel to update video IDs
-3. Or update directly in database
-
-#### Missing Content
-1. Run `npm run verify:content` to see what's missing
-2. Use admin panel to add missing content
-3. Or use seed script: `npm run prisma:seed`
-
-#### Database Issues
-```bash
-cd backend
-npm run prisma:migrate deploy
-npm run prisma:seed
-```
-
-## ✅ Ready for Production?
-
-After running `npm run report:production`:
-
-1. **If all checks pass** ✅
-   - Complete testing checklist
-   - Configure production environment
-   - Deploy!
-
-2. **If warnings only** ⚠️
-   - Review warnings
-   - Fix recommended items
-   - Re-run report
-
-3. **If errors found** ❌
-   - Fix all errors
-   - Re-run report
-   - Don't deploy until all errors are fixed
-
-## 📚 More Information
-
-- [PRODUCTION_READINESS_GUIDE.md](./PRODUCTION_READINESS_GUIDE.md) - Detailed guide
-- [LAUNCH_CHECKLIST.md](./LAUNCH_CHECKLIST.md) - Launch checklist
-- [TESTING_CHECKLIST.md](./TESTING_CHECKLIST.md) - Testing checklist
-- [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md) - Deployment guide
+1. **Never skip Step 4** - Your site will be broken without real content
+2. **Environment variables must use HTTPS** - No localhost URLs in production
+3. **Run content scripts after every database reset** - They populate the content
+4. **Test before going live** - Verify videos play and exams have questions
 
 ---
 
-**Quick Tip:** Run `npm run report:production` before every deployment to ensure everything is ready!
-
+**Need help?** Check [TROUBLESHOOTING.md](./docs/TROUBLESHOOTING.md) or review the production readiness checklist.

@@ -350,10 +350,18 @@ Each course contains:
 
 ## 📖 Documentation
 
+### Getting Started
+- **[Quick Start: Production](./QUICK_START_PRODUCTION.md)** - Fast production setup guide ⚡
+- **[Production Environment Setup](./PRODUCTION_ENV_SETUP.md)** - Complete environment variable guide
+- **[Production Readiness Checklist](./PRODUCTION_READINESS_CHECKLIST.md)** - Full production readiness checklist
 - **[Setup Guide](./SETUP_GUIDE.md)** - Detailed setup instructions
-- **[API Documentation](./backend/API_DOCUMENTATION.md)** - Complete API reference
+
+### User & Admin Guides
 - **[User Guide](./USER_GUIDE.md)** - Student user guide
 - **[Admin Guide](./ADMIN_GUIDE.md)** - Admin panel guide
+
+### Technical Documentation
+- **[API Documentation](./backend/API_DOCUMENTATION.md)** - Complete API reference
 - **[Analytics Guide](./frontend/ANALYTICS_IMPLEMENTATION.md)** - Analytics setup and tracking
 - **[Loading States](./frontend/src/components/common/LOADING_STATES_README.md)** - Loading components guide
 - **[Troubleshooting](./TROUBLESHOOTING.md)** - Common issues and solutions
@@ -424,8 +432,19 @@ npm run build
 
 #### Database
 - Use managed PostgreSQL (Fly.io, Supabase, or Railway)
-- Run migrations: `npm run prisma:migrate deploy`
-- Seed data: `npm run prisma:seed`
+- Run migrations: `npm run prisma:migrate:deploy --workspace=backend`
+- **CRITICAL:** Set up production content:
+  ```bash
+  # Quick setup (recommended)
+  npm run content:setup-production
+  
+  # Or manual setup:
+  npm run prisma:seed --workspace=backend
+  npm run content:update-videos
+  npm run content:add-exam-questions
+  ```
+  
+  **⚠️ IMPORTANT:** Without running content scripts, your production site will have placeholder videos and empty exams!
 
 ## 📚 Documentation
 

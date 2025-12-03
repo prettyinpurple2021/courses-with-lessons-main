@@ -41,10 +41,10 @@ const AdminLoginPage: React.FC = () => {
       const result = await adminService.login(email, password);
       console.log('Login successful', result);
 
-      // Store token and user data
+      // Store access token in memory only (not localStorage for security)
+      // Refresh token is stored securely in httpOnly cookie by backend
+      // User data is stored in database, ensuring cross-device access
       setAccessToken(result.accessToken);
-      localStorage.setItem('accessToken', result.accessToken);
-      localStorage.setItem('user', JSON.stringify(result.user));
 
       // Update auth context directly with admin user data
       // Don't call regular login() as it would overwrite the admin token

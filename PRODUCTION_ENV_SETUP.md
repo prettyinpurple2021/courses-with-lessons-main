@@ -277,17 +277,58 @@ npm run check:production
 - Check API quotas/limits
 - Ensure correct API is enabled (e.g., YouTube Data API v3)
 
+## Content Setup (CRITICAL)
+
+After setting up environment variables and deploying, you **MUST** populate your database with real content:
+
+### Quick Setup (Recommended)
+
+Run the all-in-one production content setup script:
+
+```bash
+npm run content:setup-production
+```
+
+This will:
+1. Seed the database with courses, lessons, activities, and exam structures
+2. Update all 84 lesson videos with real YouTube educational video IDs
+3. Add comprehensive exam questions (20 per course) to all 7 final exams
+
+### Manual Setup (Alternative)
+
+If you prefer to run steps individually:
+
+```bash
+# Step 1: Seed database structure
+npm run prisma:seed --workspace=backend
+
+# Step 2: Update lesson videos (replaces placeholder videos)
+npm run content:update-videos
+
+# Step 3: Add exam questions to all final exams
+npm run content:add-exam-questions
+```
+
+### Why This Matters
+
+**⚠️ CRITICAL:** Without running these scripts, your production site will have:
+- ❌ Placeholder "Rick Roll" videos instead of educational content
+- ❌ Empty final exams with zero questions (students cannot complete courses)
+
+**Do NOT deploy to production without running these content scripts!**
+
 ## Next Steps
 
-After configuring environment variables:
+After configuring environment variables and setting up content:
 
-1. ✅ Run `npm run check:production` to verify
-2. ✅ Deploy backend to Fly.io
-3. ✅ Deploy frontend to Vercel
-4. ✅ Run database migrations: `npm run prisma:migrate deploy`
-5. ✅ Seed database: `npm run prisma:seed`
-6. ✅ Test production deployment
-7. ✅ Monitor with Sentry (if configured)
+1. ✅ Run `npm run check:production` to verify environment variables
+2. ✅ Run `npm run content:setup-production` to populate content
+3. ✅ Run `npm run verify:content` to verify all content is complete
+4. ✅ Deploy backend to Fly.io
+5. ✅ Deploy frontend to Vercel
+6. ✅ Run database migrations: `npm run prisma:migrate:deploy --workspace=backend`
+7. ✅ Test production deployment
+8. ✅ Monitor with Sentry (if configured)
 
 ---
 

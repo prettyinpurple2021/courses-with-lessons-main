@@ -5,6 +5,7 @@ import { useToast } from '../hooks/useToast';
 import GlassmorphicCard from '../components/common/GlassmorphicCard';
 import GlassmorphicButton from '../components/common/GlassmorphicButton';
 import LoadingSpinner from '../components/common/LoadingSpinner';
+import { api } from '../services/api';
 
 interface Activity {
   id: string;
@@ -139,24 +140,15 @@ const AdminActivitiesPage: React.FC = () => {
 
     setIsGenerating(true);
     try {
-      const token = localStorage.getItem('accessToken');
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/admin/lessons/${lessonId}/generate-activities`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ dryRun }),
-        }
+      // Use API service which handles token refresh automatically
+      // Access token is stored in memory and refreshed via httpOnly cookie
+      const response = await api.post(
+        `/admin/lessons/${lessonId}/generate-activities`,
+        { dryRun }
       );
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error?.message || 'Failed to generate activities');
-      }
+      // API service returns response.data directly
+      const data = response.data;
 
       if (dryRun) {
         toast.success(`Preview: ${data.data.count} activities would be generated`);
@@ -165,9 +157,11 @@ const AdminActivitiesPage: React.FC = () => {
         setShowGenerateModal(false);
         fetchActivities();
       }
-    } catch (error) {
+    } catch (error: any) {
       toast.error(
-        error instanceof Error ? error.message : 'Failed to generate activities'
+        error.response?.data?.error?.message || 
+        error.message || 
+        'Failed to generate activities'
       );
     } finally {
       setIsGenerating(false);
