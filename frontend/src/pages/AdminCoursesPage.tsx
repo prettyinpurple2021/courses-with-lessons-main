@@ -40,7 +40,7 @@ const AdminCoursesPage: React.FC = () => {
     try {
       const token = localStorage.getItem('accessToken');
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/admin/courses`,
+        `${import.meta.env.VITE_API_BASE_URL}/admin/courses`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

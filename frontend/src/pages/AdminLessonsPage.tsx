@@ -37,7 +37,7 @@ const AdminLessonsPage: React.FC = () => {
     try {
       const token = localStorage.getItem('accessToken');
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/admin/courses/${courseId}`,
+        `${import.meta.env.VITE_API_BASE_URL}/admin/courses/${courseId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -58,7 +58,7 @@ const AdminLessonsPage: React.FC = () => {
     try {
       const token = localStorage.getItem('accessToken');
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/admin/courses/${courseId}/lessons`,
+        `${import.meta.env.VITE_API_BASE_URL}/admin/courses/${courseId}/lessons`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -90,7 +90,7 @@ const AdminLessonsPage: React.FC = () => {
     try {
       const token = localStorage.getItem('accessToken');
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/admin/lessons/${lessonId}`,
+        `${import.meta.env.VITE_API_BASE_URL}/admin/lessons/${lessonId}`,
         {
           method: 'DELETE',
           headers: {

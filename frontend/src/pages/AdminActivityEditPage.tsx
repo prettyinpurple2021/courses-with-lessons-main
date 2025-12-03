@@ -56,7 +56,7 @@ const AdminActivityEditPage: React.FC = () => {
     try {
       const token = localStorage.getItem('accessToken');
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/activities/${activityId}`,
+        `${import.meta.env.VITE_API_BASE_URL}/activities/${activityId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -106,8 +106,8 @@ const AdminActivityEditPage: React.FC = () => {
     try {
       const token = localStorage.getItem('accessToken');
       const url = isNew
-        ? `${import.meta.env.VITE_API_URL}/api/admin/lessons/${lessonId}/activities`
-        : `${import.meta.env.VITE_API_URL}/api/admin/activities/${activityId}`;
+        ? `${import.meta.env.VITE_API_BASE_URL}/admin/lessons/${lessonId}/activities`
+        : `${import.meta.env.VITE_API_BASE_URL}/admin/activities/${activityId}`;
 
       const response = await fetch(url, {
         method: isNew ? 'POST' : 'PUT',

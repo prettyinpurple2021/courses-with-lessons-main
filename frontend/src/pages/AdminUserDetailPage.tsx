@@ -50,7 +50,7 @@ const AdminUserDetailPage: React.FC = () => {
       setIsLoading(true);
       const token = localStorage.getItem('accessToken');
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/admin/users/${userId}/progress`,
+        `${import.meta.env.VITE_API_BASE_URL}/admin/users/${userId}/progress`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -79,7 +79,7 @@ const AdminUserDetailPage: React.FC = () => {
     try {
       const token = localStorage.getItem('accessToken');
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/admin/users/${userId}/unlock-course`,
+        `${import.meta.env.VITE_API_BASE_URL}/admin/users/${userId}/unlock-course`,
         {
           method: 'POST',
           headers: {

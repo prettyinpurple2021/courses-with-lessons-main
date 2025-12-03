@@ -57,7 +57,7 @@ const AdminUsersPage: React.FC = () => {
       });
 
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/admin/users?${params}`,
+        `${import.meta.env.VITE_API_BASE_URL}/admin/users?${params}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

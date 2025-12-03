@@ -52,7 +52,7 @@ const AdminLessonEditPage: React.FC = () => {
     try {
       const token = localStorage.getItem('accessToken');
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/lessons/${lessonId}`,
+        `${import.meta.env.VITE_API_BASE_URL}/lessons/${lessonId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -93,7 +93,7 @@ const AdminLessonEditPage: React.FC = () => {
     try {
       const token = localStorage.getItem('accessToken');
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/admin/youtube/validate/${
+        `${import.meta.env.VITE_API_BASE_URL}/admin/youtube/validate/${
           formData.youtubeVideoId
         }`,
         {
@@ -138,8 +138,8 @@ const AdminLessonEditPage: React.FC = () => {
     try {
       const token = localStorage.getItem('accessToken');
       const url = isNew
-        ? `${import.meta.env.VITE_API_URL}/api/admin/courses/${courseId}/lessons`
-        : `${import.meta.env.VITE_API_URL}/api/admin/lessons/${lessonId}`;
+        ? `${import.meta.env.VITE_API_BASE_URL}/admin/courses/${courseId}/lessons`
+        : `${import.meta.env.VITE_API_BASE_URL}/admin/lessons/${lessonId}`;
 
       const response = await fetch(url, {
         method: isNew ? 'POST' : 'PUT',

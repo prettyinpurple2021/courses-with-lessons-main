@@ -45,7 +45,7 @@ const AdminCourseEditPage: React.FC = () => {
     try {
       const token = localStorage.getItem('accessToken');
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/admin/courses/${id}`,
+        `${import.meta.env.VITE_API_BASE_URL}/admin/courses/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -84,8 +84,8 @@ const AdminCourseEditPage: React.FC = () => {
     try {
       const token = localStorage.getItem('accessToken');
       const url = isNew
-        ? `${import.meta.env.VITE_API_URL}/api/admin/courses`
-        : `${import.meta.env.VITE_API_URL}/api/admin/courses/${id}`;
+        ? `${import.meta.env.VITE_API_BASE_URL}/admin/courses`
+        : `${import.meta.env.VITE_API_BASE_URL}/admin/courses/${id}`;
 
       const response = await fetch(url, {
         method: isNew ? 'POST' : 'PUT',
