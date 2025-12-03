@@ -77,10 +77,41 @@ app.use(helmet({
   },
 }));
 
-app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+// CORS configuration - support Vercel deployment URLs dynamically
+const corsOrigin = process.env.CORS_ORIGIN || 'http://localhost:3000';
+const corsOptions = {
+  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) {
+      return callback(null, true);
+    }
+    
+    // In development, allow localhost
+    if (process.env.NODE_ENV !== 'production') {
+      if (origin.startsWith('http://localhost:') || origin.startsWith('http://127.0.0.1:')) {
+        return callback(null, true);
+      }
+    }
+    
+    // Check if origin matches the configured CORS_ORIGIN exactly
+    if (origin === corsOrigin) {
+      return callback(null, true);
+    }
+    
+    // Support Vercel deployment URLs - allow any *.vercel.app domain
+    // This handles Vercel's dynamic deployment URLs (e.g., frontend-*-*.vercel.app)
+    // If CORS_ORIGIN is a Vercel domain, allow all Vercel app domains
+    if (corsOrigin.includes('.vercel.app') && origin.includes('.vercel.app')) {
+      return callback(null, true);
+    }
+    
+    // Reject other origins
+    callback(new Error('Not allowed by CORS'));
+  },
   credentials: true,
-}));
+};
+
+app.use(cors(corsOptions));
 
 // Response compression (gzip)
 app.use(compression({
