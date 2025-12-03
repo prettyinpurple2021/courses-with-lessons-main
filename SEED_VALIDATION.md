@@ -94,3 +94,4 @@ If you have existing code that runs `prisma:seed`:
 2. **For development:** Use `npm run prisma:seed:dev` if you need empty exams temporarily
 3. **For CI/CD:** Ensure `NODE_ENV=production` is set to catch issues early
 
+
