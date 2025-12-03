@@ -1,6 +1,6 @@
 # Fly.io Environment Variables Check
 
-**Checked:** $(Get-Date -Format "yyyy-MM-dd HH:mm:ss")
+**Checked:** 2025-12-03 20:05:00
 
 ## ✅ Environment Variables Set
 
