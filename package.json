@@ -33,7 +33,8 @@
     "report:production": "tsx scripts/generate-production-report.ts",
     "content:update-videos": "tsx scripts/update-lesson-videos.ts",
     "content:add-exam-questions": "tsx scripts/add-exam-questions.ts",
-    "content:setup-production": "tsx scripts/setup-production-content.ts"
+    "content:setup-production": "tsx scripts/setup-production-content.ts",
+    "content:fix-state": "tsx scripts/fix-production-state.ts"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.11.0",

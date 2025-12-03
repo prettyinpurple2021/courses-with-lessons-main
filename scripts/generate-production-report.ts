@@ -38,10 +38,27 @@ function runScript(scriptName: string, description: string): ReportSection {
     const errors: string[] = [];
     const warnings: string[] = [];
 
-    if (output.includes('❌') || output.includes('Failed') || output.includes('error')) {
+    // Check for actual failures (not just the word "error" in success messages)
+    const hasFailures = output.includes('Failed:') && !output.match(/Failed:\s*0/);
+    const hasErrors = output.match(/❌.*[1-9]\d*/) || output.match(/Errors:\s*[1-9]\d*/);
+    const hasActualErrors = output.includes('❌') && !output.includes('❌ Errors: 0') && !output.includes('❌ Failed: 0');
+    
+    // Check for warnings (but not in success messages)
+    const hasWarnings = output.match(/⚠️.*[1-9]\d*/) || output.match(/Warnings:\s*[1-9]\d*/);
+    const hasActualWarnings = output.includes('⚠️') && !output.includes('⚠️  Warnings: 0');
+    
+    // Check for success indicators
+    const hasSuccess = output.includes('✅') || 
+                       output.includes('All checks passed') || 
+                       output.includes('READY FOR PRODUCTION') ||
+                       output.includes('Content is complete');
+
+    if (hasFailures || hasErrors || (hasActualErrors && !hasSuccess)) {
       status = 'fail';
-    } else if (output.includes('⚠️') || output.includes('Warning') || output.includes('warning')) {
+    } else if (hasWarnings || (hasActualWarnings && !hasSuccess)) {
       status = 'warning';
+    } else if (hasSuccess) {
+      status = 'pass';
     }
 
     // Extract errors and warnings

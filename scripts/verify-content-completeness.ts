@@ -346,7 +346,18 @@ async function verifyDatabaseIntegrity() {
       console.log('✅ Database integrity check complete');
     }
   } catch (error: any) {
-    addIssue('error', 'Database Integrity', 'Failed to check database integrity', error.message);
+    // Handle Prisma query errors gracefully
+    const errorMessage = error.message || String(error);
+    if (errorMessage.includes('must not be null') || errorMessage.includes('Argument')) {
+      addIssue(
+        'error',
+        'Database Integrity',
+        'Failed to check database integrity',
+        'Query error detected. This may indicate data inconsistency. Error: ' + errorMessage
+      );
+    } else {
+      addIssue('error', 'Database Integrity', 'Failed to check database integrity', errorMessage);
+    }
   }
 }
 
