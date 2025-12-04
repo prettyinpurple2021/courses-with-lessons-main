@@ -16,18 +16,22 @@ import { join } from 'path';
 
 const scripts = {
   // Skip exam validation during seed since we'll add questions in step 3
-  seed: 'SKIP_EXAM_VALIDATION=true npm run prisma:seed --workspace=backend',
+  seed: 'npm run prisma:seed --workspace=backend',
   updateVideos: 'npm run content:update-videos',
   addExamQuestions: 'npm run content:add-exam-questions',
 };
 
-function runScript(name: string, command: string) {
+function runScript(name: string, command: string, env?: Record<string, string>) {
   console.log(`\n${'='.repeat(70)}`);
   console.log(`📋 Step: ${name}`);
   console.log(`${'='.repeat(70)}\n`);
   
   try {
-    execSync(command, { stdio: 'inherit', cwd: process.cwd() });
+    execSync(command, { 
+      stdio: 'inherit', 
+      cwd: process.cwd(),
+      env: { ...process.env, ...env }
+    });
     console.log(`\n✅ ${name} completed successfully\n`);
     return true;
   } catch (error: any) {
@@ -54,8 +58,8 @@ async function main() {
     process.exit(1);
   }
 
-  // Step 1: Seed database
-  if (!runScript('Database Seeding', scripts.seed)) {
+  // Step 1: Seed database (skip exam validation since we'll add questions in step 3)
+  if (!runScript('Database Seeding', scripts.seed, { SKIP_EXAM_VALIDATION: 'true' })) {
     console.error('\n❌ Setup failed at database seeding step');
     process.exit(1);
   }
