@@ -34,27 +34,6 @@ export const errorHandler = (
     isOperational = err.isOperational || false;
   }
 
-  // #region agent log
-  fetch('http://127.0.0.1:7242/ingest/a6613aa6-709b-4c6a-b69d-a5caff5afc35', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      sessionId: 'debug-session',
-      runId: 'pre-fix',
-      hypothesisId: 'H9',
-      location: 'errorHandler.ts:errorHandler',
-      message: 'Global error handler invoked',
-      data: {
-        statusCode,
-        isOperational,
-        path: req.path,
-        method: req.method,
-      },
-      timestamp: Date.now(),
-    }),
-  }).catch(() => {});
-  // #endregion
-
   // Log the error with structured logging
   const logMeta = {
     statusCode,

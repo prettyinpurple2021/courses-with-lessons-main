@@ -9,6 +9,7 @@ import { logger } from './utils/logger.js';
 import { apiLimiter } from './middleware/rateLimiter.js';
 import { sanitizeRequest } from './middleware/sanitization.js';
 import { initRedis } from './config/redis.js';
+import { validateEnvironment } from './utils/validateEnv.js';
 import healthRouter from './routes/health.js';
 import authRouter from './routes/auth.js';
 import coursesRouter from './routes/courses.js';
@@ -210,6 +211,21 @@ process.on('uncaughtException', (error: Error) => {
 // Initialize Redis and start server
 async function startServer() {
   try {
+    // Validate environment variables before starting
+    // Skip validation in test environment to allow flexible test setup
+    if (process.env.NODE_ENV !== 'test') {
+      try {
+        validateEnvironment();
+        logger.info('Environment variables validated successfully');
+      } catch (validationError) {
+        logger.error('Environment validation failed', {
+          error: validationError instanceof Error ? validationError.message : validationError,
+        });
+        // Exit with error code 1 to indicate failure
+        process.exit(1);
+      }
+    }
+
     // Initialize Redis connection (non-blocking in serverless)
     // In serverless environments, connections might fail but we should still start the server
     try {

@@ -351,20 +351,21 @@ Each course contains:
 ## 📖 Documentation
 
 ### Getting Started
-- **[Quick Start: Production](./QUICK_START_PRODUCTION.md)** - Fast production setup guide ⚡
+- **[Deployment Guide](./DEPLOYMENT.md)** - Complete deployment guide for production
+- **[Production Status](./PRODUCTION_STATUS.md)** - Current production status and readiness
 - **[Production Environment Setup](./PRODUCTION_ENV_SETUP.md)** - Complete environment variable guide
 - **[Production Readiness Checklist](./PRODUCTION_READINESS_CHECKLIST.md)** - Full production readiness checklist
-- **[Setup Guide](./SETUP_GUIDE.md)** - Detailed setup instructions
 
 ### User & Admin Guides
-- **[User Guide](./USER_GUIDE.md)** - Student user guide
-- **[Admin Guide](./ADMIN_GUIDE.md)** - Admin panel guide
+- **[User Guide](./docs/USER_GUIDE.md)** - Student user guide
+- **[Admin Guide](./docs/ADMIN.md)** - Admin panel guide
 
 ### Technical Documentation
-- **[API Documentation](./backend/API_DOCUMENTATION.md)** - Complete API reference
+- **[API Documentation](./docs/API.md)** - Complete API reference
+- **[Testing Guide](./TESTING.md)** - Testing status and guidelines
 - **[Analytics Guide](./frontend/ANALYTICS_IMPLEMENTATION.md)** - Analytics setup and tracking
 - **[Loading States](./frontend/src/components/common/LOADING_STATES_README.md)** - Loading components guide
-- **[Troubleshooting](./TROUBLESHOOTING.md)** - Common issues and solutions
+- **[Troubleshooting](./docs/TROUBLESHOOTING.md)** - Common issues and solutions
 
 ## 🧪 Testing
 
@@ -398,7 +399,14 @@ npm run test:e2e:debug  # Debug mode
 
 ## 🚢 Deployment
 
-### Docker Deployment (Recommended)
+### Quick Deploy
+
+#### Current Production Setup
+- **Frontend**: Vercel
+- **Backend**: Fly.io
+- See [DEPLOYMENT.md](./DEPLOYMENT.md) for complete guide
+
+### Docker Deployment (Optional)
 
 The project includes Docker configuration for production deployment:
 
@@ -408,13 +416,6 @@ docker-compose -f docker-compose.prod.yml up -d
 
 # See docs/DEPLOYMENT.md for deployment details
 ```
-
-### Quick Deploy
-
-#### Current Production Setup
-- **Frontend**: Vercel
-- **Backend**: Fly.io
-- See [DEPLOYMENT.md](./docs/DEPLOYMENT.md) for complete guide
 
 #### Frontend (Vercel/Netlify)
 ```bash
@@ -446,13 +447,14 @@ npm run build
   
   **⚠️ IMPORTANT:** Without running content scripts, your production site will have placeholder videos and empty exams!
 
-## 📚 Documentation
+## 📚 Additional Documentation
 
-All documentation is organized in the `docs/` folder:
+All detailed documentation is organized in the `docs/` folder:
 
 ### Getting Started
 - **[SETUP.md](./docs/SETUP.md)** - Complete setup guide for local development
-- **[DEPLOYMENT.md](./docs/DEPLOYMENT.md)** - Production deployment guide (Vercel + Fly.io)
+- **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Production deployment guide (Vercel + Fly.io)
+- **[PRODUCTION_STATUS.md](./PRODUCTION_STATUS.md)** - Current production status
 
 ### Content Management
 - **[CONTENT_AUTOMATION.md](./docs/CONTENT_AUTOMATION.md)** - AI-powered content generation guide
@@ -468,6 +470,7 @@ All documentation is organized in the `docs/` folder:
 - **[API.md](./docs/API.md)** - API documentation
 - **[SECURITY.md](./docs/SECURITY.md)** - Security implementation guide
 - **[AUTH.md](./docs/AUTH.md)** - Authentication guide
+- **[TESTING.md](./TESTING.md)** - Testing status and guidelines
 - **[TROUBLESHOOTING.md](./docs/TROUBLESHOOTING.md)** - Troubleshooting guide
 
 ### Service Setup

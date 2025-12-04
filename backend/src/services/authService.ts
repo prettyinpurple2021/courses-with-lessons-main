@@ -34,24 +34,6 @@ export class AuthService {
   async register(input: RegisterInput): Promise<AuthResponse> {
     const { email, password, firstName, lastName } = input;
 
-    // #region agent log
-    fetch('http://127.0.0.1:7242/ingest/a6613aa6-709b-4c6a-b69d-a5caff5afc35', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        sessionId: 'debug-session',
-        runId: 'pre-fix',
-        hypothesisId: 'H2',
-        location: 'authService.ts:register',
-        message: 'AuthService.register input received',
-        data: {
-          emailLength: email?.length ?? 0,
-        },
-        timestamp: Date.now(),
-      }),
-    }).catch(() => {});
-    // #endregion
-
     // Validate password strength
     const passwordValidation = validatePasswordStrength(password);
     if (!passwordValidation.valid) {
@@ -107,24 +89,6 @@ export class AuthService {
       const accessToken = generateAccessToken(tokenPayload);
       const refreshToken = generateRefreshToken(tokenPayload);
 
-      // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/a6613aa6-709b-4c6a-b69d-a5caff5afc35', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          sessionId: 'debug-session',
-          runId: 'pre-fix',
-          hypothesisId: 'H3',
-          location: 'authService.ts:register',
-          message: 'AuthService.register success',
-          data: {
-            userId: user.id,
-          },
-          timestamp: Date.now(),
-        }),
-      }).catch(() => {});
-      // #endregion
-
       return {
         user: {
           id: user.id,
@@ -136,25 +100,6 @@ export class AuthService {
         refreshToken,
       };
     } catch (error) {
-      // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/a6613aa6-709b-4c6a-b69d-a5caff5afc35', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          sessionId: 'debug-session',
-          runId: 'pre-fix',
-          hypothesisId: 'H4',
-          location: 'authService.ts:register',
-          message: 'AuthService.register error',
-          data: {
-            errorName: (error as Error).name,
-            errorMessage: (error as Error).message,
-          },
-          timestamp: Date.now(),
-        }),
-      }).catch(() => {});
-      // #endregion
-
       throw error;
     }
   }
@@ -162,47 +107,11 @@ export class AuthService {
   async login(input: LoginInput): Promise<AuthResponse> {
     const { email, password } = input;
 
-    // #region agent log
-    fetch('http://127.0.0.1:7242/ingest/a6613aa6-709b-4c6a-b69d-a5caff5afc35', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        sessionId: 'debug-session',
-        runId: 'pre-fix',
-        hypothesisId: 'H5',
-        location: 'authService.ts:login',
-        message: 'AuthService.login input received',
-        data: {
-          emailLength: email?.length ?? 0,
-        },
-        timestamp: Date.now(),
-      }),
-    }).catch(() => {});
-    // #endregion
-
     try {
       // Find user
       const user = await prisma.user.findUnique({
         where: { email },
       });
-
-      // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/a6613aa6-709b-4c6a-b69d-a5caff5afc35', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          sessionId: 'debug-session',
-          runId: 'pre-fix',
-          hypothesisId: 'H6',
-          location: 'authService.ts:login',
-          message: 'AuthService.login user lookup result',
-          data: {
-            userFound: !!user,
-          },
-          timestamp: Date.now(),
-        }),
-      }).catch(() => {});
-      // #endregion
 
       if (!user) {
         throw new AuthenticationError('Invalid email or password');
@@ -210,24 +119,6 @@ export class AuthService {
 
       // Verify password
       const isPasswordValid = await comparePassword(password, user.password);
-
-      // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/a6613aa6-709b-4c6a-b69d-a5caff5afc35', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          sessionId: 'debug-session',
-          runId: 'pre-fix',
-          hypothesisId: 'H7',
-          location: 'authService.ts:login',
-          message: 'AuthService.login password validation result',
-          data: {
-            isPasswordValid,
-          },
-          timestamp: Date.now(),
-        }),
-      }).catch(() => {});
-      // #endregion
 
       if (!isPasswordValid) {
         throw new AuthenticationError('Invalid email or password');
@@ -254,25 +145,6 @@ export class AuthService {
         refreshToken,
       };
     } catch (error) {
-      // #region agent log
-      fetch('http://127.0.0.1:7242/ingest/a6613aa6-709b-4c6a-b69d-a5caff5afc35', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          sessionId: 'debug-session',
-          runId: 'pre-fix',
-          hypothesisId: 'H8',
-          location: 'authService.ts:login',
-          message: 'AuthService.login error',
-          data: {
-            errorName: (error as Error).name,
-            errorMessage: (error as Error).message,
-          },
-          timestamp: Date.now(),
-        }),
-      }).catch(() => {});
-      // #endregion
-
       throw error;
     }
   }
