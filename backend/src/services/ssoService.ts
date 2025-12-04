@@ -71,7 +71,7 @@ export async function createOrGetUser(
   email: string,
   firstName: string,
   lastName: string,
-  tier: string,
+  _tier: string,
   intelAcademyUserId?: string
 ): Promise<{ id: string; email: string; firstName: string; lastName: string }> {
   let user;

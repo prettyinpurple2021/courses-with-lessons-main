@@ -11,9 +11,6 @@
  *   - Use the admin panel to create/update activities
  */
 
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
 
 /**
  * Quiz Content Templates
@@ -22,7 +19,7 @@ export const quizTemplates = {
   /**
    * Knowledge Check Quiz (Opening Quiz)
    */
-  knowledgeCheck: (topic: string, questions: Array<{
+  knowledgeCheck: (_topic: string, questions: Array<{
     text: string;
     options: string[];
     correctAnswer: number;
@@ -40,7 +37,7 @@ export const quizTemplates = {
   /**
    * Application Quiz (Mid-Lesson)
    */
-  applicationQuiz: (topic: string, scenarios: Array<{
+  applicationQuiz: (_topic: string, scenarios: Array<{
     scenario: string;
     question: string;
     options: string[];
@@ -59,7 +56,7 @@ export const quizTemplates = {
   /**
    * Comprehensive Quiz (Closing Quiz)
    */
-  comprehensiveQuiz: (topic: string, questions: Array<{
+  comprehensiveQuiz: (_topic: string, questions: Array<{
     text: string;
     options: string[];
     correctAnswer: number;
@@ -275,8 +272,8 @@ export const courseContentExamples = {
  */
 export function generateActivityContent(
   courseNumber: number,
-  lessonNumber: number,
-  activityNumber: number,
+  _lessonNumber: number,
+  _activityNumber: number,
   activityType: 'quiz' | 'exercise' | 'practical_task' | 'reflection'
 ): any {
   // This is a template - customize based on your needs

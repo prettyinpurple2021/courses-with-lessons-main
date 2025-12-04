@@ -135,7 +135,7 @@ async function main() {
     });
 
     // Create final exam (without questions - use scripts/add-exam-questions.ts to add real questions)
-    const finalExam = await prisma.finalExam.create({
+    await prisma.finalExam.create({
       data: {
         courseId: course.id,
         title: `${courseData.title} - Final Exam`,

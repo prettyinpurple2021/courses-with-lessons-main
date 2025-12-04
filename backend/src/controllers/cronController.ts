@@ -12,7 +12,8 @@ export function verifyCronSecret(req: Request, res: Response, next: () => void) 
 
   if (!cronSecret) {
     logger.error('CRON_SECRET not configured');
-    return res.status(500).json({ error: 'Cron authentication not configured' });
+    res.status(500).json({ error: 'Cron authentication not configured' });
+    return;
   }
 
   if (!authHeader || authHeader !== `Bearer ${cronSecret}`) {
@@ -20,7 +21,8 @@ export function verifyCronSecret(req: Request, res: Response, next: () => void) 
       ip: req.ip,
       userAgent: req.get('user-agent'),
     });
-    return res.status(401).json({ error: 'Unauthorized' });
+    res.status(401).json({ error: 'Unauthorized' });
+    return;
   }
 
   next();
@@ -30,7 +32,7 @@ export function verifyCronSecret(req: Request, res: Response, next: () => void) 
  * Process queued webhooks
  * GET /api/cron/process-webhooks
  */
-export async function processWebhooks(req: Request, res: Response) {
+export async function processWebhooks(_req: Request, res: Response) {
   try {
     const result = await processQueuedWebhooks();
     
@@ -53,7 +55,7 @@ export async function processWebhooks(req: Request, res: Response) {
  * Sync all Intel Academy integrations
  * GET /api/cron/sync-intel-academy
  */
-export async function syncIntelAcademy(req: Request, res: Response) {
+export async function syncIntelAcademy(_req: Request, res: Response) {
   try {
     const result = await syncAllIntegrations();
     
@@ -76,7 +78,7 @@ export async function syncIntelAcademy(req: Request, res: Response) {
  * Clean up old webhook events
  * GET /api/cron/cleanup-webhooks
  */
-export async function cleanupWebhooks(req: Request, res: Response) {
+export async function cleanupWebhooks(_req: Request, res: Response) {
   try {
     const result = await cleanupOldWebhooks();
     

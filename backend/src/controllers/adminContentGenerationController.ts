@@ -124,7 +124,7 @@ export const adminContentGenerationController = {
         }
       }
 
-      res.status(201).json({
+      return res.status(201).json({
         success: true,
         data: {
           lesson: {
@@ -139,7 +139,7 @@ export const adminContentGenerationController = {
       });
     } catch (error) {
       logger.error('Error generating lesson activities', { error, lessonId: req.params.lessonId });
-      next(error);
+      return next(error);
     }
   },
 
@@ -220,7 +220,7 @@ export const adminContentGenerationController = {
         }
       }
 
-      res.json({
+      return res.json({
         success: true,
         data: {
           course: {
@@ -240,7 +240,7 @@ export const adminContentGenerationController = {
       });
     } catch (error) {
       logger.error('Error generating course activities', { error, courseId: req.params.courseId });
-      next(error);
+      return next(error);
     }
   },
 };

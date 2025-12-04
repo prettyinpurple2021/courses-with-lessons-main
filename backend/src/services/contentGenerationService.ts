@@ -88,7 +88,7 @@ ${lesson.activities.map(a => `- Activity ${a.activityNumber}: ${a.title} (${a.ty
 async function generateQuizContent(
   lessonContext: string,
   position: 'opening' | 'mid' | 'closing',
-  activityNumber: number
+  _activityNumber: number
 ): Promise<any> {
   const client = ensureClient();
   // Use gemini-2.5-flash which is available in v1 API
@@ -168,7 +168,7 @@ Do not include any markdown formatting, code blocks, or text outside the JSON. R
  */
 async function generateExerciseContent(
   lessonContext: string,
-  activityNumber: number
+  _activityNumber: number
 ): Promise<any> {
   const client = ensureClient();
   // Use gemini-2.5-flash which is available in v1 API
@@ -250,7 +250,7 @@ Do not include any markdown formatting, code blocks, or text outside the JSON. R
  */
 async function generatePracticalTaskContent(
   lessonContext: string,
-  activityNumber: number
+  _activityNumber: number
 ): Promise<any> {
   const client = ensureClient();
   // Use gemini-2.5-flash which is available in v1 API
@@ -334,7 +334,7 @@ Do not include any markdown formatting, code blocks, or text outside the JSON. R
  */
 async function generateReflectionContent(
   lessonContext: string,
-  activityNumber: number
+  _activityNumber: number
 ): Promise<any> {
   const client = ensureClient();
   // Use gemini-2.5-flash which is available in v1 API

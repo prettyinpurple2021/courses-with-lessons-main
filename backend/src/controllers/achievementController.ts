@@ -28,7 +28,7 @@ export async function getUserAchievements(
  * Get all achievement definitions (for display purposes)
  */
 export async function getAchievementDefinitions(
-  req: Request,
+  _req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> {

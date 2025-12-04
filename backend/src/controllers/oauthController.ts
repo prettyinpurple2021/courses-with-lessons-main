@@ -5,9 +5,8 @@ import {
   refreshAccessToken,
   revokeToken,
 } from '../services/oauthService.js';
-import { ValidationError, AuthenticationError } from '../utils/errors.js';
-import { authenticate, optionalAuthenticate } from '../middleware/auth.js';
-import { verifyAccessToken } from '../utils/jwt.js';
+import { ValidationError } from '../utils/errors.js';
+import { optionalAuthenticate } from '../middleware/auth.js';
 
 export class OAuthController {
   /**
@@ -161,7 +160,7 @@ export class OAuthController {
    * OAuth 2.0 token revocation endpoint
    * Revokes access and refresh tokens
    */
-  async revoke(req: Request, res: Response, next: NextFunction) {
+  async revoke(req: Request, res: Response, _next: NextFunction) {
     try {
       const { token } = req.body;
 

@@ -3,7 +3,7 @@ import { hashPassword, comparePassword, validatePasswordStrength } from '../util
 import { generateAccessToken, generateRefreshToken, TokenPayload } from '../utils/jwt.js';
 import { generateResetToken, verifyResetToken, deleteResetToken } from '../utils/tokenStore.js';
 import emailService from './emailService.js';
-import { ValidationError, AuthenticationError, ConflictError, NotFoundError, ServerError } from '../utils/errors.js';
+import { ValidationError, AuthenticationError, ConflictError, NotFoundError } from '../utils/errors.js';
 
 const prisma = new PrismaClient();
 

@@ -54,7 +54,7 @@ export class AdminOAuthController {
    * GET /api/admin/oauth/clients
    * List all OAuth clients
    */
-  async listClients(req: Request, res: Response, next: NextFunction) {
+  async listClients(_req: Request, res: Response, next: NextFunction) {
     try {
       const clients = await getAllClients();
 

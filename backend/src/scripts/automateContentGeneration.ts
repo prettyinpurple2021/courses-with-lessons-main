@@ -16,7 +16,6 @@ import { join } from 'path';
 import { PrismaClient } from '@prisma/client';
 import * as contentGenerationService from '../services/contentGenerationService.js';
 import { adminCourseService } from '../services/adminCourseService.js';
-import { logger } from '../utils/logger.js';
 
 // Load environment variables
 const envFile = process.env.NODE_ENV === 'production' 

@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 import { verifyAccessToken, OAuthTokenPayload } from '../services/oauthService.js';
-import { AuthenticationError } from '../utils/errors.js';
 
 // Extend Express Request type to include OAuth info
 declare global {
