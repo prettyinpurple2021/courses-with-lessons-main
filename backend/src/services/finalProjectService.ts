@@ -100,6 +100,17 @@ export async function isProjectUnlocked(userId: string, courseId: string): Promi
 /**
  * Submit final project
  */
+/**
+ * Submit final project for review
+ * 
+ * Validates project unlock status, saves submission, and queues webhook
+ * notification to external systems.
+ * 
+ * @param userId - ID of the user submitting the project
+ * @param projectId - ID of the project being submitted
+ * @param submissionData - Project submission data (files, text, etc.)
+ * @throws Error if project not found, not unlocked, or submission invalid
+ */
 export async function submitFinalProject(
   userId: string,
   projectId: string,

@@ -130,44 +130,53 @@ export class UserService {
       },
     });
 
-    const progressData = await Promise.all(
-      enrollments.map(async (enrollment: any) => {
-        const totalLessons = enrollment.course.lessons.length;
-
-        // Count completed lessons for this course
-        const completedLessons = await prisma.lessonProgress.count({
-          where: {
-            userId,
-            lessonId: {
-              in: enrollment.course.lessons.map((l: any) => l.id),
-            },
-            completed: true,
-          },
-        });
-
-        const progress = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
-
-        let status: 'not_started' | 'in_progress' | 'completed' = 'not_started';
-        if (enrollment.completedAt) {
-          status = 'completed';
-        } else if (completedLessons > 0) {
-          status = 'in_progress';
-        }
-
-        return {
-          courseId: enrollment.course.id,
-          courseNumber: enrollment.course.courseNumber,
-          courseTitle: enrollment.course.title,
-          thumbnail: enrollment.course.thumbnail,
-          progress,
-          lessonsCompleted: completedLessons,
-          totalLessons,
-          status,
-          enrolledAt: enrollment.enrolledAt.toISOString(),
-          completedAt: enrollment.completedAt?.toISOString(),
-        };
-      })
+    // Batch fetch all lesson progress to avoid N+1 queries
+    const allLessonIds = enrollments.flatMap((enrollment: any) =>
+      enrollment.course.lessons.map((l: any) => l.id)
     );
+
+    const completedLessons = await prisma.lessonProgress.findMany({
+      where: {
+        userId,
+        lessonId: { in: allLessonIds },
+        completed: true,
+      },
+      select: {
+        lessonId: true,
+      },
+    });
+
+    const completedLessonIds = new Set(completedLessons.map((lp) => lp.lessonId));
+
+    // Map progress data (no async operations in map)
+    const progressData = enrollments.map((enrollment: any) => {
+      const totalLessons = enrollment.course.lessons.length;
+      const completedCount = enrollment.course.lessons.filter((l: any) =>
+        completedLessonIds.has(l.id)
+      ).length;
+
+      const progress = totalLessons > 0 ? Math.round((completedCount / totalLessons) * 100) : 0;
+
+      let status: 'not_started' | 'in_progress' | 'completed' = 'not_started';
+      if (enrollment.completedAt) {
+        status = 'completed';
+      } else if (completedCount > 0) {
+        status = 'in_progress';
+      }
+
+      return {
+        courseId: enrollment.course.id,
+        courseNumber: enrollment.course.courseNumber,
+        courseTitle: enrollment.course.title,
+        thumbnail: enrollment.course.thumbnail,
+        progress,
+        lessonsCompleted: completedCount,
+        totalLessons,
+        status,
+        enrolledAt: enrollment.enrolledAt.toISOString(),
+        completedAt: enrollment.completedAt?.toISOString(),
+      };
+    });
 
     return progressData;
   }

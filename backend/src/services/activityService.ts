@@ -312,7 +312,17 @@ export function generateActivityFeedback(activityType: string, content: any, res
 }
 
 /**
- * Submit activity response
+ * Submit activity response and update progress
+ * 
+ * Validates user access, validates submission format, generates feedback,
+ * saves submission, unlocks next activity if applicable, and marks lesson
+ * as completed if all activities are done.
+ * 
+ * @param userId - ID of the user submitting the activity
+ * @param activityId - ID of the activity being submitted
+ * @param submissionData - User's response data
+ * @returns Object containing success status, feedback, unlock status, and completion status
+ * @throws Error if user doesn't have access, activity not found, or submission is invalid
  */
 export async function submitActivity(
   userId: string,

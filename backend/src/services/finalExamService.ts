@@ -126,6 +126,15 @@ export async function isExamUnlocked(userId: string, courseId: string): Promise<
 
 /**
  * Submit final exam and calculate score
+ * 
+ * Validates exam unlock status, calculates score based on answers,
+ * saves/updates exam result, and unlocks achievements if applicable.
+ * 
+ * @param userId - ID of the user submitting the exam
+ * @param examId - ID of the exam being submitted
+ * @param submissionData - User's answers to exam questions
+ * @returns Exam result with score, pass status, and answers
+ * @throws Error if exam not found, not unlocked, or submission invalid
  */
 export async function submitFinalExam(
   userId: string,

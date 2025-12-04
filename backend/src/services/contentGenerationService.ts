@@ -489,7 +489,18 @@ Do not include any markdown formatting, code blocks, or text outside the JSON. R
 }
 
 /**
- * Main function to generate a complete activity
+ * Generate a complete activity using AI
+ * 
+ * Fetches lesson context, generates activity metadata (title/description),
+ * and generates activity content based on type (quiz, exercise, practical_task, reflection).
+ * 
+ * @param options - Configuration for activity generation
+ * @param options.lessonId - ID of the lesson to generate activity for
+ * @param options.activityType - Type of activity to generate
+ * @param options.activityNumber - Sequential number of activity in lesson
+ * @param options.position - Position in lesson (opening/mid/closing) for quizzes
+ * @returns Generated activity with title, description, and content
+ * @throws Error if AI client not configured or generation fails
  */
 export async function generateActivity(options: GenerateActivityOptions): Promise<GeneratedActivity> {
   const { lessonId, activityType, activityNumber, position } = options;
@@ -530,7 +541,15 @@ export async function generateActivity(options: GenerateActivityOptions): Promis
 }
 
 /**
- * Generate multiple activities for a lesson
+ * Generate multiple activities for a lesson based on activity plan
+ * 
+ * Generates activities sequentially according to the provided plan or default plan.
+ * Adds delays between generations to avoid API rate limiting.
+ * 
+ * @param lessonId - ID of the lesson to generate activities for
+ * @param activityPlan - Optional custom plan for activity types and positions
+ * @returns Array of generated activities
+ * @throws Error if any activity generation fails
  */
 export async function generateLessonActivities(
   lessonId: string,

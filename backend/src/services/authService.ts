@@ -31,6 +31,17 @@ export interface AuthResponse {
 }
 
 export class AuthService {
+  /**
+   * Register a new user account
+   * 
+   * Validates password strength, checks for existing user, hashes password,
+   * creates user account, auto-enrolls in Course One, and generates JWT tokens.
+   * 
+   * @param input - Registration data containing email, password, firstName, lastName
+   * @returns Authentication response with user data and JWT tokens
+   * @throws ValidationError if password doesn't meet strength requirements
+   * @throws ConflictError if user with email already exists
+   */
   async register(input: RegisterInput): Promise<AuthResponse> {
     const { email, password, firstName, lastName } = input;
 
@@ -104,6 +115,15 @@ export class AuthService {
     }
   }
 
+  /**
+   * Authenticate user and generate JWT tokens
+   * 
+   * Validates email and password, generates access and refresh tokens.
+   * 
+   * @param input - Login credentials containing email and password
+   * @returns Authentication response with user data and JWT tokens
+   * @throws AuthenticationError if email or password is invalid
+   */
   async login(input: LoginInput): Promise<AuthResponse> {
     const { email, password } = input;
 
@@ -154,6 +174,15 @@ export class AuthService {
     throw new Error('Method should be called from controller');
   }
 
+  /**
+   * Request password reset token
+   * 
+   * Generates a reset token and sends it via email. Returns a generic message
+   * to prevent email enumeration attacks.
+   * 
+   * @param email - User's email address
+   * @returns Generic success message (doesn't reveal if user exists)
+   */
   async requestPasswordReset(email: string): Promise<string> {
     // Find user
     const user = await prisma.user.findUnique({
@@ -187,6 +216,15 @@ export class AuthService {
     return 'If an account exists with this email, a password reset link has been sent';
   }
 
+  /**
+   * Reset user password using reset token
+   * 
+   * Validates token, checks password strength, hashes new password, and updates user.
+   * 
+   * @param token - Password reset token from email
+   * @param newPassword - New password to set
+   * @throws ValidationError if token is invalid/expired or password doesn't meet requirements
+   */
   async resetPassword(token: string, newPassword: string): Promise<void> {
     // Verify token
     const userId = verifyResetToken(token);

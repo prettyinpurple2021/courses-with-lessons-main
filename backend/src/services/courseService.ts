@@ -49,6 +49,12 @@ export interface CourseDetails {
 
 /**
  * Get all courses with lock status for a specific user
+ * 
+ * Optimized to avoid N+1 queries by batching progress calculations.
+ * 
+ * @param userId - The ID of the user to get courses for
+ * @returns Array of courses with lock status, enrollment status, and progress
+ * @throws Error if database query fails
  */
 export async function getAllCoursesWithStatus(userId: string): Promise<CourseWithLockStatus[]> {
   // Get all courses ordered by course number
@@ -77,35 +83,66 @@ export async function getAllCoursesWithStatus(userId: string): Promise<CourseWit
 
   const highestUnlockedCourse = userEnrollment?.unlockedCourses || 1;
 
-  // Map courses with lock status
-  const coursesWithStatus: CourseWithLockStatus[] = await Promise.all(
-    courses.map(async (course: any) => {
-      const enrollment = course.enrollments[0];
-      const isEnrolled = !!enrollment;
-      const isCompleted = !!enrollment?.completedAt;
-      const isLocked = course.courseNumber > highestUnlockedCourse;
+  // Batch fetch all lesson progress for enrolled courses to avoid N+1 queries
+  const enrolledCourseIds = courses
+    .filter((course: any) => course.enrollments.length > 0)
+    .map((course: any) => course.id);
 
-      // Calculate progress if enrolled
-      let progress = 0;
-      if (isEnrolled) {
-        progress = await calculateCourseProgress(userId, course.id);
+  let progressMap: Record<string, number> = {};
+  if (enrolledCourseIds.length > 0) {
+    // Get all lesson IDs for enrolled courses
+    const allLessonIds = courses
+      .filter((course: any) => enrolledCourseIds.includes(course.id))
+      .flatMap((course: any) => course.lessons.map((l: { id: string }) => l.id));
+
+    // Get all completed lessons for this user in one query
+    const completedLessons = await prisma.lessonProgress.findMany({
+      where: {
+        userId,
+        lessonId: { in: allLessonIds },
+        completed: true,
+      },
+      select: {
+        lessonId: true,
+      },
+    });
+
+    const completedLessonIds = new Set(completedLessons.map((lp) => lp.lessonId));
+
+    // Calculate progress for each enrolled course
+    for (const course of courses) {
+      if (enrolledCourseIds.includes(course.id)) {
+        const totalLessons = course.lessons.length;
+        const completedCount = course.lessons.filter((l: { id: string }) =>
+          completedLessonIds.has(l.id)
+        ).length;
+        progressMap[course.id] = totalLessons > 0 ? Math.round((completedCount / totalLessons) * 100) : 0;
       }
+    }
+  }
 
-      return {
-        id: course.id,
-        courseNumber: course.courseNumber,
-        title: course.title,
-        description: course.description,
-        thumbnail: course.thumbnail,
-        published: course.published,
-        isLocked,
-        isEnrolled,
-        isCompleted,
-        progress,
-        lessonCount: course.lessons.length,
-      };
-    })
-  );
+  // Map courses with lock status (no async operations in map)
+  const coursesWithStatus: CourseWithLockStatus[] = courses.map((course: any) => {
+    const enrollment = course.enrollments[0];
+    const isEnrolled = !!enrollment;
+    const isCompleted = !!enrollment?.completedAt;
+    const isLocked = course.courseNumber > highestUnlockedCourse;
+    const progress = isEnrolled ? (progressMap[course.id] || 0) : 0;
+
+    return {
+      id: course.id,
+      courseNumber: course.courseNumber,
+      title: course.title,
+      description: course.description,
+      thumbnail: course.thumbnail,
+      published: course.published,
+      isLocked,
+      isEnrolled,
+      isCompleted,
+      progress,
+      lessonCount: course.lessons.length,
+    };
+  });
 
   return coursesWithStatus;
 }
