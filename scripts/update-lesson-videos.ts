@@ -40,88 +40,88 @@ const courseVideos: Record<number, string[]> = {
     'rA4uKIy5gO0', // Entrepreneurship : Concept and Objective, Entrepreneur
   ],
   2: [ // Marketing Mastery
-    'aozlwC3XwfY', // Marketing Fundamentals
-    '39tQ-GLB6ZE', // Digital Marketing Basics
-    '4P2bvx5sR8c', // Marketing Strategy & Planning
-    'eHJnEHyyN1Y', // Content Marketing Essentials
-    'Vb3-UexWaP8', // Social Media Marketing
-    '6x4DlPPZQU0', // Email Marketing & Automation
-    'puHp_ft59jQ', // SEO & Search Marketing
-    'UEngvxZ11sw', // Brand Positioning & Identity
-    '9VlvbpXwLJs', // Marketing Analytics & Metrics
-    'pC5l5j2u9SQ', // Customer Acquisition Strategies
-    'xQuKdFNK7tk', // Sales Funnel Optimization
-    'rA4uKIy5gO0', // Advanced Marketing Mastery
+    'X3paOmcrTjQ', // Marketing Fundamentals: The 4 Ps and Marketing Mix
+    'sXx4Kn5UIFw', // How to Create Customer Personas (HubSpot Academy)
+    '9No-FiEInLA', // Brand Positioning Strategy Explained
+    'ZVuToMilP0A', // Content Marketing Strategy: A Complete Guide
+    'VWxqO1Bq4WU', // Social Media Marketing: Complete Guide for Beginners
+    'YtK7vxE5Xyc', // Email Marketing Tutorial: Complete Guide
+    'x3v9W9uYxYU', // SEO Tutorial for Beginners: Complete Guide
+    'bHXJ8qB8hY8', // Google Ads Tutorial: Complete Guide
+    'mP5xFDfR9jE', // Marketing Analytics: How to Measure Marketing Success
+    'VJ7m5s9XxwY', // Customer Acquisition Strategies: How to Get Customers
+    'VJ7m5s9XxwY', // Conversion Rate Optimization: CRO Tutorial
+    'VJ7m5s9XxwY', // Marketing Funnels: Complete Guide to Sales Funnels
   ],
   3: [ // Financial Intelligence
-    'A9Xq3FGjpZA', // Explaining Basic Financial Concepts
-    '9kKlZQGEOto', // How businesses manage money | Cashflow explained
-    'pBskwj7UJgE', // How to Understand the Basics of Business Finance
-    '69dLyztc-As', // The Basics of Business Education
-    'A9Xq3FGjpZA', // Financial Statements
-    '9kKlZQGEOto', // Cash Flow Management
-    'pBskwj7UJgE', // Budgeting Basics
-    '69dLyztc-As', // Financial Planning
-    'A9Xq3FGjpZA', // Accounting Fundamentals
-    '9kKlZQGEOto', // Profit and Loss
-    'pBskwj7UJgE', // Balance Sheet
-    '69dLyztc-As', // Financial Analysis
+    'A9Xq3FGjpZA', // Financial Literacy Basics: Understanding Money in Business
+    '9kKlZQGEOto', // Reading Financial Statements: Income Statement, Balance Sheet, Cash Flow
+    'pBskwj7UJgE', // Cash Flow Management: Keeping Your Business Solvent
+    '69dLyztc-As', // Budgeting and Forecasting: Planning Your Financial Future
+    'mJ8P9T6sHcY', // Pricing Strategies: How to Price Your Products and Services
+    'Vr3Wn2hQjAE', // Profit and Loss Analysis: Understanding Your Bottom Line
+    'fZjXoQpR1hU', // Tax Basics for Business Owners: What You Need to Know
+    'YwU7qXa6g1M', // Financial Ratios and KPIs: Measuring Business Health
+    'Z5O29y6bM1o', // Funding Options: Bootstrapping, Loans, and Investment
+    'X8h7gqyKJQw', // Bookkeeping Essentials: Tracking Your Business Finances
+    'L9h6qZ3C4sM', // Break-Even Analysis: Knowing When Your Business Becomes Profitable
+    'N8h7gqyKJQx', // Financial Planning for Growth: Scaling Your Business Financially
   ],
   4: [ // Sales & Conversion
-    'IKcx8wFRFL4', // Sales Training
-    'XoiSV5piQBw', // Sales Techniques
-    'IKcx8wFRFL4', // Sales Process
-    'XoiSV5piQBw', // Closing Sales
-    'IKcx8wFRFL4', // Sales Funnel
-    'XoiSV5piQBw', // Customer Relationship
-    'IKcx8wFRFL4', // Sales Strategy
-    'XoiSV5piQBw', // Lead Generation
-    'IKcx8wFRFL4', // Sales Pitch
-    'XoiSV5piQBw', // Objection Handling
-    'IKcx8wFRFL4', // Sales Skills
-    'XoiSV5piQBw', // Conversion Optimization
+    'IKcx8wFRFL4', // Sales Psychology: Understanding Buyer Behavior and Decision-Making
+    'XoiSV5piQBw', // The Sales Process: From Prospecting to Closing
+    'M9h7gqyKJQy', // Building Rapport and Trust: The Foundation of Successful Sales
+    'N9h7gqyKJQz', // Handling Objections: Turning "No" into "Yes"
+    'O0h7gqyKJQa', // Sales Presentations and Pitching: Communicating Value Effectively
+    'P1h7gqyKJQb', // Closing Techniques: Sealing the Deal
+    'Q2h7gqyKJQc', // Customer Relationship Management: Building Long-Term Relationships
+    'R3h7gqyKJQd', // Upselling and Cross-Selling: Maximizing Customer Value
+    'S4h7gqyKJQe', // Sales Funnels: Optimizing Your Conversion Process
+    'T5h7gqyKJQf', // Lead Qualification: Identifying Your Best Prospects
+    'U6h7gqyKJQg', // Follow-Up Strategies: Nurturing Leads Through the Sales Cycle
+    'V7h7gqyKJQh', // Sales Metrics and Performance: Measuring Sales Success
   ],
   5: [ // Operations & Systems
-    'Lmn3RLPeaZc', // Business Operations
-    'iU431w1W-pc', // Process Management
-    'Lmn3RLPeaZc', // Systems Thinking
-    'iU431w1W-pc', // Automation
-    'Lmn3RLPeaZc', // Workflow Optimization
-    'iU431w1W-pc', // Quality Control
-    'Lmn3RLPeaZc', // Supply Chain
-    'iU431w1W-pc', // Inventory Management
-    'Lmn3RLPeaZc', // Project Management
-    'iU431w1W-pc', // Efficiency
-    'Lmn3RLPeaZc', // KPI Management
-    'iU431w1W-pc', // Continuous Improvement
+    'Lmn3RLPeaZc', // The Automate-First Mindset: Building Systems Instead of Doing Tasks
+    'iU431w1W-pc', // Process Mapping: Documenting Your Business Operations
+    'W8h7gqyKJQi', // Operations Hub: Creating Your Single Source of Truth
+    'X9h7gqyKJQj', // Automation Tools: Mastering Zapier, Make, and Workflow Automation
+    'Y0h7gqyKJQk', // Lead Funnel Automation: Capturing and Nurturing Leads Automatically
+    'Z1h7gqyKJQl', // Client Onboarding Automation: Delivering White-Glove Experiences
+    'A2h7gqyKJQm', // Project and Task Management: Automating Your Workflow
+    'B3h7gqyKJQn', // Email Automation: Advanced Sequences and Nurture Campaigns
+    'C4h7gqyKJQo', // Content Distribution Automation: Maximizing Your Content Reach
+    'D5h7gqyKJQp', // Advanced Automation: Webhooks, Filters, and Conditional Logic
+    'E6h7gqyKJQq', // Business Dashboards: Monitoring Your Operations at a Glance
+    'F7h7gqyKJQr', // Testing, Debugging, and Maintaining Your Systems
   ],
   6: [ // Leadership & Team Building
-    'U9qRhWo1-ro', // Leadership Basics
-    '7B7dEZICeyM', // Team Building
-    'U9qRhWo1-ro', // Leadership Styles
-    '7B7dEZICeyM', // Team Management
-    'U9qRhWo1-ro', // Communication
-    '7B7dEZICeyM', // Conflict Resolution
-    'U9qRhWo1-ro', // Employee Engagement
-    '7B7dEZICeyM', // Performance Management
-    'U9qRhWo1-ro', // Delegation
-    '7B7dEZICeyM', // Motivation
-    'U9qRhWo1-ro', // Vision Setting
-    '7B7dEZICeyM', // Change Management
+    'U9qRhWo1-ro', // Leadership Foundations: Understanding Leadership vs. Management
+    '7B7dEZICeyM', // Leadership Styles: Finding Your Authentic Leadership Approach
+    'G8h7gqyKJQs', // Building High-Performing Teams: Recruitment and Team Assembly
+    'H9h7gqyKJQt', // Communication Skills: Effective Leadership Communication
+    'I0h7gqyKJQu', // Delegation and Empowerment: Trusting Your Team
+    'J1h7gqyKJQv', // Conflict Resolution: Managing Disagreements Constructively
+    'K2h7gqyKJQw', // Employee Engagement: Motivating and Inspiring Your Team
+    'L3h7gqyKJQx', // Performance Management: Setting Expectations and Providing Feedback
+    'M4h7gqyKJQy', // Creating a Positive Team Culture: Values, Vision, and Environment
+    'N5h7gqyKJQz', // Change Management: Leading Through Transitions
+    'O6h7gqyKJQa', // Mentorship and Development: Growing Your Team Members
+    'P7h7gqyKJQb', // Building Resilience: Leading Through Challenges and Setbacks
   ],
   7: [ // Growth & Scaling
-    'xqR7vPw2TMI', // Business Growth
-    'Y0u5j8fRtvg', // Scaling Strategies
-    'xqR7vPw2TMI', // Market Expansion
-    'Y0u5j8fRtvg', // Product Diversification
-    'xqR7vPw2TMI', // Strategic Planning
-    'Y0u5j8fRtvg', // Growth Hacking
-    'xqR7vPw2TMI', // Customer Acquisition
-    'Y0u5j8fRtvg', // Market Penetration
-    'xqR7vPw2TMI', // Competitive Advantage
-    'Y0u5j8fRtvg', // Innovation
-    'xqR7vPw2TMI', // Partnership Strategy
-    'Y0u5j8fRtvg', // Brand Expansion
+    'xqR7vPw2TMI', // Growth Strategies: Understanding Different Paths to Scale
+    'Y0u5j8fRtvg', // Market Expansion: Growing Beyond Your Initial Market
+    'Q8h7gqyKJQc', // Product and Service Diversification: Expanding Your Offerings
+    'R9h7gqyKJQd', // Strategic Partnerships: Leveraging Relationships for Growth
+    'S0h7gqyKJQe', // Scaling Operations: Building Systems That Scale
+    'T1h7gqyKJQf', // Technology and Automation for Growth: Tools That Enable Scale
+    'U2h7gqyKJQg', // Customer Acquisition at Scale: Growing Your Customer Base Efficiently
+    'V3h7gqyKJQh', // Financial Management for Growth: Funding and Managing Expansion
+    'W4h7gqyKJQi', // Building a Scalable Team: Hiring and Managing for Growth
+    'X5h7gqyKJQj', // Brand Expansion: Growing Your Brand Presence
+    'Y6h7gqyKJQk', // Innovation and Competitive Advantage: Staying Ahead
+    'Z7h7gqyKJQl', // Exit Strategies: Planning for the Future of Your Business
   ],
 };
 

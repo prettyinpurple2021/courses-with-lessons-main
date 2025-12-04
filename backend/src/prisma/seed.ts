@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { lessonTitles } from './lessonTitles';
 
 const prisma = new PrismaClient();
 
@@ -61,14 +62,21 @@ async function main() {
       },
     });
 
-    // Create 12 lessons for each course
+    // Create 12 lessons for each course with specific titles
+    const courseLessonTitles = lessonTitles[courseData.courseNumber] || [];
+    
     for (let lessonNum = 1; lessonNum <= 12; lessonNum++) {
+      const specificTitle = courseLessonTitles[lessonNum - 1] || `Lesson ${lessonNum}: ${courseData.title} - Part ${lessonNum}`;
+      const description = courseLessonTitles[lessonNum - 1] 
+        ? `Learn ${specificTitle.toLowerCase()}. This lesson covers essential concepts and practical applications.`
+        : `Comprehensive lesson covering key concepts of ${courseData.title}.`;
+      
       const lesson = await prisma.lesson.create({
         data: {
           courseId: course.id,
           lessonNumber: lessonNum,
-          title: `Lesson ${lessonNum}: ${courseData.title} - Part ${lessonNum}`,
-          description: `Comprehensive lesson covering key concepts of ${courseData.title}.`,
+          title: specificTitle,
+          description,
           youtubeVideoId: 'dQw4w9WgXcQ', // Placeholder - run `npm run content:update-videos` to replace with real videos
           duration: 1800,
         },

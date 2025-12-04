@@ -30,6 +30,8 @@
     "test:smoke": "tsx scripts/smoke-tests.ts",
     "check:production": "tsx scripts/production-readiness-check.ts",
     "verify:videos": "tsx scripts/verify-youtube-videos.ts",
+    "verify:alignment": "tsx scripts/verify-video-lesson-alignment.ts",
+    "verify:alignment:search": "tsx scripts/verify-video-lesson-alignment.ts --search-better",
     "verify:content": "tsx scripts/verify-content-completeness.ts",
     "report:production": "tsx scripts/generate-production-report.ts",
     "content:update-videos": "tsx scripts/update-lesson-videos.ts",
