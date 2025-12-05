@@ -35,7 +35,7 @@ const RegisterPage: React.FC = () => {
       success('Registration successful! Welcome to SoloSuccess Intel Academy.');
       navigate('/dashboard', { replace: true });
     } catch (error) {
-      handleError(error, 'Registration failed. Please try again.');
+      handleError(error);
     }
   };
 

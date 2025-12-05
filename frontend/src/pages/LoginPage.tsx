@@ -35,7 +35,8 @@ const LoginPage: React.FC = () => {
       success('Welcome back! Login successful.');
       navigate(from, { replace: true });
     } catch (error) {
-      handleError(error, 'Login failed. Please check your credentials.');
+      console.log('Login error caught:', error);
+      handleError(error);
     }
   };
 

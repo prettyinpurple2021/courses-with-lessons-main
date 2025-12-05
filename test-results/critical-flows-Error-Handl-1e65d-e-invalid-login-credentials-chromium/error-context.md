@@ -27,10 +27,10 @@
       - generic [ref=e26]:
         - generic [ref=e27]:
           - generic [ref=e28]: Email
-          - textbox "your.email@example.com" [ref=e29]
+          - textbox "your.email@example.com" [ref=e29]: invalid@example.com
         - generic [ref=e30]:
           - generic [ref=e31]: Password
-          - textbox "Enter your password" [ref=e32]
+          - textbox "Enter your password" [ref=e32]: wrongpassword
         - link "Forgot password?" [ref=e34] [cursor=pointer]:
           - /url: /forgot-password
         - button "Sign In" [ref=e35] [cursor=pointer]

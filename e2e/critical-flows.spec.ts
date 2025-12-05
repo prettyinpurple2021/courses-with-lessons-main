@@ -89,12 +89,10 @@ test.describe('Critical User Flows', () => {
     await loginUser(page, userEmail, userPassword);
 
     // Wait for courses to load
-    await page.waitForSelector('text=/Business Fundamentals/i', {
-      timeout: 10000
-    });
+    const courseOne = page.getByRole('heading', { name: /Business Fundamentals/i }).first();
+    await expect(courseOne).toBeVisible({ timeout: 10000 });
 
     // Verify Course One is visible and accessible
-    const courseOne = page.locator('text=/Business Fundamentals/i').first();
     await expect(courseOne).toBeVisible();
 
     // Verify other courses are locked (if visible)
@@ -387,9 +385,8 @@ test.describe('Error Handling and Edge Cases', () => {
 
     // Should show error message
     // Should show error message
-    const alert = page.getByRole('alert');
+    const alert = page.getByRole('alert').filter({ hasText: /failed|error|invalid|incorrect/i });
     await expect(alert).toBeVisible({ timeout: 5000 });
-    await expect(alert).toContainText(/failed|error|invalid|incorrect/i);
   });
 
   test('should handle duplicate registration', async ({ page }) => {
@@ -424,9 +421,8 @@ test.describe('Error Handling and Edge Cases', () => {
 
     // Should show error about existing email
     // Should show error message
-    const alert = page.getByRole('alert');
+    const alert = page.getByRole('alert').filter({ hasText: /exists|registered|taken/i });
     await expect(alert).toBeVisible({ timeout: 5000 });
-    await expect(alert).toContainText(/exists|registered|taken/i);
   });
 
   test('should redirect unauthenticated users to login', async ({ page }) => {

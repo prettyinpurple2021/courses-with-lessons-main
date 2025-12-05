@@ -28,13 +28,13 @@
         - generic [ref=e27]:
           - generic [ref=e28]:
             - generic [ref=e29]: First Name
-            - textbox "Jane" [ref=e30]: Duplicate
+            - textbox "Jane" [ref=e30]: Test
           - generic [ref=e31]:
             - generic [ref=e32]: Last Name
-            - textbox "Doe" [ref=e33]: Test
+            - textbox "Doe" [ref=e33]: User
         - generic [ref=e34]:
           - generic [ref=e35]: Email
-          - textbox "your.email@example.com" [ref=e36]: duplicate-1764953681031@example.com
+          - textbox "your.email@example.com" [ref=e36]: test-1764958664281@example.com
         - generic [ref=e37]:
           - generic [ref=e38]: Password
           - textbox "Create a strong password" [ref=e39]: TestPassword123!

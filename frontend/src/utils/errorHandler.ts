@@ -122,7 +122,7 @@ export const getUserFriendlyMessage = (error: AppError): string => {
     case ErrorType.NETWORK_ERROR:
       return 'Unable to connect. Please check your internet connection and try again.';
     case ErrorType.AUTHENTICATION_ERROR:
-      return 'Your session has expired. Please log in again.';
+      return error.message || 'Your session has expired. Please log in again.';
     case ErrorType.VALIDATION_ERROR:
       return error.message || 'Please check your input and try again.';
     case ErrorType.NOT_FOUND:
