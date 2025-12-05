@@ -40,4 +40,24 @@ router.get(
   asyncHandler(adminController.getDashboardStats)
 );
 
+// Get pending exams (protected)
+router.get(
+  '/grading/pending',
+  authenticate,
+  requireAdmin,
+  asyncHandler(adminController.getPendingExams)
+);
+
+// Grade exam (protected)
+router.post(
+  '/grading/:resultId',
+  authenticate,
+  requireAdmin,
+  validate([
+    body('score').isFloat({ min: 0, max: 100 }).withMessage('Score must be between 0 and 100'),
+    body('passed').isBoolean().withMessage('Passed status is required'),
+  ]),
+  asyncHandler(adminController.gradeExam)
+);
+
 export default router;

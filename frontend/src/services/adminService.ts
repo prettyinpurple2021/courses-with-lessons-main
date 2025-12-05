@@ -49,4 +49,23 @@ export const adminService = {
     // Backend returns { success: true, data: { totalUsers, totalCourses, ... } }
     return response.data.data;
   },
+
+  /**
+   * Get pending exams for review
+   */
+  async getPendingExams(): Promise<any[]> {
+    const response = await api.get('/admin/grading/pending');
+    return response.data.data;
+  },
+
+  /**
+   * Grade an exam
+   */
+  async gradeExam(resultId: string, score: number, passed: boolean): Promise<any> {
+    const response = await api.post(`/admin/grading/${resultId}`, {
+      score,
+      passed,
+    });
+    return response.data.data;
+  },
 };
