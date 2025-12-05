@@ -420,6 +420,12 @@ export default function YouTubePlayer({
       onMouseMove={showControlsTemporarily}
       onMouseEnter={() => setShowControls(true)}
       onMouseLeave={() => isPlaying && setShowControls(false)}
+      onTouchStart={() => setShowControls(true)}
+      onTouchEnd={() => {
+        if (isPlaying) {
+          setTimeout(() => setShowControls(false), 3000);
+        }
+      }}
     >
       <div className="glassmorphic overflow-hidden rounded-lg">
         <div className="relative pt-[56.25%]">
@@ -437,7 +443,7 @@ export default function YouTubePlayer({
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none" />
               
               {/* Controls Container */}
-              <div className="relative z-10 p-4 space-y-3">
+              <div className="relative z-10 p-2 md:p-4 space-y-2 md:space-y-3">
                 {/* Progress Bar */}
                 <div className="group">
                   <input
@@ -446,13 +452,13 @@ export default function YouTubePlayer({
                     max={duration || 100}
                     value={currentTime}
                     onChange={(e) => handleSeek(Number(e.target.value))}
-                    className="w-full h-1 bg-white/20 rounded-full appearance-none cursor-pointer
-                      [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 
+                    className="w-full h-2 md:h-1 bg-white/20 rounded-full appearance-none cursor-pointer touch-manipulation
+                      [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 
                       [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-hot-pink 
                       [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:holographic
-                      [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:rounded-full 
+                      [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full 
                       [&::-moz-range-thumb]:bg-hot-pink [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer
-                      hover:h-2 transition-all"
+                      hover:h-2 md:hover:h-2 transition-all"
                     style={{
                       background: `linear-gradient(to right, #FF1493 0%, #FF1493 ${(currentTime / duration) * 100}%, rgba(255,255,255,0.2) ${(currentTime / duration) * 100}%, rgba(255,255,255,0.2) 100%)`
                     }}
@@ -460,40 +466,40 @@ export default function YouTubePlayer({
                 </div>
 
                 {/* Control Buttons */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
+                <div className="flex items-center justify-between flex-wrap gap-2">
+                  <div className="flex items-center gap-2 md:gap-3">
                     {/* Play/Pause Button */}
                     <button
                       onClick={togglePlayPause}
-                      className="glassmorphic p-2 rounded-full hover:bg-white/20 transition-all holographic-border"
+                      className="glassmorphic p-1.5 md:p-2 rounded-full hover:bg-white/20 transition-all holographic-border touch-manipulation"
                       aria-label={isPlaying ? 'Pause' : 'Play'}
                     >
                       {isPlaying ? (
-                        <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-5 h-5 md:w-6 md:h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
                           <path d="M6 4h4v16H6V4zm8 0h4v16h-4V4z" />
                         </svg>
                       ) : (
-                        <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-5 h-5 md:w-6 md:h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
                           <path d="M8 5v14l11-7z" />
                         </svg>
                       )}
                     </button>
 
                     {/* Time Display */}
-                    <div className="text-white text-sm font-medium">
+                    <div className="text-white text-xs md:text-sm font-medium whitespace-nowrap">
                       {formatTime(currentTime)} / {formatTime(duration)}
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-1 md:gap-2 lg:gap-3 flex-wrap">
                     {/* Skip Backward Button */}
                     <button
                       onClick={skipBackward}
-                      className="glassmorphic p-2 rounded-full hover:bg-white/20 transition-all"
+                      className="glassmorphic p-1.5 md:p-2 rounded-full hover:bg-white/20 transition-all touch-manipulation"
                       aria-label="Skip backward 10 seconds"
                       title="← or J"
                     >
-                      <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-4 h-4 md:w-5 md:h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M11.99 5V1l-5 5 5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6h-2c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8zm-1.1 11h-.85v-3.26l-1.01.31v-.69l1.77-.63h.09V16zm4.28-1.76c0 .32-.03.6-.1.82s-.17.42-.29.57-.28.26-.45.33-.37.1-.59.1-.41-.03-.59-.1-.33-.18-.46-.33-.23-.34-.3-.57-.11-.5-.11-.82v-.74c0-.32.03-.6.1-.82s.17-.42.29-.57.28-.26.45-.33.37-.1.59-.1.41.03.59.1.33.18.46.33.23.34.3.57.11.5.11.82v.74zm-.85-.86c0-.19-.01-.35-.04-.48s-.07-.23-.12-.31-.11-.14-.19-.17-.16-.05-.25-.05-.18.02-.25.05-.14.09-.19.17-.09.18-.12.31-.04.29-.04.48v.97c0 .19.01.35.04.48s.07.24.12.32.11.14.19.17.16.05.25.05.18-.02.25-.05.14-.09.19-.17.09-.19.11-.32.04-.29.04-.48v-.97z" />
                       </svg>
                     </button>
@@ -501,11 +507,11 @@ export default function YouTubePlayer({
                     {/* Skip Forward Button */}
                     <button
                       onClick={skipForward}
-                      className="glassmorphic p-2 rounded-full hover:bg-white/20 transition-all"
+                      className="glassmorphic p-1.5 md:p-2 rounded-full hover:bg-white/20 transition-all touch-manipulation"
                       aria-label="Skip forward 10 seconds"
                       title="→ or L"
                     >
-                      <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-4 h-4 md:w-5 md:h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M15.95 10.78c.03-.25.05-.51.05-.78s-.02-.53-.06-.78l1.69-1.32c.15-.12.19-.34.1-.51l-1.6-2.77c-.1-.18-.31-.24-.49-.18l-1.99.8c-.42-.32-.86-.58-1.35-.78L12 2.34c-.03-.2-.2-.34-.4-.34H8.4c-.2 0-.36.14-.39.34l-.3 2.12c-.49.2-.94.47-1.35.78l-1.99-.8c-.18-.07-.39 0-.49.18l-1.6 2.77c-.1.18-.06.39.1.51l1.69 1.32c-.04.25-.07.52-.07.78s.02.53.06.78L2.37 12.1c-.15.12-.19.34-.1.51l1.6 2.77c.1.18.31.24.49.18l1.99-.8c.42.32.86.58 1.35.78l.3 2.12c.04.2.2.34.4.34h3.2c.2 0 .37-.14.39-.34l.3-2.12c.49-.2.94-.47 1.35-.78l1.99.8c.18.07.39 0 .49-.18l1.6-2.77c.1-.18.06-.39-.1-.51l-1.67-1.32zM10 13c-1.65 0-3-1.35-3-3s1.35-3 3-3 3 1.35 3 3-1.35 3-3 3zm8-2h3v2h-3v3h-2v-3h-3v-2h3V8h2v3z" />
                       </svg>
                     </button>
@@ -514,7 +520,7 @@ export default function YouTubePlayer({
                     <div className="relative">
                       <button
                         onClick={() => setShowSpeedMenu(!showSpeedMenu)}
-                        className="glassmorphic px-3 py-2 rounded-full hover:bg-white/20 transition-all text-white text-sm font-medium"
+                        className="glassmorphic px-2 md:px-3 py-1.5 md:py-2 rounded-full hover:bg-white/20 transition-all text-white text-xs md:text-sm font-medium touch-manipulation"
                         aria-label="Playback speed"
                       >
                         {playbackSpeed}x
@@ -537,15 +543,15 @@ export default function YouTubePlayer({
                     </div>
 
                     {/* Volume Control */}
-                    <div className="flex items-center gap-2 group">
+                    <div className="flex items-center gap-1 md:gap-2 group">
                       <button
                         onClick={() => handleVolumeChange(volume > 0 ? 0 : 100)}
-                        className="glassmorphic p-2 rounded-full hover:bg-white/20 transition-all"
+                        className="glassmorphic p-1.5 md:p-2 rounded-full hover:bg-white/20 transition-all touch-manipulation"
                         aria-label={volume > 0 ? 'Mute' : 'Unmute'}
                         title="M"
                       >
                         {volume > 0 ? (
-                          <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-4 h-4 md:w-5 md:h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
                           </svg>
                         ) : (
@@ -560,11 +566,11 @@ export default function YouTubePlayer({
                         max="100"
                         value={volume}
                         onChange={(e) => handleVolumeChange(Number(e.target.value))}
-                        className="w-20 h-1 bg-white/20 rounded-full appearance-none cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity
-                          [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-2 [&::-webkit-slider-thumb]:h-2 
+                        className="w-16 md:w-20 h-1 bg-white/20 rounded-full appearance-none cursor-pointer opacity-0 group-hover:opacity-100 md:opacity-100 transition-opacity touch-manipulation
+                          [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:h-3 
                           [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white 
                           [&::-webkit-slider-thumb]:cursor-pointer
-                          [&::-moz-range-thumb]:w-2 [&::-moz-range-thumb]:h-2 [&::-moz-range-thumb]:rounded-full 
+                          [&::-moz-range-thumb]:w-3 [&::-moz-range-thumb]:h-3 [&::-moz-range-thumb]:rounded-full 
                           [&::-moz-range-thumb]:bg-white [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
                       />
                     </div>
@@ -572,12 +578,12 @@ export default function YouTubePlayer({
                     {/* Fullscreen Button */}
                     <button
                       onClick={toggleFullscreen}
-                      className="glassmorphic p-2 rounded-full hover:bg-white/20 transition-all"
+                      className="glassmorphic p-1.5 md:p-2 rounded-full hover:bg-white/20 transition-all touch-manipulation"
                       aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
                       title="F"
                     >
                       {isFullscreen ? (
-                        <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4 md:w-5 md:h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
                           <path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z" />
                         </svg>
                       ) : (

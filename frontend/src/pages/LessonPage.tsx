@@ -298,8 +298,8 @@ export default function LessonPage() {
           </button>
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-3 mb-2">
-                <h1 className="text-3xl font-bold text-white">
+              <div className="flex items-center gap-2 md:gap-3 mb-2 flex-wrap">
+                <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-white break-words">
                   Lesson {lesson.lessonNumber}: {lesson.title}
                 </h1>
                 {lesson.progress.completed && (
@@ -310,8 +310,13 @@ export default function LessonPage() {
               </div>
               <p className="text-gray-300">{lesson.description}</p>
             </div>
-            <div className="flex items-center gap-3">
-              <GlassmorphicButton variant="outline" size="sm" onClick={() => setIsTutorOpen(true)}>
+            <div className="flex items-center gap-2 md:gap-3 flex-wrap">
+              <GlassmorphicButton 
+                variant="outline" 
+                size="sm" 
+                onClick={() => setIsTutorOpen(true)}
+                className="text-xs md:text-sm"
+              >
                 Ask AI Tutor
               </GlassmorphicButton>
               {lesson.progress.completed && (
@@ -323,9 +328,9 @@ export default function LessonPage() {
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-6">
+        <div className="grid lg:grid-cols-3 gap-4 md:gap-6">
           {/* Main Content */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-4 md:space-y-6">
             {/* Video Player */}
             <YouTubePlayer
               videoId={lesson.youtubeVideoId}
@@ -413,7 +418,7 @@ export default function LessonPage() {
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-6">
+          <div className="space-y-4 md:space-y-6 mt-6 lg:mt-0">
             {/* Lesson Navigation */}
             {courseDetails && (
               <LessonNavigation

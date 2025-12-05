@@ -161,6 +161,50 @@ export const logError = (error: AppError, context?: string): void => {
     });
   }
 
-  // In production, you would send this to an error tracking service like Sentry
-  // Example: Sentry.captureException(error.details || error.message, { extra: { context } });
+  // In production, send to error tracking service (e.g., Sentry)
+  if (import.meta.env.PROD) {
+    // Example implementation for Sentry:
+    // if (window.Sentry) {
+    //   window.Sentry.captureException(error.details || new Error(error.message), {
+    //     tags: {
+    //       errorType: error.type,
+    //       statusCode: error.statusCode,
+    //     },
+    //     extra: {
+    //       context,
+    //       timestamp: error.timestamp,
+    //     },
+    //   });
+    // }
+  }
+};
+
+/**
+ * Get retry delay based on attempt number with exponential backoff
+ */
+export const getRetryDelay = (attempt: number, baseDelay: number = 1000): number => {
+  return baseDelay * Math.pow(2, attempt);
+};
+
+/**
+ * Check if error indicates offline status
+ */
+export const isOfflineError = (error: AppError): boolean => {
+  return (
+    error.type === ErrorType.NETWORK_ERROR &&
+    !navigator.onLine
+  );
+};
+
+/**
+ * Get user-friendly retry message
+ */
+export const getRetryMessage = (retryCount: number, maxRetries: number): string => {
+  if (retryCount === 0) {
+    return 'Retrying...';
+  }
+  if (retryCount >= maxRetries) {
+    return 'Maximum retries reached. Please try again later.';
+  }
+  return `Retrying... (${retryCount}/${maxRetries})`;
 };
