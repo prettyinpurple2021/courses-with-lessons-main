@@ -222,6 +222,7 @@ export async function completeLessonAndUnlockNext(userId: string, lessonId: stri
     select: {
       lessonNumber: true,
       courseId: true,
+      duration: true,
     },
   });
 
@@ -271,6 +272,63 @@ export async function completeLessonAndUnlockNext(userId: string, lessonId: stri
       },
       data: {
         currentLesson: lesson.lessonNumber + 1,
+      },
+    });
+  }
+
+  // Update user stats (study time and streaks)
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: {
+      totalStudyTime: true,
+      currentStreak: true,
+      longestStreak: true,
+      lastStudyDate: true,
+    },
+  });
+
+  if (user) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const lastStudyDate = user.lastStudyDate ? new Date(user.lastStudyDate) : null;
+    if (lastStudyDate) {
+      lastStudyDate.setHours(0, 0, 0, 0);
+    }
+
+    let newCurrentStreak = user.currentStreak;
+    let newLongestStreak = user.longestStreak;
+
+    // Check streak logic
+    if (!lastStudyDate) {
+      // First time studying
+      newCurrentStreak = 1;
+    } else {
+      const diffTime = Math.abs(today.getTime() - lastStudyDate.getTime());
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      if (diffDays === 1) {
+        // Consecutive day
+        newCurrentStreak += 1;
+      } else if (diffDays > 1) {
+        // Streak broken
+        newCurrentStreak = 1;
+      }
+      // If diffDays === 0, same day, streak doesn't change
+    }
+
+    if (newCurrentStreak > newLongestStreak) {
+      newLongestStreak = newCurrentStreak;
+    }
+
+    // Update user stats
+    await prisma.user.update({
+      where: { id: userId },
+      data: {
+        totalStudyTime: { increment: lesson.duration || 0 },
+        currentStreak: newCurrentStreak,
+        longestStreak: newLongestStreak,
+        lastStudyDate: new Date(),
       },
     });
   }

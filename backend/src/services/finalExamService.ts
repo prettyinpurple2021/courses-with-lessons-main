@@ -42,6 +42,7 @@ export interface ExamResult {
   id: string;
   score: number;
   passed: boolean;
+  gradingStatus: 'GRADED' | 'PENDING_REVIEW';
   submittedAt: Date;
   answers: any;
 }
@@ -108,11 +109,11 @@ export async function getFinalExamByCourseId(
     })),
     result: result
       ? {
-          id: result.id,
-          score: result.score,
-          passed: result.passed,
-          submittedAt: result.submittedAt,
-        }
+        id: result.id,
+        score: result.score,
+        passed: result.passed,
+        submittedAt: result.submittedAt,
+      }
       : null,
   };
 }
@@ -169,9 +170,14 @@ export async function submitFinalExam(
   }
 
   // Calculate score
-  const { score, totalPoints } = calculateExamScore(exam.questions, submissionData.answers);
+  const { score, totalPoints, requiresManualGrading } = calculateExamScore(exam.questions, submissionData.answers);
   const scorePercentage = Math.round((score / totalPoints) * 100);
+
+  // If manual grading is required, we can't determine pass/fail yet
+  // But for now, we'll calculate based on auto-gradable parts
+  // In a real system, we might set passed to false until reviewed
   const passed = scorePercentage >= exam.passingScore;
+  const gradingStatus = requiresManualGrading ? 'PENDING_REVIEW' : 'GRADED';
 
   // Check if result already exists
   const existingResult = await prisma.finalExamResult.findUnique({
@@ -198,6 +204,7 @@ export async function submitFinalExam(
         score: scorePercentage,
         answers: submissionData.answers,
         passed,
+        gradingStatus,
         submittedAt: new Date(),
       },
     });
@@ -210,27 +217,32 @@ export async function submitFinalExam(
         score: scorePercentage,
         answers: submissionData.answers,
         passed,
+        gradingStatus,
       },
     });
   }
 
-  // Check and unlock achievements for exam submission (perfect score)
-  try {
-    await checkAndUnlockAchievements(userId, 'exam_submitted');
-  } catch (error) {
-    // Log error but don't fail exam submission if achievement check fails
-    console.error('Failed to check achievements:', error);
-  }
+  // Only unlock achievements/course if fully graded and passed
+  if (gradingStatus === 'GRADED') {
+    // Check and unlock achievements for exam submission (perfect score)
+    try {
+      await checkAndUnlockAchievements(userId, 'exam_submitted');
+    } catch (error) {
+      // Log error but don't fail exam submission if achievement check fails
+      console.error('Failed to check achievements:', error);
+    }
 
-  // If passed, mark course as completed and unlock next course
-  if (passed) {
-    await completeCourse(userId, exam.courseId);
+    // If passed, mark course as completed and unlock next course
+    if (passed) {
+      await completeCourse(userId, exam.courseId);
+    }
   }
 
   return {
     id: result.id,
     score: result.score,
     passed: result.passed,
+    gradingStatus: result.gradingStatus as 'GRADED' | 'PENDING_REVIEW',
     submittedAt: result.submittedAt,
     answers: result.answers,
   };
@@ -251,9 +263,10 @@ function calculateExamScore(
     }>;
   }>,
   answers: Record<string, any>
-): { score: number; totalPoints: number } {
+): { score: number; totalPoints: number; requiresManualGrading: boolean } {
   let score = 0;
   let totalPoints = 0;
+  let requiresManualGrading = false;
 
   for (const question of questions) {
     totalPoints += question.points;
@@ -276,14 +289,13 @@ function calculateExamScore(
         score += question.points;
       }
     } else if (question.type === 'short_answer') {
-      // For short answer, we'll need manual grading
-      // For now, we'll skip auto-grading short answers
-      // In a real system, this would require admin review
-      continue;
+      // For short answer, we require manual grading
+      requiresManualGrading = true;
+      // We don't add points for this yet
     }
   }
 
-  return { score, totalPoints };
+  return { score, totalPoints, requiresManualGrading };
 }
 
 /**
@@ -307,6 +319,7 @@ export async function getExamResult(userId: string, examId: string): Promise<Exa
     id: result.id,
     score: result.score,
     passed: result.passed,
+    gradingStatus: result.gradingStatus as 'GRADED' | 'PENDING_REVIEW',
     submittedAt: result.submittedAt,
     answers: result.answers,
   };

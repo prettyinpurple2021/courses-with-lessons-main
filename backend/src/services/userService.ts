@@ -88,11 +88,19 @@ export class UserService {
         ? Math.round(examResults.reduce((sum: number, result: { score: number }) => sum + result.score, 0) / examResults.length)
         : 0;
 
-    // For now, we'll use placeholder values for study time and streaks
-    // In a real implementation, these would be tracked separately
-    const totalStudyTime = lessonsViewed * 45; // Estimate 45 minutes per lesson
-    const currentStreak = 0; // Would need daily activity tracking
-    const longestStreak = 0; // Would need daily activity tracking
+    // Use real values from database
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        totalStudyTime: true,
+        currentStreak: true,
+        longestStreak: true,
+      },
+    });
+
+    const totalStudyTime = user?.totalStudyTime || 0;
+    const currentStreak = user?.currentStreak || 0;
+    const longestStreak = user?.longestStreak || 0;
 
     return {
       coursesCompleted,
@@ -216,7 +224,7 @@ export class UserService {
 
   async updateAvatar(userId: string, avatarData: string) {
     const { uploadImageToCloudinary, deleteImageFromCloudinary, isCloudinaryConfigured } = await import('../utils/imageUpload.js');
-    
+
     // Get current user to check for existing avatar
     const currentUser = await prisma.user.findUnique({
       where: { id: userId },
@@ -263,7 +271,7 @@ export class UserService {
 
   async changePassword(userId: string, currentPassword: string, newPassword: string) {
     const bcrypt = await import('bcrypt');
-    
+
     // Get user with password
     const user = await prisma.user.findUnique({
       where: { id: userId },
@@ -318,7 +326,7 @@ export class UserService {
 
   async deleteAccount(userId: string, password: string) {
     const bcrypt = await import('bcrypt');
-    
+
     // Get user with password
     const user = await prisma.user.findUnique({
       where: { id: userId },

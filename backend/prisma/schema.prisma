@@ -22,6 +22,10 @@ model User {
   createdAt               DateTime                 @default(now())
   updatedAt               DateTime                 @updatedAt
   role                    String                   @default("student")
+  totalStudyTime          Int                      @default(0) // in minutes
+  currentStreak           Int                      @default(0) // in days
+  longestStreak           Int                      @default(0) // in days
+  lastStudyDate           DateTime?
   achievements            Achievement[]
   activitySubmissions     ActivitySubmission[]
   certificates            Certificate[]
@@ -165,15 +169,16 @@ model ExamQuestionOption {
 }
 
 model FinalExamResult {
-  id          String    @id @default(uuid())
-  userId      String
-  examId      String
-  score       Int
-  answers     Json
-  passed      Boolean
-  submittedAt DateTime  @default(now())
-  exam        FinalExam @relation(fields: [examId], references: [id], onDelete: Cascade)
-  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id            String    @id @default(uuid())
+  userId        String
+  examId        String
+  score         Int
+  answers       Json
+  passed        Boolean
+  gradingStatus String    @default("GRADED") // GRADED, PENDING_REVIEW
+  submittedAt   DateTime  @default(now())
+  exam          FinalExam @relation(fields: [examId], references: [id], onDelete: Cascade)
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, examId])
 }
