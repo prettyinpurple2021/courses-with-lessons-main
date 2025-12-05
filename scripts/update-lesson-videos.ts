@@ -50,8 +50,8 @@ const courseVideos: Record<number, string[]> = {
     'bHXJ8qB8hY8', // Google Ads Tutorial: Complete Guide
     'mP5xFDfR9jE', // Marketing Analytics: How to Measure Marketing Success
     'VJ7m5s9XxwY', // Customer Acquisition Strategies: How to Get Customers
-    'VJ7m5s9XxwY', // Conversion Rate Optimization: CRO Tutorial
-    'VJ7m5s9XxwY', // Marketing Funnels: Complete Guide to Sales Funnels
+    'uoUq56-yTlA', // Conversion Rate Optimization: CRO Tutorial
+    'Ip59Qbv6J_w', // Marketing Funnels: Complete Guide to Sales Funnels
   ],
   3: [ // Financial Intelligence
     'A9Xq3FGjpZA', // Financial Literacy Basics: Understanding Money in Business
@@ -63,50 +63,50 @@ const courseVideos: Record<number, string[]> = {
     'fZjXoQpR1hU', // Tax Basics for Business Owners: What You Need to Know
     'YwU7qXa6g1M', // Financial Ratios and KPIs: Measuring Business Health
     'Z5O29y6bM1o', // Funding Options: Bootstrapping, Loans, and Investment
-    'X8h7gqyKJQw', // Bookkeeping Essentials: Tracking Your Business Finances
+    'a3GqDaIw8pA', // Bookkeeping Essentials: Tracking Your Business Finances
     'L9h6qZ3C4sM', // Break-Even Analysis: Knowing When Your Business Becomes Profitable
-    'N8h7gqyKJQx', // Financial Planning for Growth: Scaling Your Business Financially
+    'LDJ5MdhHpkU', // Financial Planning for Growth: Scaling Your Business Financially
   ],
   4: [ // Sales & Conversion
     'IKcx8wFRFL4', // Sales Psychology: Understanding Buyer Behavior and Decision-Making
     'XoiSV5piQBw', // The Sales Process: From Prospecting to Closing
-    'M9h7gqyKJQy', // Building Rapport and Trust: The Foundation of Successful Sales
-    'N9h7gqyKJQz', // Handling Objections: Turning "No" into "Yes"
-    'O0h7gqyKJQa', // Sales Presentations and Pitching: Communicating Value Effectively
-    'P1h7gqyKJQb', // Closing Techniques: Sealing the Deal
-    'Q2h7gqyKJQc', // Customer Relationship Management: Building Long-Term Relationships
-    'R3h7gqyKJQd', // Upselling and Cross-Selling: Maximizing Customer Value
-    'S4h7gqyKJQe', // Sales Funnels: Optimizing Your Conversion Process
-    'T5h7gqyKJQf', // Lead Qualification: Identifying Your Best Prospects
-    'U6h7gqyKJQg', // Follow-Up Strategies: Nurturing Leads Through the Sales Cycle
-    'V7h7gqyKJQh', // Sales Metrics and Performance: Measuring Sales Success
+    'PkCDXJooFmk', // Building Rapport and Trust: The Foundation of Successful Sales
+    'mDWUpuumAuo', // Handling Objections: Turning "No" into "Yes"
+    'QW0nxV7NLwM', // Sales Presentations and Pitching: Communicating Value Effectively
+    'I1qCquAm6UU', // Closing Techniques: Sealing the Deal
+    'IFl8olpwNKY', // Customer Relationship Management: Building Long-Term Relationships
+    'Y_Vob0sbPLQ', // Upselling and Cross-Selling: Maximizing Customer Value
+    '6oYu8TEa0W8', // Sales Funnels: Optimizing Your Conversion Process
+    '554iUA81fu4', // Lead Qualification: Identifying Your Best Prospects
+    'xdXAJJDsWmM', // Follow-Up Strategies: Nurturing Leads Through the Sales Cycle
+    'eTfktfHzU0w', // Sales Metrics and Performance: Measuring Sales Success
   ],
   5: [ // Operations & Systems
     'Lmn3RLPeaZc', // The Automate-First Mindset: Building Systems Instead of Doing Tasks
     'iU431w1W-pc', // Process Mapping: Documenting Your Business Operations
-    'W8h7gqyKJQi', // Operations Hub: Creating Your Single Source of Truth
-    'X9h7gqyKJQj', // Automation Tools: Mastering Zapier, Make, and Workflow Automation
-    'Y0h7gqyKJQk', // Lead Funnel Automation: Capturing and Nurturing Leads Automatically
-    'Z1h7gqyKJQl', // Client Onboarding Automation: Delivering White-Glove Experiences
-    'A2h7gqyKJQm', // Project and Task Management: Automating Your Workflow
-    'B3h7gqyKJQn', // Email Automation: Advanced Sequences and Nurture Campaigns
-    'C4h7gqyKJQo', // Content Distribution Automation: Maximizing Your Content Reach
-    'D5h7gqyKJQp', // Advanced Automation: Webhooks, Filters, and Conditional Logic
-    'E6h7gqyKJQq', // Business Dashboards: Monitoring Your Operations at a Glance
-    'F7h7gqyKJQr', // Testing, Debugging, and Maintaining Your Systems
+    '84WXRqe8WfQ', // Operations Hub: Creating Your Single Source of Truth
+    'JSA2oezQWOU', // Automation Tools: Mastering Zapier, Make, and Workflow Automation
+    'bZaKKiu9TEY', // Lead Funnel Automation: Capturing and Nurturing Leads Automatically
+    'ZQPXJG4P1mY', // Client Onboarding Automation: Delivering White-Glove Experiences
+    '1lom7oqKpdM', // Project and Task Management: Automating Your Workflow
+    'sQ9YWijEMJ0', // Email Automation: Advanced Sequences and Nurture Campaigns
+    'QoEHjnme1uc', // Content Distribution Automation: Maximizing Your Content Reach
+    'tNO0_7iH_pA', // Advanced Automation: Webhooks, Filters, and Conditional Logic
+    'b2QUdg5FyiY', // Business Dashboards: Monitoring Your Operations at a Glance
+    'ac8B4OwWbKA', // Testing, Debugging, and Maintaining Your Systems
   ],
   6: [ // Leadership & Team Building
     'U9qRhWo1-ro', // Leadership Foundations: Understanding Leadership vs. Management
     '7B7dEZICeyM', // Leadership Styles: Finding Your Authentic Leadership Approach
-    'G8h7gqyKJQs', // Building High-Performing Teams: Recruitment and Team Assembly
-    'H9h7gqyKJQt', // Communication Skills: Effective Leadership Communication
-    'I0h7gqyKJQu', // Delegation and Empowerment: Trusting Your Team
-    'J1h7gqyKJQv', // Conflict Resolution: Managing Disagreements Constructively
-    'K2h7gqyKJQw', // Employee Engagement: Motivating and Inspiring Your Team
-    'L3h7gqyKJQx', // Performance Management: Setting Expectations and Providing Feedback
-    'M4h7gqyKJQy', // Creating a Positive Team Culture: Values, Vision, and Environment
-    'N5h7gqyKJQz', // Change Management: Leading Through Transitions
-    'O6h7gqyKJQa', // Mentorship and Development: Growing Your Team Members
+    'kHqotfdgNdw', // Building High-Performing Teams: Recruitment and Team Assembly
+    'mm9_iyTe0oM', // Communication Skills: Effective Leadership Communication
+    'Ir2VqQERvgU', // Delegation and Empowerment: Trusting Your Team
+    'EDMY39JE1sY', // Conflict Resolution: Managing Disagreements Constructively
+    'y7xAtSETznY', // Employee Engagement: Motivating and Inspiring Your Team
+    '2PHuhBlxTu4', // Performance Management: Setting Expectations and Providing Feedback
+    '2y8SA6cLUys', // Creating a Positive Team Culture: Values, Vision, and Environment
+    'wxVgd8h1svU', // Change Management: Leading Through Transitions
+    'TChiE1FDXdY', // Mentorship and Development: Growing Your Team Members
     'P7h7gqyKJQb', // Building Resilience: Leading Through Challenges and Setbacks
   ],
   7: [ // Growth & Scaling
