@@ -40,7 +40,13 @@ router.get('/', asyncHandler(async (_req: Request, res: Response) => {
   try {
     const redisClient = getRedisClient();
     if (redisClient) {
-      await redisClient.ping();
+      // Add timeout to Redis ping to prevent hanging
+      const pingPromise = redisClient.ping();
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Redis ping timeout')), 1000)
+      );
+
+      await Promise.race([pingPromise, timeoutPromise]);
       healthStatus.redis = 'connected';
     } else {
       healthStatus.redis = 'not configured';
@@ -54,8 +60,8 @@ router.get('/', asyncHandler(async (_req: Request, res: Response) => {
     }
   }
 
-  const statusCode = healthStatus.status === 'healthy' ? 200 : 
-                     healthStatus.status === 'degraded' ? 200 : 503;
+  const statusCode = healthStatus.status === 'healthy' ? 200 :
+    healthStatus.status === 'degraded' ? 200 : 503;
 
   res.status(statusCode).json(healthStatus);
 }));

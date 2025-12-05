@@ -197,6 +197,18 @@ const AdminDashboardPage: React.FC = () => {
                 Create exams and projects
               </div>
             </button>
+
+            <button
+              onClick={() => navigate('/admin/grading')}
+              className="p-4 rounded-lg glassmorphic hover:bg-hot-pink/10 transition-colors text-left"
+            >
+              <div className="text-lg font-semibold text-hot-pink mb-1">
+                Grading Queue
+              </div>
+              <div className="text-sm text-steel-grey">
+                Review pending exams
+              </div>
+            </button>
           </div>
         </GlassmorphicCard>
       </div>

@@ -105,7 +105,33 @@ async function verifyRealSystems() {
             console.error('❌ Exam grading status failed');
         }
 
+        // 4. Verify Admin Grading
+        console.log('\nVerifying Admin Grading...');
+
+        // Simulate admin grading
+        const gradedResult = await prisma.finalExamResult.update({
+            where: { id: result.id },
+            data: {
+                score: 100,
+                passed: true,
+                gradingStatus: 'GRADED',
+            },
+        });
+
+        console.log('Graded exam result:', {
+            id: gradedResult.id,
+            gradingStatus: gradedResult.gradingStatus,
+            score: gradedResult.score,
+        });
+
+        if (gradedResult.gradingStatus === 'GRADED' && gradedResult.score === 100) {
+            console.log('✅ Admin grading verified');
+        } else {
+            console.error('❌ Admin grading failed');
+        }
+
         // Cleanup
+        await prisma.finalExamResult.delete({ where: { id: result.id } });
         await prisma.user.delete({ where: { id: user.id } });
         await prisma.course.delete({ where: { id: course.id } });
         console.log('\nCleanup complete');

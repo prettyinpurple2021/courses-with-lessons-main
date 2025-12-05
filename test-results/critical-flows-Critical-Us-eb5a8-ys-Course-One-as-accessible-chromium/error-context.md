@@ -1,0 +1,167 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - link "Skip to main content" [ref=e4] [cursor=pointer]:
+    - /url: "#main-content"
+  - navigation [ref=e5]:
+    - generic [ref=e8]:
+      - link "SoloSuccess Intel" [ref=e9] [cursor=pointer]:
+        - /url: /dashboard
+        - generic [ref=e10]: SoloSuccess
+        - generic [ref=e11]: Intel
+      - generic [ref=e12]:
+        - link "Dashboard" [ref=e13] [cursor=pointer]:
+          - /url: /dashboard
+        - link "Community" [ref=e14] [cursor=pointer]:
+          - /url: /community
+        - link "Profile" [ref=e15] [cursor=pointer]:
+          - /url: /profile
+        - button "Logout" [ref=e16] [cursor=pointer]
+  - button "Show keyboard shortcuts" [ref=e17] [cursor=pointer]:
+    - img [ref=e18]
+  - main [ref=e20]:
+    - generic [ref=e22]:
+      - generic [ref=e24]:
+        - generic [ref=e25]:
+          - generic [ref=e26]:
+            - generic [ref=e28]: TU
+            - generic [ref=e29]: "1"
+          - generic [ref=e30]:
+            - heading "Welcome back, Test!" [level=1] [ref=e31]
+            - paragraph [ref=e32]: Recruit • Level 1
+        - generic [ref=e33]:
+          - button "Profile" [ref=e34] [cursor=pointer]
+          - button "Logout" [ref=e35] [cursor=pointer]
+      - navigation [ref=e36]:
+        - generic [ref=e37]:
+          - button "📊 Overview" [ref=e38] [cursor=pointer]:
+            - generic [ref=e40]:
+              - generic [ref=e41]: 📊
+              - generic [ref=e42]: Overview
+          - button "📚 My Courses" [ref=e43] [cursor=pointer]:
+            - generic [ref=e44]:
+              - generic [ref=e45]: 📚
+              - generic [ref=e46]: My Courses
+          - button "🏆 Achievements" [ref=e47] [cursor=pointer]:
+            - generic [ref=e48]:
+              - generic [ref=e49]: 🏆
+              - generic [ref=e50]: Achievements
+          - button "👥 Community" [ref=e51] [cursor=pointer]:
+            - generic [ref=e52]:
+              - generic [ref=e53]: 👥
+              - generic [ref=e54]: Community
+      - generic [ref=e56]:
+        - generic [ref=e57]:
+          - heading "Quick Actions" [level=2] [ref=e58]
+          - generic [ref=e59]:
+            - 'button "📚 Continue Learning Resume Foundation: Business Fundamentals" [ref=e60] [cursor=pointer]':
+              - generic [ref=e61]: 📚
+              - generic [ref=e62]:
+                - heading "Continue Learning" [level=3] [ref=e63]
+                - paragraph [ref=e64]: "Resume Foundation: Business Fundamentals"
+            - button "🔍 Browse Courses Explore all available courses" [ref=e65] [cursor=pointer]:
+              - generic [ref=e66]: 🔍
+              - generic [ref=e67]:
+                - heading "Browse Courses" [level=3] [ref=e68]
+                - paragraph [ref=e69]: Explore all available courses
+            - button "🏆 Achievements View your earned badges" [ref=e70] [cursor=pointer]:
+              - generic [ref=e71]: 🏆
+              - generic [ref=e72]:
+                - heading "Achievements" [level=3] [ref=e73]
+                - paragraph [ref=e74]: View your earned badges
+            - button "👥 Community Connect with other students" [ref=e75] [cursor=pointer]:
+              - generic [ref=e76]: 👥
+              - generic [ref=e77]:
+                - heading "Community" [level=3] [ref=e78]
+                - paragraph [ref=e79]: Connect with other students
+        - generic [ref=e80]:
+          - heading "My Courses" [level=2] [ref=e81]
+          - generic [ref=e82]:
+            - generic [ref=e83] [cursor=pointer]:
+              - generic [ref=e84]: "1"
+              - generic [ref=e85]:
+                - generic [ref=e86]:
+                  - 'heading "Foundation: Business Fundamentals" [level=3] [ref=e87]'
+                  - paragraph [ref=e88]: Master the core principles of business strategy, planning, and execution.
+                - generic [ref=e89]:
+                  - generic [ref=e90]:
+                    - generic [ref=e91]: Progress
+                    - generic [ref=e92]: 0%
+                  - generic [ref=e93]:
+                    - generic [ref=e95]: 0%
+                    - generic [ref=e98]: 0 of 100 completed
+                - generic [ref=e100]: 12 Lessons
+                - generic [ref=e102]:
+                  - generic [ref=e103]: 📚
+                  - text: In Progress
+            - generic [ref=e104]:
+              - generic [ref=e106]:
+                - generic [ref=e107]: 🔒
+                - paragraph [ref=e108]: Locked
+                - paragraph [ref=e109]: Complete previous course
+              - generic [ref=e110]: "2"
+              - generic [ref=e111]:
+                - generic [ref=e112]:
+                  - heading "Marketing Mastery" [level=3] [ref=e113]
+                  - paragraph [ref=e114]: Learn to create compelling marketing strategies that drive results.
+                - generic [ref=e116]: 12 Lessons
+            - generic [ref=e118]:
+              - generic [ref=e120]:
+                - generic [ref=e121]: 🔒
+                - paragraph [ref=e122]: Locked
+                - paragraph [ref=e123]: Complete previous course
+              - generic [ref=e124]: "3"
+              - generic [ref=e125]:
+                - generic [ref=e126]:
+                  - heading "Financial Intelligence" [level=3] [ref=e127]
+                  - paragraph [ref=e128]: Develop financial literacy and money management skills for your business.
+                - generic [ref=e130]: 12 Lessons
+            - generic [ref=e132]:
+              - generic [ref=e134]:
+                - generic [ref=e135]: 🔒
+                - paragraph [ref=e136]: Locked
+                - paragraph [ref=e137]: Complete previous course
+              - generic [ref=e138]: "4"
+              - generic [ref=e139]:
+                - generic [ref=e140]:
+                  - heading "Sales & Conversion" [level=3] [ref=e141]
+                  - paragraph [ref=e142]: Master the art of selling and converting prospects into loyal customers.
+                - generic [ref=e144]: 12 Lessons
+            - generic [ref=e146]:
+              - generic [ref=e148]:
+                - generic [ref=e149]: 🔒
+                - paragraph [ref=e150]: Locked
+                - paragraph [ref=e151]: Complete previous course
+              - generic [ref=e152]: "5"
+              - generic [ref=e153]:
+                - generic [ref=e154]:
+                  - heading "Operations & Systems" [level=3] [ref=e155]
+                  - paragraph [ref=e156]: Build efficient systems and processes to scale your business.
+                - generic [ref=e158]: 12 Lessons
+            - generic [ref=e160]:
+              - generic [ref=e162]:
+                - generic [ref=e163]: 🔒
+                - paragraph [ref=e164]: Locked
+                - paragraph [ref=e165]: Complete previous course
+              - generic [ref=e166]: "6"
+              - generic [ref=e167]:
+                - generic [ref=e168]:
+                  - heading "Leadership & Team Building" [level=3] [ref=e169]
+                  - paragraph [ref=e170]: Develop leadership skills and learn to build high-performing teams.
+                - generic [ref=e172]: 12 Lessons
+            - generic [ref=e174]:
+              - generic [ref=e176]:
+                - generic [ref=e177]: 🔒
+                - paragraph [ref=e178]: Locked
+                - paragraph [ref=e179]: Complete previous course
+              - generic [ref=e180]: "7"
+              - generic [ref=e181]:
+                - generic [ref=e182]:
+                  - heading "Growth & Scaling" [level=3] [ref=e183]
+                  - paragraph [ref=e184]: Learn strategies to scale your business to new heights.
+                - generic [ref=e186]: 12 Lessons
+        - generic [ref=e188]:
+          - heading "Recent Activity" [level=2] [ref=e189]
+          - paragraph [ref=e191]: We couldn't load your recent activity. Please try again shortly.
+```

@@ -104,6 +104,7 @@ const Toast: React.FC<ToastProps> = ({
 
   return (
     <div
+      role="alert"
       className={`glassmorphic border-2 ${typeStyles[type]} p-4 rounded-lg shadow-lg flex items-center gap-3 min-w-[300px] max-w-md transition-all duration-300 ${
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
       } ${className}`}

@@ -54,8 +54,14 @@ export async function initRedis() {
       logger.warn('Redis client reconnecting');
     });
 
-    await redisClient.connect();
-    
+    // Connect with timeout
+    const connectPromise = redisClient.connect();
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('Redis connection timeout')), 5000)
+    );
+
+    await Promise.race([connectPromise, timeoutPromise]);
+
     return redisClient;
   } catch (error) {
     logger.error('Failed to initialize Redis', { error });

@@ -37,6 +37,8 @@ const AdminFinalProjectEditPage = lazy(() => import('./pages/AdminFinalProjectEd
 const AdminFinalExamEditPage = lazy(() => import('./pages/AdminFinalExamEditPage'));
 const AdminUsersPage = lazy(() => import('./pages/AdminUsersPage'));
 const AdminUserDetailPage = lazy(() => import('./pages/AdminUserDetailPage'));
+const AdminGradingPage = lazy(() => import('./pages/AdminGradingPage'));
+const AdminGradingDetailPage = lazy(() => import('./pages/AdminGradingDetailPage'));
 const CoursePage = lazy(() => import('./pages/CoursePage'));
 const LessonPage = lazy(() => import('./pages/LessonPage'));
 const FinalProjectPage = lazy(() => import('./pages/FinalProjectPage'));
@@ -82,7 +84,7 @@ function AppContent() {
       <SkipToContent />
       {shouldShowNav && <Navigation />}
       <KeyboardShortcutsHelp />
-      <AccessibilityChecker />
+      {/* <AccessibilityChecker /> */}
       <main id="main-content" tabIndex={-1}>
         <Suspense fallback={<LoadingSpinner fullScreen />}>
           <Routes>
@@ -226,6 +228,8 @@ function AppContent() {
                   <Route path="/admin/courses/:courseId/final-exam/edit" element={<AdminFinalExamEditPage />} />
                   <Route path="/admin/users" element={<AdminUsersPage />} />
                   <Route path="/admin/users/:userId" element={<AdminUserDetailPage />} />
+                  <Route path="/admin/grading" element={<AdminGradingPage />} />
+                  <Route path="/admin/grading/:resultId" element={<AdminGradingDetailPage />} />
                 </Route>
               </Routes>
         </Suspense>
@@ -243,8 +247,8 @@ function App() {
             <Router>
               <AppContent />
               <PerformanceMonitor />
-              <CookieConsent />
-              <Chatbot />
+              {/* <CookieConsent /> */}
+              {/* <Chatbot /> */}
             </Router>
           </AuthProvider>
         </ToastProvider>

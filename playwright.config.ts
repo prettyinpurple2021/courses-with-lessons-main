@@ -22,18 +22,18 @@ export default defineConfig({
   ],
   // Note: webServer configuration is commented out for manual server management
   // Uncomment and configure if you want Playwright to automatically start servers
-  // webServer: [
-  //   {
-  //     command: 'npm run dev:backend',
-  //     url: 'http://localhost:5000/api/health',
-  //     reuseExistingServer: !process.env.CI,
-  //     timeout: 120000,
-  //   },
-  //   {
-  //     command: 'npm run dev:frontend',
-  //     url: 'http://localhost:5173',
-  //     reuseExistingServer: !process.env.CI,
-  //     timeout: 120000,
-  //   },
-  // ],
+  webServer: [
+    {
+      command: 'npm run dev:backend',
+      url: 'http://localhost:5000/api/health',
+      reuseExistingServer: !process.env.CI,
+      timeout: 120000,
+    },
+    {
+      command: 'npm run dev:frontend',
+      url: 'http://localhost:5173',
+      reuseExistingServer: !process.env.CI,
+      timeout: 120000,
+    },
+  ],
 });

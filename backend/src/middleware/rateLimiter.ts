@@ -12,6 +12,7 @@ export const apiLimiter = rateLimit({
   },
   standardHeaders: true,
   legacyHeaders: false,
+  skip: (req) => process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test',
 });
 
 // Stricter rate limiter for authentication endpoints

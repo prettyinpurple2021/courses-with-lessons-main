@@ -65,53 +65,50 @@ export const adminController = {
       next(error);
     }
   },
-} catch (error) {
-  next(error);
-}
-  },
+
 
   /**
    * Get pending exams
    */
   async getPendingExams(_req: Request, res: Response, next: NextFunction) {
-  try {
-    const exams = await adminService.getPendingExams();
+    try {
+      const exams = await adminService.getPendingExams();
 
-    res.json({
-      success: true,
-      data: exams,
-    });
-  } catch (error) {
-    next(error);
-  }
-},
+      res.json({
+        success: true,
+        data: exams,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
 
   /**
    * Grade an exam
    */
   async gradeExam(req: Request, res: Response, next: NextFunction) {
-  try {
-    const { resultId } = req.params;
-    const { score, passed } = req.body;
+    try {
+      const { resultId } = req.params;
+      const { score, passed } = req.body;
 
-    if (typeof score !== 'number' || typeof passed !== 'boolean') {
-      res.status(400).json({
-        success: false,
-        error: {
-          message: 'Score (number) and passed (boolean) are required',
-        },
+      if (typeof score !== 'number' || typeof passed !== 'boolean') {
+        res.status(400).json({
+          success: false,
+          error: {
+            message: 'Score (number) and passed (boolean) are required',
+          },
+        });
+        return;
+      }
+
+      const result = await adminService.gradeExam(resultId, score, passed);
+
+      res.json({
+        success: true,
+        data: result,
       });
-      return;
+    } catch (error) {
+      next(error);
     }
-
-    const result = await adminService.gradeExam(resultId, score, passed);
-
-    res.json({
-      success: true,
-      data: result,
-    });
-  } catch (error) {
-    next(error);
-  }
-},
+  },
 };

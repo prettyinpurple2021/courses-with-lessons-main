@@ -1,0 +1,50 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - link "Skip to main content" [ref=e4] [cursor=pointer]:
+    - /url: "#main-content"
+  - navigation [ref=e5]:
+    - generic [ref=e8]:
+      - link "SoloSuccess Intel" [ref=e9] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e10]: SoloSuccess
+        - generic [ref=e11]: Intel
+      - generic [ref=e12]:
+        - link "Sign In" [ref=e13] [cursor=pointer]:
+          - /url: /login
+          - button "Sign In" [ref=e14]
+        - link "Get Started" [ref=e15] [cursor=pointer]:
+          - /url: /register
+          - button "Get Started" [ref=e16]
+  - button "Show keyboard shortcuts" [ref=e17] [cursor=pointer]:
+    - img [ref=e18]
+  - main [ref=e20]:
+    - generic [ref=e22]:
+      - generic [ref=e23]:
+        - heading "Join the Academy" [level=1] [ref=e24]
+        - paragraph [ref=e25]: Start your bootcamp training today
+      - generic [ref=e26]:
+        - generic [ref=e27]:
+          - generic [ref=e28]:
+            - generic [ref=e29]: First Name
+            - textbox "Jane" [ref=e30]: Duplicate
+          - generic [ref=e31]:
+            - generic [ref=e32]: Last Name
+            - textbox "Doe" [ref=e33]: Test
+        - generic [ref=e34]:
+          - generic [ref=e35]: Email
+          - textbox "your.email@example.com" [ref=e36]: duplicate-1764953681031@example.com
+        - generic [ref=e37]:
+          - generic [ref=e38]: Password
+          - textbox "Create a strong password" [ref=e39]: TestPassword123!
+          - paragraph [ref=e40]: Min 8 characters, 1 uppercase, 1 lowercase, 1 number
+        - generic [ref=e41]:
+          - generic [ref=e42]: Confirm Password
+          - textbox "Re-enter your password" [ref=e43]: TestPassword123!
+        - button "Create Account" [ref=e44] [cursor=pointer]
+      - paragraph [ref=e46]:
+        - text: Already have an account?
+        - link "Sign in" [ref=e47] [cursor=pointer]:
+          - /url: /login
+```

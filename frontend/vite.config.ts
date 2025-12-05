@@ -31,15 +31,15 @@ export default defineConfig({
     // Sentry source map upload (only in production builds)
     process.env.NODE_ENV === 'production' && process.env.SENTRY_AUTH_TOKEN
       ? sentryVitePlugin({
-          org: 'solosuccess-ai',
-          project: 'courses-with-lessons-main',
-          authToken: process.env.SENTRY_AUTH_TOKEN,
-          sourcemaps: {
-            assets: './dist/**',
-            ignore: ['node_modules'],
-            rewriteSources: (source) => source.replace(/^\/@fs\//, ''),
-          },
-        })
+        org: 'solosuccess-ai',
+        project: 'courses-with-lessons-main',
+        authToken: process.env.SENTRY_AUTH_TOKEN,
+        sourcemaps: {
+          assets: './dist/**',
+          ignore: ['node_modules'],
+          rewriteSources: (source) => source.replace(/^\/@fs\//, ''),
+        },
+      })
       : null,
   ].filter(Boolean),
   resolve: {
@@ -48,7 +48,7 @@ export default defineConfig({
     },
   },
   server: {
-    port: 3000,
+    port: 5173,
     host: true,
     proxy: {
       '/api': {
@@ -67,7 +67,7 @@ export default defineConfig({
           'form-vendor': ['react-hook-form', '@hookform/resolvers', 'zod'],
           'animation-vendor': ['framer-motion'],
           'utils-vendor': ['axios', 'date-fns'],
-          
+
           // Feature-based chunks
           'course-pages': [
             './src/pages/CoursePage.tsx',

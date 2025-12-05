@@ -2,6 +2,7 @@ import prisma from '../config/prisma.js';
 import { comparePassword } from '../utils/password.js';
 import { generateAccessToken, generateRefreshToken } from '../utils/jwt.js';
 import { AuthenticationError, AuthorizationError } from '../utils/errors.js';
+import { checkAndUnlockAchievements } from './achievementService.js';
 
 export const adminService = {
   /**
@@ -184,13 +185,11 @@ export const adminService = {
 
     if (passed) {
       // 1. Unlock 'Exam Master' achievement if score is 100
-      if (score === 100) {
-        await prisma.userAchievement.create({
-          data: {
-            userId: result.userId,
-            achievementId: 'exam-master', // Assuming this ID exists
-          },
-        }).catch(() => { }); // Ignore if already exists
+      // 1. Check for achievements
+      try {
+        await checkAndUnlockAchievements(result.userId, 'exam_submitted');
+      } catch (error) {
+        console.error('Failed to check achievements:', error);
       }
 
       // 2. Check if course is completed (all lessons + final exam passed)

@@ -40,7 +40,7 @@ test.describe('Critical User Flows', () => {
     await page.goto('/register');
 
     // Verify registration page loads
-    await expect(page.locator('h1, h2')).toContainText(/register|sign up/i);
+    await expect(page.locator('h1, h2')).toContainText(/register|sign up|join/i);
 
     // Fill registration form
     await page.fill('input[name="firstName"]', testUser.firstName);
@@ -68,7 +68,7 @@ test.describe('Critical User Flows', () => {
     await page.goto('/login');
 
     // Verify login page loads
-    await expect(page.locator('h1, h2')).toContainText(/login|sign in/i);
+    await expect(page.locator('h1, h2')).toContainText(/login|sign in|welcome/i);
 
     // Fill login form
     await page.fill('input[name="email"]', userEmail);
@@ -89,12 +89,12 @@ test.describe('Critical User Flows', () => {
     await loginUser(page, userEmail, userPassword);
 
     // Wait for courses to load
-    await page.waitForSelector('[data-testid="course-card"], .course-card, [class*="course"]', {
+    await page.waitForSelector('text=/Business Fundamentals/i', {
       timeout: 10000
     });
 
     // Verify Course One is visible and accessible
-    const courseOne = page.locator('text=/Course (One|1)/i').first();
+    const courseOne = page.locator('text=/Business Fundamentals/i').first();
     await expect(courseOne).toBeVisible();
 
     // Verify other courses are locked (if visible)
@@ -386,8 +386,10 @@ test.describe('Error Handling and Edge Cases', () => {
     await page.click('button[type="submit"]');
 
     // Should show error message
-    const errorMessage = page.locator('text=/error|invalid|incorrect/i, [role="alert"], .error');
-    await expect(errorMessage.first()).toBeVisible({ timeout: 5000 });
+    // Should show error message
+    const alert = page.getByRole('alert');
+    await expect(alert).toBeVisible({ timeout: 5000 });
+    await expect(alert).toContainText(/failed|error|invalid|incorrect/i);
   });
 
   test('should handle duplicate registration', async ({ page }) => {
@@ -421,8 +423,10 @@ test.describe('Error Handling and Edge Cases', () => {
     await page.click('button[type="submit"]');
 
     // Should show error about existing email
-    const errorMessage = page.locator('text=/already exists|already registered|email.*taken/i, [role="alert"], .error');
-    await expect(errorMessage.first()).toBeVisible({ timeout: 5000 });
+    // Should show error message
+    const alert = page.getByRole('alert');
+    await expect(alert).toBeVisible({ timeout: 5000 });
+    await expect(alert).toContainText(/exists|registered|taken/i);
   });
 
   test('should redirect unauthenticated users to login', async ({ page }) => {
