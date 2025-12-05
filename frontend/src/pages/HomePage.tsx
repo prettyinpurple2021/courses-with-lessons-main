@@ -120,10 +120,9 @@ const pricingTiers = [
 
 const HomePage = () => {
   // SEO optimization for homepage
+  // DynamicMetaTags handles all meta tags including document.title
+  // usePageMeta only handles structured data (JSON-LD)
   usePageMeta({
-    title: 'Home',
-    description: 'SoloSuccess Intel Academy - Master entrepreneurship with military-style discipline and feminine power. Bootcamp training for female founders.',
-    keywords: 'entrepreneurship, female founders, business training, online courses, certification',
     includeOrganization: true,
     includeWebSite: true,
   });
