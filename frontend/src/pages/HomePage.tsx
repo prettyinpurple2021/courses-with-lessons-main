@@ -119,8 +119,28 @@ const pricingTiers = [
 
 
 const HomePage = () => {
+  // SEO optimization for homepage
+  usePageMeta({
+    title: 'Home',
+    description: 'SoloSuccess Intel Academy - Master entrepreneurship with military-style discipline and feminine power. Bootcamp training for female founders.',
+    keywords: 'entrepreneurship, female founders, business training, online courses, certification',
+    includeOrganization: true,
+    includeWebSite: true,
+  });
+
   return (
-    <div className="min-h-screen relative overflow-hidden">
+    <>
+      <DynamicMetaTags
+        title="SoloSuccess Intel Academy - Bootcamp Training for Female Founders"
+        description="Master entrepreneurship with military-style discipline and feminine power. Comprehensive online courses with certification programs."
+        keywords="entrepreneurship, female founders, business training, online courses, certification"
+        ogTitle="SoloSuccess Intel Academy"
+        ogDescription="Bootcamp Training for Female Founders"
+        ogImage="/og-image.png"
+        ogType="website"
+        twitterCard="summary_large_image"
+      />
+      <div className="min-h-screen relative overflow-hidden">
       {/* Camo Background */}
       <CamoBackground variant="subtle" className="fixed inset-0 z-0" />
       
@@ -377,6 +397,7 @@ const HomePage = () => {
         </div>
       </footer>
     </div>
+    </>
   );
 };
 

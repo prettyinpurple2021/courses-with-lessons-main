@@ -1,7 +1,7 @@
 import { HTMLAttributes } from 'react';
 
 interface SkeletonProps extends HTMLAttributes<HTMLDivElement> {
-  variant?: 'text' | 'circular' | 'rectangular' | 'rounded';
+  variant?: 'text' | 'circular' | 'rectangular' | 'rounded' | 'circle' | 'rectangle';
   width?: string | number;
   height?: string | number;
   animate?: boolean;
@@ -23,11 +23,14 @@ export function Skeleton({
   const baseClasses = 'bg-gradient-to-r from-steel-grey/20 via-steel-grey/30 to-steel-grey/20';
   const animateClasses = animate ? 'animate-pulse' : '';
   
-  const variantClasses = {
+  const variantClasses: Record<string, string> = {
     text: 'h-4 rounded',
     circular: 'rounded-full',
     rectangular: 'rounded-none',
     rounded: 'rounded-lg',
+    // Backward compatibility
+    circle: 'rounded-full',
+    rectangle: 'rounded-none',
   };
 
   const style = {
@@ -35,9 +38,12 @@ export function Skeleton({
     height: height ? (typeof height === 'number' ? `${height}px` : height) : undefined,
   };
 
+  // Normalize variant name for backward compatibility
+  const normalizedVariant = variant === 'circle' ? 'circular' : variant === 'rectangle' ? 'rectangular' : variant;
+  
   return (
     <div
-      className={`${baseClasses} ${variantClasses[variant]} ${animateClasses} ${className}`}
+      className={`${baseClasses} ${variantClasses[normalizedVariant || 'text']} ${animateClasses} ${className}`}
       style={style}
       aria-busy="true"
       aria-label="Loading"
@@ -220,3 +226,6 @@ export function PageSkeleton() {
     </div>
   );
 }
+
+// Default export for backward compatibility
+export default Skeleton;

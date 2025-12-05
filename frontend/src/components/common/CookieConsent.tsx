@@ -4,12 +4,6 @@ import GlassmorphicButton from './GlassmorphicButton';
 import GlassmorphicCard from './GlassmorphicCard';
 import CookieConsentService, { CookiePreferences } from '../../services/cookieConsentService';
 
-interface CookiePreferences {
-  necessary: boolean;
-  analytics: boolean;
-  marketing: boolean;
-}
-
 export default function CookieConsent() {
   const [showBanner, setShowBanner] = useState(false);
   const [showSettings, setShowSettings] = useState(false);

@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "CookieConsent" ALTER COLUMN "updatedAt" SET DEFAULT CURRENT_TIMESTAMP;
+
