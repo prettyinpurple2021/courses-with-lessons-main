@@ -177,7 +177,9 @@ api.interceptors.response.use(
         const delay = RETRY_DELAY * Math.pow(2, retryCount);
         await sleep(delay);
 
-        console.log(`Retrying request (${retryCount + 1}/${MAX_RETRIES})...`);
+        if (import.meta.env.DEV) {
+          console.log(`Retrying request (${retryCount + 1}/${MAX_RETRIES})...`);
+        }
         return api(originalRequest);
       }
     }

@@ -30,12 +30,14 @@ export function register(config?: ServiceWorkerConfig) {
         checkValidServiceWorker(swUrl, config);
 
         // Log additional info in localhost
-        navigator.serviceWorker.ready.then(() => {
-          console.log(
-            'This web app is being served cache-first by a service worker. ' +
-              'To learn more, visit https://cra.link/PWA'
-          );
-        });
+        if (import.meta.env.DEV) {
+          navigator.serviceWorker.ready.then(() => {
+            console.log(
+              'This web app is being served cache-first by a service worker. ' +
+                'To learn more, visit https://cra.link/PWA'
+            );
+          });
+        }
       } else {
         // Register service worker in production
         registerValidSW(swUrl, config);
@@ -54,7 +56,9 @@ function registerValidSW(swUrl: string, config?: ServiceWorkerConfig) {
   navigator.serviceWorker
     .register(swUrl)
     .then((registration) => {
-      console.log('[SW] Service Worker registered:', registration);
+      if (import.meta.env.DEV) {
+        console.log('[SW] Service Worker registered:', registration);
+      }
 
       registration.onupdatefound = () => {
         const installingWorker = registration.installing;
@@ -66,14 +70,18 @@ function registerValidSW(swUrl: string, config?: ServiceWorkerConfig) {
           if (installingWorker.state === 'installed') {
             if (navigator.serviceWorker.controller) {
               // New update available
-              console.log('[SW] New content is available; please refresh.');
+              if (import.meta.env.DEV) {
+                console.log('[SW] New content is available; please refresh.');
+              }
 
               if (config && config.onUpdate) {
                 config.onUpdate(registration);
               }
             } else {
               // Content cached for offline use
-              console.log('[SW] Content is cached for offline use.');
+              if (import.meta.env.DEV) {
+                console.log('[SW] Content is cached for offline use.');
+              }
 
               if (config && config.onSuccess) {
                 config.onSuccess(registration);
@@ -89,7 +97,9 @@ function registerValidSW(swUrl: string, config?: ServiceWorkerConfig) {
       }, 60 * 60 * 1000);
     })
     .catch((error) => {
-      console.error('[SW] Error during service worker registration:', error);
+      if (import.meta.env.DEV) {
+        console.error('[SW] Error during service worker registration:', error);
+      }
     });
 }
 
@@ -118,7 +128,9 @@ function checkValidServiceWorker(swUrl: string, config?: ServiceWorkerConfig) {
       }
     })
     .catch(() => {
-      console.log('[SW] No internet connection found. App is running in offline mode.');
+      if (import.meta.env.DEV) {
+        console.log('[SW] No internet connection found. App is running in offline mode.');
+      }
     });
 }
 
@@ -127,14 +139,18 @@ function checkValidServiceWorker(swUrl: string, config?: ServiceWorkerConfig) {
  */
 function setupNetworkListeners(config?: ServiceWorkerConfig) {
   window.addEventListener('online', () => {
-    console.log('[SW] Connection restored');
+    if (import.meta.env.DEV) {
+      console.log('[SW] Connection restored');
+    }
     if (config && config.onOnline) {
       config.onOnline();
     }
   });
 
   window.addEventListener('offline', () => {
-    console.log('[SW] Connection lost');
+    if (import.meta.env.DEV) {
+      console.log('[SW] Connection lost');
+    }
     if (config && config.onOffline) {
       config.onOffline();
     }
@@ -151,7 +167,9 @@ export function unregister() {
         registration.unregister();
       })
       .catch((error) => {
-        console.error('[SW] Error unregistering service worker:', error);
+        if (import.meta.env.DEV) {
+          console.error('[SW] Error unregistering service worker:', error);
+        }
       });
   }
 }

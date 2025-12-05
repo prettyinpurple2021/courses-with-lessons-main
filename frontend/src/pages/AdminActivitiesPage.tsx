@@ -51,7 +51,9 @@ const AdminActivitiesPage: React.FC = () => {
         setLessonTitle(data.data.title);
       }
     } catch (error) {
-      console.error('Failed to fetch lesson:', error);
+      if (import.meta.env.DEV) {
+        console.error('Failed to fetch lesson:', error);
+      }
     }
   };
 

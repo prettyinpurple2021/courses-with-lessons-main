@@ -61,7 +61,9 @@ function sendToAnalytics(metric: PerformanceMetric) {
       body: JSON.stringify(metric),
       keepalive: true, // Ensure request completes even if page is closing
     }).catch((error) => {
-      console.error('Failed to send performance metric:', error);
+      if (import.meta.env.DEV) {
+        console.error('Failed to send performance metric:', error);
+      }
     });
   }
 }
@@ -166,7 +168,9 @@ export function trackCustomMetric(name: string, value: number, metadata?: Record
       }),
       keepalive: true,
     }).catch((error) => {
-      console.error('Failed to send custom metric:', error);
+      if (import.meta.env.DEV) {
+        console.error('Failed to send custom metric:', error);
+      }
     });
   }
 }

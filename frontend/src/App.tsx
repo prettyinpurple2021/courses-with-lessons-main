@@ -84,7 +84,7 @@ function AppContent() {
       <SkipToContent />
       {shouldShowNav && <Navigation />}
       <KeyboardShortcutsHelp />
-      {/* <AccessibilityChecker /> */}
+      <AccessibilityChecker />
       <main id="main-content" tabIndex={-1}>
         <Suspense fallback={<LoadingSpinner fullScreen />}>
           <Routes>
@@ -247,8 +247,8 @@ function App() {
             <Router>
               <AppContent />
               <PerformanceMonitor />
-              {/* <CookieConsent /> */}
-              {/* <Chatbot /> */}
+              <CookieConsent />
+              <Chatbot />
             </Router>
           </AuthProvider>
         </ToastProvider>

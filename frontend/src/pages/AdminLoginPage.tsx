@@ -26,7 +26,9 @@ const AdminLoginPage: React.FC = () => {
       return;
     }
     
-    console.log('Form submitted', { email, password: '***' });
+    if (import.meta.env.DEV) {
+      console.log('Form submitted', { email, password: '***' });
+    }
     
     if (!email || !password) {
       toast.error('Please fill in all fields');
@@ -36,10 +38,14 @@ const AdminLoginPage: React.FC = () => {
     setIsLoading(true);
 
     try {
-      console.log('Calling admin service login...');
+      if (import.meta.env.DEV) {
+        console.log('Calling admin service login...');
+      }
       // Use admin service which handles API URL correctly
       const result = await adminService.login(email, password);
-      console.log('Login successful', result);
+      if (import.meta.env.DEV) {
+        console.log('Login successful', result);
+      }
 
       // Store access token in memory only (not localStorage for security)
       // Refresh token is stored securely in httpOnly cookie by backend
@@ -55,7 +61,9 @@ const AdminLoginPage: React.FC = () => {
       // Use push to allow back button navigation
       navigate('/admin/dashboard', { replace: false });
     } catch (error: any) {
-      console.error('Admin login error:', error);
+      if (import.meta.env.DEV) {
+        console.error('Admin login error:', error);
+      }
       
       // Handle different error types
       let errorMessage = 'Admin login failed';

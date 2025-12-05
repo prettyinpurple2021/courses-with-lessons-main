@@ -28,7 +28,9 @@ const AdminRoute: React.FC = () => {
       const result = await adminService.verifyAdmin();
       setIsAdmin(result.isAdmin);
     } catch (error) {
-      console.error('Admin verification failed:', error);
+      if (import.meta.env.DEV) {
+        console.error('Admin verification failed:', error);
+      }
       setIsAdmin(false);
     } finally {
       setIsVerifying(false);

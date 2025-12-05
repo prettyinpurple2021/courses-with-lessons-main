@@ -3,6 +3,8 @@ import CamoBackground from '../components/common/CamoBackground';
 import GlassmorphicButton from '../components/common/GlassmorphicButton';
 import CourseCard from '../components/course/CourseCard';
 import PricingCard from '../components/pricing/PricingCard';
+import DynamicMetaTags from '../components/common/DynamicMetaTags';
+import { usePageMeta } from '../hooks/usePageMeta';
 
 
 // Mock course data - will be replaced with API data later

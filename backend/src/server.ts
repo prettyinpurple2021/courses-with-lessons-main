@@ -35,6 +35,7 @@ import ssoRouter from './routes/sso.js';
 import subscriptionSyncRouter from './routes/subscriptionSync.js';
 import aiRouter from './routes/ai.js';
 import cronRouter from './routes/cron.js';
+import cookieConsentRouter from './routes/cookieConsent.js';
 
 dotenv.config();
 
@@ -168,6 +169,7 @@ app.use('/api/community', communityRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/progress', progressRouter);
 app.use('/api/analytics', analyticsRouter);
+app.use('/api/consent', cookieConsentRouter);
 app.use('/api/admin', adminRouter);
 app.use('/api/admin', adminCoursesRouter);
 app.use('/api/admin', adminUsersRouter);

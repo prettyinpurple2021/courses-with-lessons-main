@@ -65,12 +65,13 @@ export interface AnalyticsEventData {
 class AnalyticsService {
   private isInitialized = false;
   private analyticsProvider: 'ga4' | 'plausible' | 'none' = 'none';
+  private consentEnabled = true; // Default to enabled, can be changed by cookie consent
 
   /**
    * Check if analytics is enabled
    */
   get analyticsEnabled(): boolean {
-    return this.analyticsProvider !== 'none';
+    return this.consentEnabled && this.analyticsProvider !== 'none';
   }
 
   /**
@@ -82,17 +83,52 @@ class AnalyticsService {
     // Check for Google Analytics 4
     if (typeof window !== 'undefined' && (window as any).gtag) {
       this.analyticsProvider = 'ga4';
-      console.log('[Analytics] Google Analytics 4 initialized');
+      if (import.meta.env.DEV) {
+        console.log('[Analytics] Google Analytics 4 initialized');
+      }
     }
     // Check for Plausible Analytics
     else if (typeof window !== 'undefined' && (window as any).plausible) {
       this.analyticsProvider = 'plausible';
-      console.log('[Analytics] Plausible Analytics initialized');
+      if (import.meta.env.DEV) {
+        console.log('[Analytics] Plausible Analytics initialized');
+      }
     }
     // No analytics provider found
     else {
       this.analyticsProvider = 'none';
-      console.warn('[Analytics] No analytics provider found');
+      if (import.meta.env.DEV) {
+        console.warn('[Analytics] No analytics provider found');
+      }
+    }
+
+    // Listen for cookie consent events
+    if (typeof window !== 'undefined') {
+      window.addEventListener('enableAnalytics', () => {
+        this.consentEnabled = true;
+        if (import.meta.env.DEV) {
+          console.log('[Analytics] Analytics enabled by user consent');
+        }
+      });
+
+      window.addEventListener('disableAnalytics', () => {
+        this.consentEnabled = false;
+        if (import.meta.env.DEV) {
+          console.log('[Analytics] Analytics disabled by user consent');
+        }
+      });
+
+      // Check for existing consent in localStorage
+      try {
+        const consent = localStorage.getItem('cookie_consent');
+        if (consent) {
+          const consentData = JSON.parse(consent);
+          this.consentEnabled = consentData.preferences?.analytics ?? true;
+        }
+      } catch {
+        // Invalid consent data, default to enabled
+        this.consentEnabled = true;
+      }
     }
 
     this.isInitialized = true;

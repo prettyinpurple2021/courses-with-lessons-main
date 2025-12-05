@@ -35,7 +35,9 @@ const LoginPage: React.FC = () => {
       success('Welcome back! Login successful.');
       navigate(from, { replace: true });
     } catch (error) {
-      console.log('Login error caught:', error);
+      if (import.meta.env.DEV) {
+        console.log('Login error caught:', error);
+      }
       handleError(error);
     }
   };

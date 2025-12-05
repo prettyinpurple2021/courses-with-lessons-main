@@ -2,8 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import GlassmorphicButton from './GlassmorphicButton';
 import GlassmorphicCard from './GlassmorphicCard';
-
-const COOKIE_CONSENT_KEY = 'cookie_consent';
+import CookieConsentService, { CookiePreferences } from '../../services/cookieConsentService';
 
 interface CookiePreferences {
   necessary: boolean;
@@ -22,54 +21,49 @@ export default function CookieConsent() {
 
   useEffect(() => {
     // Check if user has already given consent
-    const consent = localStorage.getItem(COOKIE_CONSENT_KEY);
+    const consent = CookieConsentService.getConsent();
     if (!consent) {
       setShowBanner(true);
     } else {
       // Load saved preferences
-      try {
-        const saved = JSON.parse(consent);
-        setPreferences(saved.preferences || preferences);
-      } catch {
-        // Invalid saved data, show banner again
-        setShowBanner(true);
-      }
+      setPreferences(consent.preferences || preferences);
+      
+      // Sync to server in case it wasn't synced before (e.g., after network failure)
+      CookieConsentService.syncToServer().catch(() => {
+        // Silently fail - localStorage is primary
+      });
     }
   }, []);
 
-  const handleAcceptAll = () => {
+  const handleAcceptAll = async () => {
     const allAccepted: CookiePreferences = {
       necessary: true,
       analytics: true,
       marketing: true,
     };
-    saveConsent(allAccepted);
+    await saveConsent(allAccepted);
     setShowBanner(false);
   };
 
-  const handleRejectAll = () => {
+  const handleRejectAll = async () => {
     const onlyNecessary: CookiePreferences = {
       necessary: true,
       analytics: false,
       marketing: false,
     };
-    saveConsent(onlyNecessary);
+    await saveConsent(onlyNecessary);
     setShowBanner(false);
   };
 
-  const handleSavePreferences = () => {
-    saveConsent(preferences);
+  const handleSavePreferences = async () => {
+    await saveConsent(preferences);
     setShowBanner(false);
     setShowSettings(false);
   };
 
-  const saveConsent = (prefs: CookiePreferences) => {
-    const consentData = {
-      preferences: prefs,
-      timestamp: new Date().toISOString(),
-      version: '1.0',
-    };
-    localStorage.setItem(COOKIE_CONSENT_KEY, JSON.stringify(consentData));
+  const saveConsent = async (prefs: CookiePreferences) => {
+    // Store in localStorage and sync to backend (production-ready)
+    await CookieConsentService.storeConsent(prefs);
     
     // Update analytics based on preferences
     if (prefs.analytics) {

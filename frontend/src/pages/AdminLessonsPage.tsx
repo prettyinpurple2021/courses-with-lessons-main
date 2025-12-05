@@ -50,7 +50,9 @@ const AdminLessonsPage: React.FC = () => {
         setCourseName(data.data.title);
       }
     } catch (error) {
-      console.error('Failed to fetch course:', error);
+      if (import.meta.env.DEV) {
+        console.error('Failed to fetch course:', error);
+      }
     }
   };
 
