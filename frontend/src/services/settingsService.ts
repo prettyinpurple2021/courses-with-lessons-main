@@ -31,4 +31,9 @@ export const settingsService = {
     const response = await api.delete('/users/me', { data });
     return response.data.data;
   },
+
+  async exportData(): Promise<any> {
+    const response = await api.get('/users/me/export');
+    return response.data.data;
+  },
 };

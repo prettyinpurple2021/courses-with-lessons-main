@@ -350,6 +350,230 @@ export class UserService {
 
     return { success: true };
   }
+
+  /**
+   * Export all user data for GDPR compliance (right to data portability)
+   */
+  async exportUserData(userId: string) {
+    // Get user basic info
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        email: true,
+        firstName: true,
+        lastName: true,
+        bio: true,
+        emailNotifications: true,
+        courseUpdates: true,
+        communityDigest: true,
+        achievementAlerts: true,
+        createdAt: true,
+      },
+    });
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    // Get enrollments and progress
+    const enrollments = await prisma.enrollment.findMany({
+      where: { userId },
+      include: {
+        course: {
+          select: {
+            title: true,
+            courseNumber: true,
+          },
+        },
+      },
+    });
+
+    // Get lesson progress
+    const lessonProgress = await prisma.lessonProgress.findMany({
+      where: { userId },
+      include: {
+        lesson: {
+          select: {
+            title: true,
+            lessonNumber: true,
+          },
+        },
+      },
+    });
+
+    // Get activity submissions
+    const activitySubmissions = await prisma.activitySubmission.findMany({
+      where: { userId },
+      include: {
+        activity: {
+          select: {
+            title: true,
+            type: true,
+          },
+        },
+      },
+    });
+
+    // Get notes
+    const notes = await prisma.note.findMany({
+      where: { userId },
+      include: {
+        lesson: {
+          select: {
+            title: true,
+          },
+        },
+      },
+    });
+
+    // Get forum posts
+    const forumPosts = await prisma.forumPost.findMany({
+      where: { authorId: userId },
+      select: {
+        content: true,
+        createdAt: true,
+        thread: {
+          select: {
+            title: true,
+          },
+        },
+      },
+    });
+
+    // Get forum threads
+    const forumThreads = await prisma.forumThread.findMany({
+      where: { authorId: userId },
+      select: {
+        title: true,
+        createdAt: true,
+      },
+    });
+
+    // Get certificates
+    const certificates = await prisma.certificate.findMany({
+      where: { userId },
+      select: {
+        verificationCode: true,
+        issuedAt: true,
+        course: {
+          select: {
+            title: true,
+          },
+        },
+      },
+    });
+
+    // Get achievements
+    const achievements = await prisma.achievement.findMany({
+      where: { userId },
+      select: {
+        title: true,
+        description: true,
+        unlockedAt: true,
+      },
+    });
+
+    // Get exam results
+    const examResults = await prisma.finalExamResult.findMany({
+      where: { userId },
+      include: {
+        exam: {
+          include: {
+            course: {
+              select: {
+                title: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    // Get cookie consent records
+    const cookieConsents = await prisma.cookieConsent.findMany({
+      where: { userId },
+      select: {
+        preferences: true,
+        version: true,
+        timestamp: true,
+      },
+    });
+
+    return {
+      exportDate: new Date().toISOString(),
+      exportVersion: '1.0',
+      profile: {
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        bio: user.bio,
+        accountCreated: user.createdAt,
+      },
+      preferences: {
+        emailNotifications: user.emailNotifications,
+        courseUpdates: user.courseUpdates,
+        communityDigest: user.communityDigest,
+        achievementAlerts: user.achievementAlerts,
+      },
+      enrollments: enrollments.map((e) => ({
+        course: e.course.title,
+        courseNumber: e.course.courseNumber,
+        enrolledAt: e.enrolledAt,
+        completedAt: e.completedAt,
+      })),
+      lessonProgress: lessonProgress.map((lp) => ({
+        lesson: lp.lesson.title,
+        lessonNumber: lp.lesson.lessonNumber,
+        completed: lp.completed,
+        videoPosition: lp.videoPosition,
+        completedAt: lp.completedAt,
+      })),
+      activitySubmissions: activitySubmissions.map((as) => ({
+        activity: as.activity.title,
+        type: as.activity.type,
+        response: as.response,
+        completed: as.completed,
+        submittedAt: as.submittedAt,
+      })),
+      notes: notes.map((n) => ({
+        lesson: n.lesson.title,
+        content: n.content,
+        timestamp: n.timestamp,
+        createdAt: n.createdAt,
+      })),
+      forumThreads: forumThreads.map((t) => ({
+        title: t.title,
+        createdAt: t.createdAt,
+      })),
+      forumPosts: forumPosts.map((p) => ({
+        threadTitle: p.thread.title,
+        content: p.content,
+        createdAt: p.createdAt,
+      })),
+      certificates: certificates.map((c) => ({
+        course: c.course.title,
+        verificationCode: c.verificationCode,
+        issuedAt: c.issuedAt,
+      })),
+      achievements: achievements.map((a) => ({
+        title: a.title,
+        description: a.description,
+        unlockedAt: a.unlockedAt,
+      })),
+      examResults: examResults.map((er) => ({
+        course: er.exam.course.title,
+        score: er.score,
+        passed: er.passed,
+        submittedAt: er.submittedAt,
+      })),
+      cookieConsents: cookieConsents.map((cc) => ({
+        preferences: cc.preferences,
+        version: cc.version,
+        timestamp: cc.timestamp,
+      })),
+    };
+  }
 }
 
 export const userService = new UserService();

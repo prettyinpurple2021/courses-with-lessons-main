@@ -14,7 +14,7 @@
 - [x] **Migration commands available** - `prisma:migrate:deploy` script exists
 - [x] **Database seeding scripts** - `prisma:seed` script exists
 - [x] **Connection pooling** - Prisma client configured with connection pooling
-- [ ] **Database backups** - ⚠️ Manual setup required (backup script exists: `backup:db`)
+- [x] **Database backups** - ✅ Daily automated backups at 03:00 (configured in Neon)
 
 ### Security
 - [x] **Rate limiting enabled** - Implemented for API, Auth, OAuth endpoints
@@ -44,10 +44,14 @@
 
 ### Legal & Compliance
 - [x] **Cookie consent implemented** - `CookieConsent` component exists
-- [ ] **Privacy Policy** - ⚠️ Manual review/creation required
-- [ ] **Terms of Service** - ⚠️ Manual review/creation required
-- [ ] **GDPR compliance verified** - ⚠️ Manual verification required
-- [ ] **CCPA compliance verified** - ⚠️ Manual verification required
+- [x] **Privacy Policy** - ✅ Created (`/privacy`)
+- [x] **Terms of Service** - ✅ Created (`/terms`)
+- [x] **Cookie Policy** - ✅ Created (`/cookies`)
+- [x] **Refund Policy** - ✅ Created (`/refunds`)
+- [x] **Accessibility Statement** - ✅ Created (`/accessibility`)
+- [x] **Disclaimer** - ✅ Created (`/disclaimer`)
+- [ ] **GDPR compliance verified** - ⚠️ Manual verification required (if serving EU users)
+- [ ] **CCPA compliance verified** - ⚠️ Manual verification required (if serving California users)
 
 ## ⚠️ Items Requiring Manual Verification
 

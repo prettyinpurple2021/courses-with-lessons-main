@@ -138,9 +138,9 @@ export class UserController {
 
       return res.status(200).json({
         success: true,
-        data: { 
+        data: {
           avatarUrl: updatedUser.avatar,
-          user: updatedUser 
+          user: updatedUser
         },
       });
     } catch (error) {
@@ -253,6 +253,34 @@ export class UserController {
       const message = error instanceof Error ? error.message : 'Failed to delete account';
       const statusCode = message === 'Password is incorrect' ? 400 : 500;
       return res.status(statusCode).json({
+        success: false,
+        error: { message },
+      });
+    }
+  }
+
+  async exportData(req: Request, res: Response) {
+    try {
+      if (!req.user) {
+        return res.status(401).json({
+          success: false,
+          error: { message: 'Not authenticated' },
+        });
+      }
+
+      const exportedData = await userService.exportUserData(req.user.userId);
+
+      // Set headers for file download
+      res.setHeader('Content-Type', 'application/json');
+      res.setHeader('Content-Disposition', 'attachment; filename="my-data-export.json"');
+
+      return res.status(200).json({
+        success: true,
+        data: exportedData,
+      });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to export data';
+      return res.status(500).json({
         success: false,
         error: { message },
       });

@@ -369,6 +369,51 @@ export default function SettingsPage() {
           </div>
         </GlassmorphicCard>
 
+        {/* Data & Privacy Section */}
+        <GlassmorphicCard variant="elevated" className="p-6 md:p-8 mb-6">
+          <h2 className="text-2xl font-bold text-white mb-4">Data & Privacy</h2>
+          <p className="text-white/70 mb-6">
+            Download a copy of all your personal data or learn more about how we handle your information.
+          </p>
+
+          <div className="flex flex-col sm:flex-row gap-4">
+            <GlassmorphicButton
+              variant="outline"
+              onClick={async () => {
+                try {
+                  toast.info('Preparing your data export...');
+                  const exportedData = await settingsService.exportData();
+                  
+                  // Create and download the JSON file
+                  const blob = new Blob([JSON.stringify(exportedData, null, 2)], { type: 'application/json' });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url;
+                  a.download = `my-data-export-${new Date().toISOString().split('T')[0]}.json`;
+                  document.body.appendChild(a);
+                  a.click();
+                  document.body.removeChild(a);
+                  URL.revokeObjectURL(url);
+                  
+                  toast.success('Your data has been exported!');
+                } catch (error) {
+                  toast.error('Failed to export data. Please try again.');
+                }
+              }}
+              className="border-hot-pink/50 text-hot-pink hover:bg-hot-pink/20"
+            >
+              📥 Export My Data
+            </GlassmorphicButton>
+            
+            <GlassmorphicButton
+              variant="outline"
+              onClick={() => navigate('/privacy')}
+            >
+              📄 Privacy Policy
+            </GlassmorphicButton>
+          </div>
+        </GlassmorphicCard>
+
         {/* Danger Zone - Delete Account */}
         <GlassmorphicCard variant="elevated" className="p-6 md:p-8 border-2 border-red-500/30">
           <h2 className="text-2xl font-bold text-red-400 mb-4">Danger Zone</h2>

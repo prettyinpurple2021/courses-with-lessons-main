@@ -13,5 +13,6 @@ router.put('/me/avatar', authenticate, asyncHandler((req, res) => userController
 router.put('/me/password', authenticate, asyncHandler((req, res) => userController.changePassword(req, res)));
 router.put('/me/notifications', authenticate, asyncHandler((req, res) => userController.updateNotificationPreferences(req, res)));
 router.delete('/me', authenticate, asyncHandler((req, res) => userController.deleteAccount(req, res)));
+router.get('/me/export', authenticate, asyncHandler((req, res) => userController.exportData(req, res)));
 
 export default router;
