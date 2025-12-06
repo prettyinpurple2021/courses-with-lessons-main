@@ -169,4 +169,3 @@ export default function ContextualTooltip({
 
   return createPortal(tooltipContent, document.body);
 }
-
