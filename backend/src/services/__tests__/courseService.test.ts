@@ -11,6 +11,10 @@ vi.mock('../achievementService.js');
 const prisma = new PrismaClient();
 
 describe('CourseService', () => {
+  afterAll(async () => {
+    await prisma.$disconnect();
+  });
+
   let testUserId: string;
   let testCourseId: string;
 

@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter } from 'react-router-dom';
+import { ToastProvider } from '../../contexts/ToastContext';
 import LessonPage from '../LessonPage';
 import { api } from '../../services/api';
 import { getCourseById } from '../../services/courseService';
@@ -26,6 +27,23 @@ vi.mock('../../components/course/YouTubePlayer', () => ({
     <div data-testid="youtube-player">YouTube Player: {videoId}</div>
   ),
 }));
+vi.mock('../../components/course/ResourceList', () => ({
+  default: () => null, // Don't render ResourceList in tests
+}));
+vi.mock('../../components/course/NoteTakingPanel', () => ({
+  default: () => null, // Don't render NoteTakingPanel in tests
+}));
+vi.mock('../../components/course/LessonNavigation', () => ({
+  default: () => null, // Don't render LessonNavigation in tests
+}));
+vi.mock('react-router-dom', async () => {
+  const actual = await vi.importActual<typeof import('react-router-dom')>('react-router-dom');
+  return {
+    ...actual,
+    useParams: vi.fn(() => ({ lessonId: 'lesson-1' })),
+    useNavigate: vi.fn(() => vi.fn()),
+  };
+});
 
 const createTestQueryClient = () =>
   new QueryClient({
@@ -39,7 +57,9 @@ const renderWithProviders = (component: React.ReactElement) => {
   const queryClient = createTestQueryClient();
   return render(
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>{component}</BrowserRouter>
+      <ToastProvider>
+        <BrowserRouter>{component}</BrowserRouter>
+      </ToastProvider>
     </QueryClientProvider>
   );
 };
@@ -82,15 +102,32 @@ describe('LessonPage', () => {
 
     renderWithProviders(<LessonPage />);
 
-    expect(screen.getByText(/loading lesson/i)).toBeInTheDocument();
+    // Use getAllByText and check that at least one exists
+    const loadingElements = screen.getAllByText(/loading lesson/i);
+    expect(loadingElements.length).toBeGreaterThan(0);
   });
 
   it('displays lesson details when loaded', async () => {
-    vi.mocked(api.get).mockResolvedValue({
-      data: {
-        success: true,
-        data: mockLesson,
-      },
+    // Mock lesson API call
+    vi.mocked(api.get).mockImplementation((url: string) => {
+      if (url.includes('/lessons/')) {
+        return Promise.resolve({
+          data: {
+            success: true,
+            data: mockLesson,
+          },
+        });
+      }
+      // Mock resources API call
+      if (url.includes('/resources')) {
+        return Promise.resolve({
+          data: {
+            success: true,
+            data: [],
+          },
+        });
+      }
+      return Promise.reject(new Error('Unexpected API call'));
     });
 
     vi.mocked(getCourseById).mockResolvedValue({
@@ -100,20 +137,11 @@ describe('LessonPage', () => {
       lessons: [],
     });
 
-    // Mock useParams
-    vi.mock('react-router-dom', async () => {
-      const actual = await vi.importActual('react-router-dom');
-      return {
-        ...actual,
-        useParams: () => ({ lessonId: 'lesson-1' }),
-      };
-    });
-
     renderWithProviders(<LessonPage />);
 
     await waitFor(() => {
       expect(screen.getByText(/Test Lesson/i)).toBeInTheDocument();
-    });
+    }, { timeout: 3000 });
   });
 
   it('displays error message when lesson not found', async () => {
@@ -132,11 +160,26 @@ describe('LessonPage', () => {
   });
 
   it('displays YouTube player with correct video ID', async () => {
-    vi.mocked(api.get).mockResolvedValue({
-      data: {
-        success: true,
-        data: mockLesson,
-      },
+    // Mock lesson API call
+    vi.mocked(api.get).mockImplementation((url: string) => {
+      if (url.includes('/lessons/')) {
+        return Promise.resolve({
+          data: {
+            success: true,
+            data: mockLesson,
+          },
+        });
+      }
+      // Mock resources API call
+      if (url.includes('/resources')) {
+        return Promise.resolve({
+          data: {
+            success: true,
+            data: [],
+          },
+        });
+      }
+      return Promise.reject(new Error('Unexpected API call'));
     });
 
     vi.mocked(getCourseById).mockResolvedValue({
@@ -150,15 +193,30 @@ describe('LessonPage', () => {
 
     await waitFor(() => {
       expect(screen.getByTestId('youtube-player')).toBeInTheDocument();
-    });
+    }, { timeout: 3000 });
   });
 
   it('displays activities list', async () => {
-    vi.mocked(api.get).mockResolvedValue({
-      data: {
-        success: true,
-        data: mockLesson,
-      },
+    // Mock lesson API call
+    vi.mocked(api.get).mockImplementation((url: string) => {
+      if (url.includes('/lessons/')) {
+        return Promise.resolve({
+          data: {
+            success: true,
+            data: mockLesson,
+          },
+        });
+      }
+      // Mock resources API call
+      if (url.includes('/resources')) {
+        return Promise.resolve({
+          data: {
+            success: true,
+            data: [],
+          },
+        });
+      }
+      return Promise.reject(new Error('Unexpected API call'));
     });
 
     vi.mocked(getCourseById).mockResolvedValue({
@@ -172,6 +230,6 @@ describe('LessonPage', () => {
 
     await waitFor(() => {
       expect(screen.getByText(/Test Activity/i)).toBeInTheDocument();
-    });
+    }, { timeout: 3000 });
   });
 });

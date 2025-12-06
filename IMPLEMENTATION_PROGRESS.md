@@ -205,15 +205,36 @@
 ### 9. Critical Tests ✅
 - **Backend Service Tests**:
   - `courseService.test.ts` - Course enrollment, locking, completion logic
+    - Tests sequential progression (Course One unlocks Course Two)
+    - Tests course completion and unlocking
+    - Includes proper Prisma cleanup with `afterAll` hook
   - `userService.test.ts` - User profile, statistics, profile updates
+    - Tests profile data retrieval
+    - Tests statistics calculation
+    - Includes proper Prisma cleanup
   - `lessonService.test.ts` - Lesson details, progress tracking, completion
+    - Tests sequential activity locking
+    - Tests progress tracking
+    - Tests lesson completion validation
+    - Includes proper Prisma cleanup
   
 - **Frontend Service Tests**:
   - `courseService.test.ts` - API integration, course fetching, enrollment
+    - Tests API calls with proper mocking
+    - Tests error handling
   
 - **Component Tests**:
   - `YouTubePlayer.test.tsx` - Video player initialization, progress tracking, error handling
-  - `LessonPage.test.tsx` - Lesson loading, activity display, error states
+    - Tests YouTube IFrame API integration
+    - Tests video playback controls
+    - Tests error handling
+  - `LessonPage.test.tsx` - ✅ All 5 tests passing
+    - Tests loading states
+    - Tests lesson data display
+    - Tests error handling
+    - Tests YouTube player integration
+    - Tests activities list display
+    - Properly mocked all dependencies (ToastProvider, ResourceList, etc.)
   
 - **Test Coverage**:
   - Sequential progression logic
@@ -222,6 +243,7 @@
   - Progress tracking
   - Error handling
   - API integration
+  - Component lifecycle management
 
 ## Pending Tasks 📋
 
