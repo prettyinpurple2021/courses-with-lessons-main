@@ -423,7 +423,15 @@ export default function YouTubePlayer({
       onTouchStart={() => setShowControls(true)}
       onTouchEnd={() => {
         if (isPlaying) {
-          setTimeout(() => setShowControls(false), 3000);
+          // Clear any existing timeout to prevent memory leaks
+          if (controlsTimeoutRef.current) {
+            clearTimeout(controlsTimeoutRef.current);
+          }
+          // Set new timeout and track it
+          controlsTimeoutRef.current = setTimeout(() => {
+            setShowControls(false);
+            controlsTimeoutRef.current = null;
+          }, 3000);
         }
       }}
     >

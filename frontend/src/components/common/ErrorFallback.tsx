@@ -85,7 +85,17 @@ const ErrorFallback: React.FC<ErrorFallbackProps> = ({
       {showRetry && onRetry && (
         <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
           <GlassmorphicButton 
-            onClick={onRetry} 
+            onClick={async () => {
+              try {
+                await onRetry();
+              } catch (error) {
+                // Error is already handled by the retry mechanism or parent component
+                // This prevents unhandled promise rejections
+                if (import.meta.env.DEV) {
+                  console.error('Error in retry callback:', error);
+                }
+              }
+            }}
             variant="primary"
             disabled={isRetrying}
             loading={isRetrying}

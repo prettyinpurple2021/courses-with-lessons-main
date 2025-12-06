@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
-import { AppError, isRetryableError, parseError } from '../utils/errorHandler';
+import { AppError } from '../types/error';
+import { isRetryableError, parseError } from '../utils/errorHandler';
 
 interface RetryOptions {
   maxRetries?: number;
