@@ -14,6 +14,8 @@ import CookieConsent from './components/common/CookieConsent';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import AdminRoute from './components/auth/AdminRoute';
 import Chatbot from './components/ai/Chatbot';
+import OnboardingFlow from './components/onboarding/OnboardingFlow';
+import { useOnboarding } from './hooks/useOnboarding';
 
 // Eager load critical pages
 import HomePage from './pages/HomePage';
@@ -85,6 +87,7 @@ function AppContent() {
       {shouldShowNav && <Navigation />}
       <KeyboardShortcutsHelp />
       <AccessibilityChecker />
+      <OnboardingWrapper />
       <main id="main-content" tabIndex={-1}>
         <Suspense fallback={<LoadingSpinner fullScreen />}>
           <Routes>
@@ -235,6 +238,22 @@ function AppContent() {
         </Suspense>
       </main>
     </div>
+  );
+}
+
+// Wrapper component for onboarding (must be inside AuthProvider)
+function OnboardingWrapper() {
+  const { showOnboarding, handleComplete, handleSkip } = useOnboarding();
+
+  if (!showOnboarding) {
+    return null;
+  }
+
+  return (
+    <OnboardingFlow
+      onComplete={handleComplete}
+      onSkip={handleSkip}
+    />
   );
 }
 
