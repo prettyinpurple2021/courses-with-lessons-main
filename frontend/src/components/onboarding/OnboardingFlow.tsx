@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import GlassmorphicCard from '../common/GlassmorphicCard';
 import GlassmorphicButton from '../common/GlassmorphicButton';
 import OnboardingService, { OnboardingState } from '../../services/onboardingService';
@@ -12,7 +11,6 @@ interface OnboardingFlowProps {
 export default function OnboardingFlow({ onComplete, onSkip }: OnboardingFlowProps) {
   const [currentStep, setCurrentStep] = useState(0);
   const [onboardingState, setOnboardingState] = useState<OnboardingState | null>(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const state = OnboardingService.getState();
