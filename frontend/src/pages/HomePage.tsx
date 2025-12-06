@@ -377,24 +377,37 @@ const HomePage = () => {
       {/* Footer */}
       <footer className="relative z-10 py-8 px-4 sm:px-6 lg:px-8 border-t border-white border-opacity-10">
         <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             <div className="text-gray-400 text-sm">
-              © 2024 SoloSuccess Intel Academy. All rights reserved.
+              © {new Date().getFullYear()} SoloSuccess Intel Academy. All rights reserved.
             </div>
-            <div className="flex gap-6">
-              <Link to="/privacy" className="text-gray-400 hover:text-hot-pink transition-colors">
+            <div className="flex flex-wrap justify-center gap-4 md:gap-6">
+              <Link to="/privacy" className="text-gray-400 hover:text-hot-pink transition-colors text-sm">
                 Privacy Policy
               </Link>
-              <Link to="/terms" className="text-gray-400 hover:text-hot-pink transition-colors">
+              <Link to="/terms" className="text-gray-400 hover:text-hot-pink transition-colors text-sm">
                 Terms of Service
               </Link>
-              <Link to="/contact" className="text-gray-400 hover:text-hot-pink transition-colors">
+              <Link to="/cookies" className="text-gray-400 hover:text-hot-pink transition-colors text-sm">
+                Cookie Policy
+              </Link>
+              <Link to="/refunds" className="text-gray-400 hover:text-hot-pink transition-colors text-sm">
+                Refund Policy
+              </Link>
+              <Link to="/accessibility" className="text-gray-400 hover:text-hot-pink transition-colors text-sm">
+                Accessibility
+              </Link>
+              <Link to="/disclaimer" className="text-gray-400 hover:text-hot-pink transition-colors text-sm">
+                Disclaimer
+              </Link>
+              <Link to="/contact" className="text-gray-400 hover:text-hot-pink transition-colors text-sm">
                 Contact
               </Link>
             </div>
           </div>
         </div>
       </footer>
+
     </div>
     </>
   );

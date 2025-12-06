@@ -58,6 +58,10 @@ const SettingsPage = lazy(() => import('./pages/SettingsPage'));
 const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'));
 const TermsOfServicePage = lazy(() => import('./pages/TermsOfServicePage'));
 const ContactPage = lazy(() => import('./pages/ContactPage'));
+const CookiePolicyPage = lazy(() => import('./pages/CookiePolicyPage'));
+const RefundPolicyPage = lazy(() => import('./pages/RefundPolicyPage'));
+const AccessibilityPage = lazy(() => import('./pages/AccessibilityPage'));
+const DisclaimerPage = lazy(() => import('./pages/DisclaimerPage'));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -100,6 +104,10 @@ function AppContent() {
                 <Route path="/privacy" element={<PrivacyPolicyPage />} />
                 <Route path="/terms" element={<TermsOfServicePage />} />
                 <Route path="/contact" element={<ContactPage />} />
+                <Route path="/cookies" element={<CookiePolicyPage />} />
+                <Route path="/refunds" element={<RefundPolicyPage />} />
+                <Route path="/accessibility" element={<AccessibilityPage />} />
+                <Route path="/disclaimer" element={<DisclaimerPage />} />
                 <Route
                   path="/dashboard"
                   element={
