@@ -6,6 +6,9 @@ const prisma = new PrismaClient();
 const userService = new UserService();
 
 describe('UserService', () => {
+  afterAll(async () => {
+    await prisma.$disconnect();
+  });
   let testUserId: string;
 
   beforeEach(async () => {

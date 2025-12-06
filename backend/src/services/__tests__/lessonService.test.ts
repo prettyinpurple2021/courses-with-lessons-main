@@ -5,6 +5,9 @@ import * as lessonService from '../lessonService.js';
 const prisma = new PrismaClient();
 
 describe('LessonService', () => {
+  afterAll(async () => {
+    await prisma.$disconnect();
+  });
   let testUserId: string;
   let testCourseId: string;
   let testLessonId: string;
