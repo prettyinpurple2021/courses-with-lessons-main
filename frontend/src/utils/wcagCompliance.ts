@@ -20,10 +20,10 @@ const hexToRgb = (hex: string): { r: number; g: number; b: number } | null => {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   return result
     ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16),
-      }
+      r: parseInt(result[1], 16),
+      g: parseInt(result[2], 16),
+      b: parseInt(result[3], 16),
+    }
     : null;
 };
 
@@ -275,19 +275,22 @@ export const runWCAGAudit = (): {
  * Brand colors with WCAG AA compliant alternatives
  */
 export const ACCESSIBLE_COLORS = {
-  // Original brand colors
-  hotPink: '#FF1493',
+  // Original brand colors (updated to teal/navy theme)
+  accentTeal: '#0FA3A3',
   glossyBlack: '#000000',
   steelGrey: '#708090',
   successTeal: '#40E0D0',
-  girlyPink: '#FFC0CB',
+  accentLight: '#1CC8C8',
   white: '#FFFFFF',
+  // Legacy aliases
+  hotPink: '#0FA3A3',
+  girlyPink: '#1CC8C8',
 
   // WCAG AA compliant text colors on dark backgrounds
   textOnDark: {
     primary: '#FFFFFF', // White text on dark backgrounds (21:1 ratio)
     secondary: '#E0E0E0', // Light grey (17:1 ratio)
-    accent: '#FF69B4', // Lighter hot pink (8.2:1 ratio)
+    accent: '#1CC8C8', // Lighter teal (good contrast)
     success: '#5FFFD7', // Lighter teal (12:1 ratio)
   },
 
@@ -295,7 +298,7 @@ export const ACCESSIBLE_COLORS = {
   textOnLight: {
     primary: '#000000', // Black text on light backgrounds (21:1 ratio)
     secondary: '#4A4A4A', // Dark grey (9:1 ratio)
-    accent: '#C71585', // Darker hot pink (5.5:1 ratio)
+    accent: '#0A7B7B', // Darker teal (5.5:1 ratio)
     success: '#008B8B', // Darker teal (4.8:1 ratio)
   },
 } as const;

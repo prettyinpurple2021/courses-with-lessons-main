@@ -12,13 +12,13 @@ const orbs = [
 ];
 
 const radialBackgroundGradient =
-  '[background-image:radial-gradient(at_8%_15%,hsla(328,100%,54%,0.25)_0px,transparent_40%),radial-gradient(at_95%_25%,hsla(0,0%,0%,0.6)_0px,transparent_50%),radial-gradient(at_70%_98%,hsla(210,9%,44%,0.3)_0px,transparent_50%),radial-gradient(at_15%_88%,hsla(0,0%,0%,0.6)_0px,transparent_40%),radial-gradient(at_50%_50%,hsla(328,100%,54%,0.15)_0px,transparent_50%)]';
+  '[background-image:radial-gradient(at_8%_15%,hsla(180,83%,35%,0.25)_0px,transparent_40%),radial-gradient(at_95%_25%,hsla(0,0%,0%,0.6)_0px,transparent_50%),radial-gradient(at_70%_98%,hsla(210,9%,44%,0.3)_0px,transparent_50%),radial-gradient(at_15%_88%,hsla(0,0%,0%,0.6)_0px,transparent_40%),radial-gradient(at_50%_50%,hsla(180,83%,35%,0.15)_0px,transparent_50%)]';
 
 const noiseBg =
   '[background-image:url(\'data:image/svg+xml,%3Csvg viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E\')]';
 
 const orbBg =
-  '[background:radial-gradient(circle,rgba(255,255,255,0.3)_0%,rgba(255,255,255,0)_60%),conic-gradient(from_180deg_at_50%_50%,#00FFFF_0deg,#FF00FF_120deg,#FFFF00_240deg,#00FFFF_360deg)]';
+  '[background:radial-gradient(circle,rgba(255,255,255,0.3)_0%,rgba(255,255,255,0)_60%),conic-gradient(from_180deg_at_50%_50%,#0FA3A3_0deg,#1A2B4A_120deg,#D4AF37_240deg,#0FA3A3_360deg)]';
 
 const DecorativeBackground = () => (
   <div className="pointer-events-none fixed inset-0 overflow-hidden z-0">

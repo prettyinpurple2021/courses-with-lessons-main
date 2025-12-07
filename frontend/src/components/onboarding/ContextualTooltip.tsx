@@ -100,7 +100,7 @@ export default function ContextualTooltip({
     };
 
     // Add highlight to target
-    target.style.outline = '2px solid #FF1493';
+    target.style.outline = '2px solid #0FA3A3';
     target.style.outlineOffset = '4px';
     target.style.zIndex = '9998';
     target.style.position = 'relative';

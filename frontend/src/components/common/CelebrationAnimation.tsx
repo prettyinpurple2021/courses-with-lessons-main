@@ -15,7 +15,7 @@ const CelebrationAnimation = ({ show, onComplete }: CelebrationAnimationProps) =
         id: i,
         x: Math.random() * 100,
         y: -10,
-        color: ['#FF1493', '#FFC0CB', '#40E0D0', '#00FFFF', '#FF00FF', '#FFFF00'][Math.floor(Math.random() * 6)],
+        color: ['#0FA3A3', '#1CC8C8', '#40E0D0', '#D4AF37', '#1A2B4A', '#2D4A6F'][Math.floor(Math.random() * 6)],
       }));
       setParticles(newParticles);
 

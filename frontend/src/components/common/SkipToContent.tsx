@@ -9,7 +9,7 @@ const SkipToContent: React.FC = () => {
         position: 'absolute',
         top: '-40px',
         left: 0,
-        background: '#FF1493',
+        background: '#0FA3A3',
         color: 'white',
         padding: '8px 16px',
         textDecoration: 'none',

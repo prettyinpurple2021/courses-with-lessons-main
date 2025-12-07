@@ -468,7 +468,7 @@ export default function YouTubePlayer({
                       [&::-moz-range-thumb]:bg-hot-pink [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer
                       hover:h-2 md:hover:h-2 transition-all"
                     style={{
-                      background: `linear-gradient(to right, #FF1493 0%, #FF1493 ${(currentTime / duration) * 100}%, rgba(255,255,255,0.2) ${(currentTime / duration) * 100}%, rgba(255,255,255,0.2) 100%)`
+                      background: `linear-gradient(to right, #0FA3A3 0%, #0FA3A3 ${(currentTime / duration) * 100}%, rgba(255,255,255,0.2) ${(currentTime / duration) * 100}%, rgba(255,255,255,0.2) 100%)`
                     }}
                   />
                 </div>

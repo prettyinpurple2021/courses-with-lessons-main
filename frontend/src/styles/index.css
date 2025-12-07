@@ -13,20 +13,20 @@ input[type='range'].slider::-webkit-slider-thumb {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #FF1493, #FF00FF);
+  background: linear-gradient(135deg, #0fa3a3, #1a2b4a);
   cursor: pointer;
   border: 2px solid white;
-  box-shadow: 0 0 10px rgba(255, 20, 147, 0.5);
+  box-shadow: 0 0 10px rgba(15, 163, 163, 0.5);
 }
 
 input[type='range'].slider::-moz-range-thumb {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #FF1493, #FF00FF);
+  background: linear-gradient(135deg, #0fa3a3, #1a2b4a);
   cursor: pointer;
   border: 2px solid white;
-  box-shadow: 0 0 10px rgba(255, 20, 147, 0.5);
+  box-shadow: 0 0 10px rgba(15, 163, 163, 0.5);
 }
 
 input[type='range'].slider::-webkit-slider-runnable-track {

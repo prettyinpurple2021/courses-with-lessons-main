@@ -62,7 +62,7 @@ export default function CourseProgressCard({ course }: CourseProgressCardProps) 
             // Fallback to gradient if image fails to load
             e.currentTarget.style.display = 'none';
             e.currentTarget.parentElement!.style.background =
-              'linear-gradient(135deg, #FF1493 0%, #708090 100%)';
+              'linear-gradient(135deg, #0FA3A3 0%, #708090 100%)';
           }}
         />
         

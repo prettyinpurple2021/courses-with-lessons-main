@@ -1,21 +1,21 @@
-/* Beautiful Gradient Backgrounds */
+/* Beautiful Gradient Backgrounds - Updated to Teal/Navy Theme */
 .camo-background {
   background: linear-gradient(135deg, 
-    #FFC0CB 0%,      /* Pink */
-    #FF69B4 25%,     /* Hot Pink */
+    #1CC8C8 0%,      /* Light Teal */
+    #0FA3A3 25%,     /* Teal */
     #000000 50%,     /* Black */
-    #FF1493 75%,     /* Deep Pink */
-    #808080 100%     /* Grey */
+    #1A2B4A 75%,     /* Navy */
+    #708090 100%     /* Steel Grey */
   );
   background-size: 400% 400%;
 }
 
 .camo-background-subtle {
   background: linear-gradient(135deg, 
-    #FFB6C1 0%,      /* Light Pink */
-    #FFC0CB 25%,     /* Pink */
-    #1a1a1a 50%,     /* Dark Grey (softer than black) */
-    #FFB6C1 75%,     /* Light Pink */
+    #1CC8C8 0%,      /* Light Teal (replaces Light Pink) */
+    #0FA3A3 25%,     /* Teal (replaces Pink) */
+    #1a1a1a 50%,     /* Dark Grey */
+    #2D4A6F 75%,     /* Navy Light */
     #A9A9A9 100%     /* Light Grey */
   );
   background-size: 400% 400%;
@@ -39,11 +39,11 @@
 
 .camo-background-bold {
   background: linear-gradient(135deg, 
-    #FF1493 0%,      /* Deep Pink */
-    #FF69B4 20%,     /* Hot Pink */
+    #0FA3A3 0%,      /* Teal (replaces Deep Pink) */
+    #1CC8C8 20%,     /* Light Teal (replaces Hot Pink) */
     #000000 40%,     /* Black */
-    #FF1493 60%,     /* Deep Pink */
-    #FFC0CB 80%,     /* Pink */
+    #1A2B4A 60%,     /* Navy */
+    #D4AF37 80%,     /* Gold Accent */
     #696969 100%     /* Dim Grey */
   );
   background-size: 400% 400%;
@@ -59,9 +59,9 @@
   position: absolute;
   inset: 0;
   background: linear-gradient(135deg, 
-    rgba(255, 192, 203, 0.3) 0%,    /* Pink with transparency */
+    rgba(15, 163, 163, 0.3) 0%,    /* Teal with transparency */
     rgba(0, 0, 0, 0.2) 50%,         /* Black with transparency */
-    rgba(128, 128, 128, 0.3) 100%   /* Grey with transparency */
+    rgba(26, 43, 74, 0.3) 100%     /* Navy with transparency */
   );
   pointer-events: none;
   z-index: 0;

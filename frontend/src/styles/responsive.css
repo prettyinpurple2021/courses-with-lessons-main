@@ -312,11 +312,11 @@ html {
 
 /* Focus visible for keyboard navigation with holographic effect */
 *:focus-visible {
-  outline: 3px solid #FF1493;
+  outline: 3px solid #0FA3A3;
   outline-offset: 3px;
   border-radius: 4px;
-  box-shadow: 0 0 0 6px rgba(255, 20, 147, 0.2),
-              0 0 15px rgba(0, 255, 255, 0.3);
+  box-shadow: 0 0 0 6px rgba(15, 163, 163, 0.2),
+              0 0 15px rgba(15, 163, 163, 0.3);
   transition: outline 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -327,16 +327,16 @@ input:focus-visible,
 textarea:focus-visible,
 select:focus-visible,
 [role="button"]:focus-visible {
-  outline: 3px solid #FF1493;
+  outline: 3px solid #0FA3A3;
   outline-offset: 3px;
-  box-shadow: 0 0 0 6px rgba(255, 20, 147, 0.2),
-              0 0 15px rgba(0, 255, 255, 0.3),
-              0 0 25px rgba(255, 0, 255, 0.2);
+  box-shadow: 0 0 0 6px rgba(15, 163, 163, 0.2),
+              0 0 15px rgba(15, 163, 163, 0.3),
+              0 0 25px rgba(26, 43, 74, 0.2);
 }
 
 /* Improve tap highlight on mobile */
 * {
-  -webkit-tap-highlight-color: rgba(255, 20, 147, 0.3);
+  -webkit-tap-highlight-color: rgba(15, 163, 163, 0.3);
 }
 
 /* Prevent text size adjustment on orientation change */
@@ -364,7 +364,7 @@ html {
   position: absolute;
   top: -40px;
   left: 0;
-  background: #FF1493;
+  background: #0FA3A3;
   color: white;
   padding: 8px 16px;
   text-decoration: none;
@@ -423,7 +423,7 @@ html {
   button,
   a,
   [role="button"] {
-    -webkit-tap-highlight-color: rgba(255, 20, 147, 0.3);
+    -webkit-tap-highlight-color: rgba(15, 163, 163, 0.3);
   }
 }
 

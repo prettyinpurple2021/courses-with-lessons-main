@@ -1,4 +1,4 @@
-/* Holographic Effects */
+/* Holographic Effects - Updated to Teal/Navy/Gold Theme */
 .holographic {
   position: relative;
   overflow: hidden;
@@ -14,9 +14,9 @@
   background: linear-gradient(
     45deg,
     transparent 30%,
-    rgba(0, 255, 255, 0.3) 40%,
-    rgba(255, 0, 255, 0.3) 50%,
-    rgba(255, 255, 0, 0.3) 60%,
+    rgba(15, 163, 163, 0.3) 40%,
+    rgba(26, 43, 74, 0.3) 50%,
+    rgba(212, 175, 55, 0.3) 60%,
     transparent 70%
   );
   animation: holographic-shimmer 3s linear infinite;
@@ -38,10 +38,10 @@
     linear-gradient(#000, #000) padding-box,
     linear-gradient(
       90deg,
-      #00FFFF,
-      #FF00FF,
-      #FFFF00,
-      #00FFFF
+      #0FA3A3,
+      #1A2B4A,
+      #D4AF37,
+      #0FA3A3
     ) border-box;
   animation: holographic-border-rotate 3s linear infinite;
 }
@@ -58,10 +58,10 @@
 .holographic-text {
   background: linear-gradient(
     90deg,
-    #00FFFF,
-    #FF00FF,
-    #FFFF00,
-    #00FFFF
+    #0FA3A3,
+    #1CC8C8,
+    #D4AF37,
+    #0FA3A3
   );
   background-size: 200% auto;
   -webkit-background-clip: text;
@@ -94,9 +94,9 @@
   bottom: 0;
   background: linear-gradient(
     135deg,
-    rgba(0, 255, 255, 0.2),
-    rgba(255, 0, 255, 0.2),
-    rgba(255, 255, 0, 0.2)
+    rgba(15, 163, 163, 0.2),
+    rgba(26, 43, 74, 0.2),
+    rgba(212, 175, 55, 0.2)
   );
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -119,22 +119,22 @@
 
 @keyframes holographic-pulse-anim {
   0%, 100% {
-    box-shadow: 0 0 10px rgba(0, 255, 255, 0.5),
-                0 0 20px rgba(255, 0, 255, 0.3),
-                0 0 30px rgba(255, 255, 0, 0.2);
+    box-shadow: 0 0 10px rgba(15, 163, 163, 0.5),
+                0 0 20px rgba(26, 43, 74, 0.3),
+                0 0 30px rgba(212, 175, 55, 0.2);
   }
   50% {
-    box-shadow: 0 0 20px rgba(0, 255, 255, 0.8),
-                0 0 40px rgba(255, 0, 255, 0.6),
-                0 0 60px rgba(255, 255, 0, 0.4);
+    box-shadow: 0 0 20px rgba(15, 163, 163, 0.8),
+                0 0 40px rgba(26, 43, 74, 0.6),
+                0 0 60px rgba(212, 175, 55, 0.4);
   }
 }
 
 /* Holographic Glow */
 .holographic-glow {
-  box-shadow: 0 0 15px rgba(0, 255, 255, 0.4),
-              0 0 30px rgba(255, 0, 255, 0.3),
-              0 0 45px rgba(255, 255, 0, 0.2);
+  box-shadow: 0 0 15px rgba(15, 163, 163, 0.4),
+              0 0 30px rgba(26, 43, 74, 0.3),
+              0 0 45px rgba(212, 175, 55, 0.2);
 }
 
 /* Shine Effect for CTA Buttons */
@@ -185,9 +185,9 @@
   
   /* Reduce glow intensity on mobile */
   .holographic-glow {
-    box-shadow: 0 0 10px rgba(0, 255, 255, 0.3),
-                0 0 20px rgba(255, 0, 255, 0.2),
-                0 0 30px rgba(255, 255, 0, 0.1);
+    box-shadow: 0 0 10px rgba(15, 163, 163, 0.3),
+                0 0 20px rgba(26, 43, 74, 0.2),
+                0 0 30px rgba(212, 175, 55, 0.1);
   }
 }
 

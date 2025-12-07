@@ -4,14 +4,21 @@ export default {
   theme: {
     extend: {
       colors: {
-        'hot-pink': '#FF1493',
+        'accent-teal': '#0FA3A3',
+        'accent-light': '#1CC8C8',
+        'navy-primary': '#1A2B4A',
+        'navy-light': '#2D4A6F',
+        'gold-accent': '#D4AF37',
         'glossy-black': '#000000',
         'steel-grey': '#708090',
-        'holographic-cyan': '#00FFFF',
-        'holographic-magenta': '#FF00FF',
-        'holographic-yellow': '#FFFF00',
+        'teal-glow': '#0FA3A3',
         'success-teal': '#40E0D0',
-        'girly-pink': '#FFC0CB',
+        // Legacy aliases for backward compatibility
+        'hot-pink': '#0FA3A3',
+        'girly-pink': '#1CC8C8',
+        'holographic-cyan': '#0FA3A3',
+        'holographic-magenta': '#1A2B4A',
+        'holographic-yellow': '#D4AF37',
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
