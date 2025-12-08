@@ -36,8 +36,35 @@ test.describe('Critical User Flows', () => {
     userPassword = testUser.password;
   });
 
+  // Set cookie consent before each test to prevent dialog from appearing
+  test.beforeEach(async ({ page }) => {
+    // Pre-set cookie consent in localStorage to bypass dialog
+    await page.addInitScript(() => {
+      localStorage.setItem('cookie_consent', JSON.stringify({
+        preferences: { necessary: true, analytics: true, marketing: true },
+        version: '1.0',
+        timestamp: new Date().toISOString()
+      }));
+    });
+  });
+
   test('1. User Registration Flow', async ({ page }) => {
     await page.goto('/register');
+
+    // Dismiss cookie consent dialog if present
+    const cookieAcceptButton = page.locator('button:has-text("Accept All")').first();
+    if (await cookieAcceptButton.isVisible({ timeout: 3000 }).catch(() => false)) {
+      await cookieAcceptButton.click();
+      // Wait for cookie dialog to disappear
+      await page.locator('dialog:has-text("Cookie Consent")').waitFor({ state: 'hidden', timeout: 3000 }).catch(() => { });
+    }
+
+    // Dismiss accessibility audit dialog if present (dev mode only)
+    const auditCloseButton = page.locator('button:has-text("Close")').first();
+    if (await auditCloseButton.isVisible({ timeout: 2000 }).catch(() => false)) {
+      await auditCloseButton.click();
+      await page.waitForTimeout(500);
+    }
 
     // Verify registration page loads
     await expect(page.locator('h1, h2')).toContainText(/register|sign up|join/i);
@@ -284,6 +311,14 @@ test.describe('Final Project and Exam Flow (Simulated)', () => {
 
     // Register and login
     await page.goto('/register');
+
+    // Dismiss cookie consent dialog if present
+    const cookieAcceptButton = page.locator('button:has-text("Accept All"), button:has-text("Reject All")').first();
+    if (await cookieAcceptButton.isVisible({ timeout: 3000 }).catch(() => false)) {
+      await cookieAcceptButton.click();
+      await page.waitForTimeout(500);
+    }
+
     await page.fill('input[name="firstName"]', 'Final');
     await page.fill('input[name="lastName"]', 'Test');
     await page.fill('input[name="email"]', userEmail);
@@ -349,6 +384,14 @@ test.describe('Certificate Generation Flow (Simulated)', () => {
 
     // Register and login
     await page.goto('/register');
+
+    // Dismiss cookie consent dialog if present
+    const cookieAcceptBtn = page.locator('button:has-text("Accept All"), button:has-text("Reject All")').first();
+    if (await cookieAcceptBtn.isVisible({ timeout: 3000 }).catch(() => false)) {
+      await cookieAcceptBtn.click();
+      await page.waitForTimeout(500);
+    }
+
     await page.fill('input[name="firstName"]', 'Cert');
     await page.fill('input[name="lastName"]', 'Test');
     await page.fill('input[name="email"]', userEmail);
@@ -394,6 +437,14 @@ test.describe('Error Handling and Edge Cases', () => {
 
     // First registration
     await page.goto('/register');
+
+    // Dismiss cookie consent dialog if present
+    const cookieBtn = page.locator('button:has-text("Accept All"), button:has-text("Reject All")').first();
+    if (await cookieBtn.isVisible({ timeout: 3000 }).catch(() => false)) {
+      await cookieBtn.click();
+      await page.waitForTimeout(500);
+    }
+
     await page.fill('input[name="firstName"]', 'Duplicate');
     await page.fill('input[name="lastName"]', 'Test');
     await page.fill('input[name="email"]', duplicateEmail);
@@ -412,6 +463,14 @@ test.describe('Error Handling and Edge Cases', () => {
 
     // Try to register again with same email
     await page.goto('/register');
+
+    // Dismiss cookie consent dialog if present (may appear again after logout)
+    const cookieBtnRetry = page.locator('button:has-text("Accept All"), button:has-text("Reject All")').first();
+    if (await cookieBtnRetry.isVisible({ timeout: 2000 }).catch(() => false)) {
+      await cookieBtnRetry.click();
+      await page.waitForTimeout(500);
+    }
+
     await page.fill('input[name="firstName"]', 'Duplicate');
     await page.fill('input[name="lastName"]', 'Test');
     await page.fill('input[name="email"]', duplicateEmail);
