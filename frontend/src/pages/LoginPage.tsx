@@ -12,13 +12,19 @@ import { useErrorHandler } from '../hooks/useErrorHandler';
 import { loginSchema, LoginFormData } from '../utils/validationSchemas';
 
 const LoginPage: React.FC = () => {
-  const { login } = useAuth();
+  const { login, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const { success } = useToast();
   const { handleError } = useErrorHandler({ context: 'Login' });
 
   const from = (location.state as any)?.from?.pathname || '/dashboard';
+
+  React.useEffect(() => {
+    if (isAuthenticated) {
+      navigate(from, { replace: true });
+    }
+  }, [isAuthenticated, navigate, from]);
 
   const {
     register,

@@ -36,6 +36,7 @@ import subscriptionSyncRouter from './routes/subscriptionSync.js';
 import aiRouter from './routes/ai.js';
 import cronRouter from './routes/cron.js';
 import cookieConsentRouter from './routes/cookieConsent.js';
+import dashboardRouter from './routes/dashboard.js';
 
 dotenv.config();
 
@@ -87,26 +88,26 @@ const corsOptions = {
     if (!origin) {
       return callback(null, true);
     }
-    
+
     // In development, allow localhost
     if (process.env.NODE_ENV !== 'production') {
       if (origin.startsWith('http://localhost:') || origin.startsWith('http://127.0.0.1:')) {
         return callback(null, true);
       }
     }
-    
+
     // Check if origin matches the configured CORS_ORIGIN exactly
     if (origin === corsOrigin) {
       return callback(null, true);
     }
-    
+
     // Support Vercel deployment URLs - allow any *.vercel.app domain
     // This handles Vercel's dynamic deployment URLs (e.g., frontend-*-*.vercel.app)
     // If CORS_ORIGIN is a Vercel domain, allow all Vercel app domains
     if (corsOrigin.includes('.vercel.app') && origin.includes('.vercel.app')) {
       return callback(null, true);
     }
-    
+
     // Reject other origins
     callback(new Error('Not allowed by CORS'));
   },
@@ -177,6 +178,7 @@ app.use('/api/admin/youtube', adminYouTubeRouter);
 app.use('/api/admin', adminContentGenerationRouter);
 app.use('/api/admin/oauth', adminOAuthRouter);
 app.use('/api/ai', aiRouter);
+app.use('/api/dashboard', dashboardRouter);
 
 // 404 handler for undefined routes
 app.use(notFoundHandler);

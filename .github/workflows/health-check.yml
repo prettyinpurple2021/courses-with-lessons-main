@@ -74,8 +74,10 @@ jobs:
 
       - name: Check frontend health
         id: frontend
+        env:
+          PRODUCTION_FRONTEND_URL: ${{ secrets.PRODUCTION_FRONTEND_URL }}
         run: |
-          FRONTEND_URL=${{ secrets.PRODUCTION_FRONTEND_URL || 'https://your-app.vercel.app' }}
+          FRONTEND_URL=${PRODUCTION_FRONTEND_URL:-'https://your-app.vercel.app'}
           RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" "$FRONTEND_URL")
           if [ "$RESPONSE" != "200" ]; then
             echo "Frontend health check failed with status: $RESPONSE"
@@ -105,13 +107,15 @@ jobs:
 
       - name: Notify on failure
         if: failure()
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: |
           echo "Health check failed!"
           # Add notification logic
           # Example: Send to Slack
           # curl -X POST -H 'Content-type: application/json' \
           #   --data '{"text":"🚨 Health check failed for SoloSuccess Academy"}' \
-          #   ${{ secrets.SLACK_WEBHOOK_URL }}
+          #   "$SLACK_WEBHOOK_URL"
 
       - name: Create incident
         if: failure()
