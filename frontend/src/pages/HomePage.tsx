@@ -7,72 +7,7 @@ import DynamicMetaTags from '../components/common/DynamicMetaTags';
 import { usePageMeta } from '../hooks/usePageMeta';
 
 
-// Mock course data - will be replaced with API data later
-const courses = [
-  {
-    id: '1',
-    courseNumber: 1,
-    title: 'Foundation & Mindset',
-    description: 'Build the mental fortitude and foundational knowledge every successful entrepreneur needs. Master the basics of business strategy and develop an unshakeable mindset.',
-    duration: '4 weeks',
-    lessonsCount: 12,
-    isLocked: false,
-  },
-  {
-    id: '2',
-    courseNumber: 2,
-    title: 'Market Intelligence',
-    description: 'Learn to read your market like a tactical map. Understand your customers, competitors, and position yourself for dominance in your niche.',
-    duration: '4 weeks',
-    lessonsCount: 12,
-    isLocked: false,
-  },
-  {
-    id: '3',
-    courseNumber: 3,
-    title: 'Strategic Operations',
-    description: 'Streamline your operations with military precision. Build systems that scale and processes that run like clockwork.',
-    duration: '4 weeks',
-    lessonsCount: 12,
-    isLocked: false,
-  },
-  {
-    id: '4',
-    courseNumber: 4,
-    title: 'Financial Command',
-    description: 'Take control of your finances with confidence. Master budgeting, forecasting, and financial strategy to fuel sustainable growth.',
-    duration: '4 weeks',
-    lessonsCount: 12,
-    isLocked: false,
-  },
-  {
-    id: '5',
-    courseNumber: 5,
-    title: 'Marketing Warfare',
-    description: 'Deploy marketing strategies that capture attention and convert. Learn to position your brand and dominate your market space.',
-    duration: '4 weeks',
-    lessonsCount: 12,
-    isLocked: false,
-  },
-  {
-    id: '6',
-    courseNumber: 6,
-    title: 'Sales Mastery',
-    description: 'Close deals with confidence and authenticity. Develop a sales process that feels natural and drives consistent revenue.',
-    duration: '4 weeks',
-    lessonsCount: 12,
-    isLocked: false,
-  },
-  {
-    id: '7',
-    courseNumber: 7,
-    title: 'Leadership & Scale',
-    description: 'Step into your role as a leader. Build teams, delegate effectively, and scale your business beyond your wildest dreams.',
-    duration: '4 weeks',
-    lessonsCount: 12,
-    isLocked: false,
-  },
-];
+import { courses } from '../data/courseContent';
 
 // Mock pricing data
 const pricingTiers = [

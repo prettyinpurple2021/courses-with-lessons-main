@@ -19,6 +19,7 @@ import { useOnboarding } from './hooks/useOnboarding';
 
 // Eager load critical pages
 import HomePage from './pages/HomePage';
+import SyllabusPage from './pages/SyllabusPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 
@@ -96,6 +97,7 @@ function AppContent() {
         <Suspense fallback={<LoadingSpinner fullScreen />}>
           <Routes>
                 <Route path="/" element={<HomePage />} />
+                <Route path="/syllabus" element={<SyllabusPage />} />
                 <Route path="/showcase" element={<ComponentShowcase />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />

@@ -69,6 +69,12 @@ const Navigation = () => {
                 </>
               ) : (
                 <>
+                  <Link 
+                    to="/syllabus" 
+                    className="text-white hover:text-hot-pink transition-colors font-semibold"
+                  >
+                    Syllabus
+                  </Link>
                   <Link to="/login">
                     <GlassmorphicButton variant="outline" size="sm">
                       Sign In
@@ -146,6 +152,13 @@ const Navigation = () => {
               </>
             ) : (
               <>
+                <Link
+                  to="/syllabus"
+                  className="block px-4 py-3 rounded-lg text-white hover:bg-white/10 transition-colors font-semibold text-center"
+                  onClick={closeMobileMenu}
+                >
+                  Syllabus
+                </Link>
                 <Link
                   to="/login"
                   className="block px-4 py-3 rounded-lg text-white hover:bg-white/10 transition-colors font-semibold text-center"
