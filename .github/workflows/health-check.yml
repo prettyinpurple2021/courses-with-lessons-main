@@ -10,30 +10,40 @@ jobs:
   health-check:
     name: Check Application Health
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Check backend health
         id: backend
         env:
           BACKEND_URL: ${{ secrets.BACKEND_URL }}
         run: |
-          # Validate BACKEND_URL is set
+          # Health check script with URL normalization and exponential backoff
+          set -eo pipefail
+
           if [ -z "$BACKEND_URL" ]; then
             echo "::error::BACKEND_URL secret is not set. Please configure it in Settings → Secrets → Actions."
             exit 1
           fi
 
-          ENDPOINT="$BACKEND_URL/api/health"
-          MAX_ATTEMPTS=4
-          TIMEOUT=10
-          RESPONSE_PREVIEW_LENGTH=500
-          BACKOFF_MULTIPLIER=2
-          ATTEMPT=1
+          # Normalize BACKEND_URL (remove trailing slash)
+          BASE="${BACKEND_URL%/}"
 
-          while [ $ATTEMPT -le $MAX_ATTEMPTS ]; do
-            echo "Attempt $ATTEMPT of $MAX_ATTEMPTS: checking $ENDPOINT"
-            TMPFILE=$(mktemp)
-            HTTP_CODE=$(curl -s -o "$TMPFILE" -w "%{http_code}" --max-time $TIMEOUT "$ENDPOINT") || HTTP_CODE="000"
+          # If base already ends with /api, call /health; otherwise call /api/health
+          if [[ "$BASE" =~ /api$ ]]; then
+            HEALTH_URL="${BASE}/health"
+          else
+            HEALTH_URL="${BASE}/api/health"
+          fi
+
+          echo "Checking health endpoint: $HEALTH_URL"
+
+          TMPFILE="$(mktemp)"
+          MAX_ATTEMPTS=4
+          RESPONSE_PREVIEW_LENGTH=400
+
+          for attempt in $(seq 1 $MAX_ATTEMPTS); do
+            echo "Attempt $attempt of $MAX_ATTEMPTS: checking $HEALTH_URL"
+            HTTP_CODE=$(curl --silent --show-error --location --fail --max-time 10 -w "%{http_code}" -o "$TMPFILE" "$HEALTH_URL" || true)
 
             if [ "$HTTP_CODE" = "200" ]; then
               echo "Backend is healthy (HTTP $HTTP_CODE)"
@@ -45,21 +55,20 @@ jobs:
             echo "Response body (truncated):"
             head -c $RESPONSE_PREVIEW_LENGTH "$TMPFILE" 2>/dev/null || true
 
-            if [ $ATTEMPT -eq $MAX_ATTEMPTS ]; then
-              echo ""
-              echo "Final failure after $MAX_ATTEMPTS attempts."
-              echo "Full response body:"
-              cat "$TMPFILE" 2>/dev/null || true
-              rm -f "$TMPFILE"
-              exit 1
-            fi
-
-            rm -f "$TMPFILE"
-            ATTEMPT=$((ATTEMPT + 1))
-            SLEEP_TIME=$((ATTEMPT * BACKOFF_MULTIPLIER))
-            echo "Retrying in $SLEEP_TIME seconds..."
-            sleep $SLEEP_TIME
+            # Exponential-ish backoff: 4, 6, 8, 12 seconds
+            case $attempt in
+              1) sleep 4 ;;
+              2) sleep 6 ;;
+              3) sleep 8 ;;
+              *) sleep 12 ;;
+            esac
           done
+
+          echo "Final failure after $MAX_ATTEMPTS attempts."
+          echo "Full response body:"
+          cat "$TMPFILE" 2>/dev/null || true
+          rm -f "$TMPFILE"
+          exit 1
 
       - name: Check frontend health
         id: frontend
