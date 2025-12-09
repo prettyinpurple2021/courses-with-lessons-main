@@ -1,5 +1,6 @@
 
 import { Request, Response } from 'express';
+import prisma from '../config/prisma.js';
 
 // Define interface for recent lesson structure
 interface DashboardRecentLesson {
@@ -14,44 +15,100 @@ interface DashboardRecentLesson {
 }
 
 export const dashboardController = {
-    getRecentLessons: async (_req: Request, res: Response) => {
+    getRecentLessons: async (req: Request, res: Response) => {
         try {
-            // Logic to fetch recent lessons
-            // For now, return empty array or mock data if DB schema is complex to join immediately
-            // Relying on user ID from request (assuming authenticated)
-            // const userId = req.user?.id; 
+            if (!req.user) {
+                return res.status(401).json({
+                    status: 'error',
+                    message: 'User not authenticated',
+                });
+            }
 
-            // Mock response to satisfy the frontend interface
+            // Cast req.user to any to access custom properties if type definition is outdated
+            const userId = (req.user as any).userId || (req.user as any).id;
 
-            const recentLessons: DashboardRecentLesson[] = [
-                // Empty for now to verify endpoint work
-            ];
+            // Fetch recent lesson progress
+            const recentProgress = await prisma.lessonProgress.findMany({
+                where: { userId },
+                take: 5,
+                orderBy: { updatedAt: 'desc' },
+                include: {
+                    lesson: {
+                        select: {
+                            id: true,
+                            title: true,
+                            lessonNumber: true,
+                            courseId: true,
+                            course: {
+                                select: {
+                                    id: true,
+                                    title: true,
+                                    thumbnail: true,
+                                },
+                            },
+                        },
+                    },
+                },
+            });
+
+            const recentLessons: DashboardRecentLesson[] = recentProgress.map((progress) => ({
+                id: progress.lesson.lessonNumber,
+                lessonId: progress.lessonId,
+                lessonTitle: progress.lesson.title,
+                courseId: progress.lesson.courseId,
+                courseTitle: progress.lesson.course ? progress.lesson.course.title : 'Unknown Course',
+                thumbnailUrl: progress.lesson.course ? progress.lesson.course.thumbnail : null,
+                progress: progress.completed ? 100 : Math.round((progress.videoPosition / 100) * 100) || 0,
+                completedAt: progress.updatedAt.toISOString(),
+            }));
 
             return res.json({
                 status: 'success',
-                data: recentLessons
+                data: recentLessons,
             });
         } catch (error) {
             console.error('Get recent lessons error:', error);
             return res.status(500).json({
                 status: 'error',
-                message: 'Failed to fetch recent lessons'
+                message: 'Failed to fetch recent lessons',
             });
         }
     },
 
-    getAchievements: async (_req: Request, res: Response) => {
+    getAchievements: async (req: Request, res: Response) => {
         try {
-            // Mock response
+            if (!req.user) {
+                return res.status(401).json({
+                    status: 'error',
+                    message: 'User not authenticated',
+                });
+            }
+
+            const userId = (req.user as any).userId || (req.user as any).id;
+
+            const achievements = await prisma.achievement.findMany({
+                where: { userId },
+                orderBy: { unlockedAt: 'desc' },
+                take: 5,
+                select: {
+                    id: true,
+                    title: true,
+                    description: true,
+                    icon: true,
+                    unlockedAt: true,
+                },
+            });
+
             return res.json({
                 status: 'success',
-                data: []
+                data: achievements,
             });
         } catch (error) {
+            console.error('Get achievements error:', error);
             return res.status(500).json({
                 status: 'error',
-                message: 'Failed to fetch achievements'
+                message: 'Failed to fetch achievements',
             });
         }
-    }
+    },
 };
