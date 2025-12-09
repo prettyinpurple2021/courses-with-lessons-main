@@ -26,9 +26,9 @@ const GlassmorphicButton: React.FC<GlassmorphicButtonProps> = ({
   const baseClasses = 'glassmorphic transition-all duration-300 font-semibold';
   
   const variantClasses = {
-    primary: 'bg-hot-pink/20 hover:bg-hot-pink/30 text-white border-hot-pink/50 hover:scale-105',
-    secondary: 'bg-success-teal/20 hover:bg-success-teal/30 text-white border-success-teal/50 hover:scale-105',
-    outline: 'bg-transparent hover:bg-white/10 text-white border-white/30 hover:border-white/50',
+    primary: 'bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white shadow-[0_0_20px_rgba(6,182,212,0.3)] hover:shadow-[0_0_30px_rgba(6,182,212,0.5)] border-none',
+    secondary: 'bg-cyan-950/30 border border-cyan-500/50 text-cyan-400 hover:bg-cyan-500 hover:text-black',
+    outline: 'bg-transparent border border-slate-700 hover:border-cyan-400 text-slate-300 hover:text-white',
   };
 
   const sizeClasses = {

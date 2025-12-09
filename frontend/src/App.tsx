@@ -18,11 +18,12 @@ import OnboardingFlow from './components/onboarding/OnboardingFlow';
 import { useOnboarding } from './hooks/useOnboarding';
 
 // Eager load critical pages
-import HomePage from './pages/HomePage';
+import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 
 // Lazy load non-critical pages with route-based code splitting
+const HomePage = lazy(() => import('./pages/HomePage')); // Keeping as fallback or for reference if needed, but not used in main route
 const ComponentShowcase = lazy(() => import('./pages/ComponentShowcase'));
 const ForgotPasswordPage = lazy(() => import('./pages/ForgotPasswordPage'));
 const ResetPasswordPage = lazy(() => import('./pages/ResetPasswordPage'));
@@ -86,7 +87,7 @@ function AppContent() {
   const shouldShowNav = !hideNavOnPages.includes(location.pathname);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-girly-pink via-steel-grey to-glossy-black">
+    <div className="min-h-screen bg-slate-950 text-slate-50">
       <SkipToContent />
       {shouldShowNav && <Navigation />}
       <KeyboardShortcutsHelp />
@@ -95,7 +96,7 @@ function AppContent() {
       <main id="main-content" tabIndex={-1}>
         <Suspense fallback={<LoadingSpinner fullScreen />}>
           <Routes>
-                <Route path="/" element={<HomePage />} />
+                <Route path="/" element={<LandingPage />} />
                 <Route path="/showcase" element={<ComponentShowcase />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegisterPage />} />

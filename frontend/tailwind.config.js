@@ -22,7 +22,8 @@ export default {
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
-        headline: ['Inter', 'system-ui', 'sans-serif'],
+        headline: ['Outfit', 'sans-serif'],
+        heading: ['Outfit', 'sans-serif'], // Alias for new code usage if needed
       },
       backdropBlur: {
         xs: '2px',

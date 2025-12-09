@@ -32,7 +32,7 @@ const Navigation = () => {
               <span className="text-xl md:text-2xl font-headline font-bold text-white">
                 SoloSuccess
               </span>
-              <span className="text-xl md:text-2xl font-headline font-bold text-hot-pink">
+              <span className="text-xl md:text-2xl font-headline font-bold text-cyan-400">
                 Intel
               </span>
             </Link>
@@ -43,19 +43,19 @@ const Navigation = () => {
                 <>
                   <Link 
                     to="/dashboard" 
-                    className="text-white hover:text-hot-pink transition-colors font-semibold"
+                    className="text-white hover:text-cyan-400 transition-colors font-semibold"
                   >
                     Dashboard
                   </Link>
                   <Link 
                     to="/community" 
-                    className="text-white hover:text-hot-pink transition-colors font-semibold"
+                    className="text-white hover:text-cyan-400 transition-colors font-semibold"
                   >
                     Community
                   </Link>
                   <Link 
                     to="/profile" 
-                    className="text-white hover:text-hot-pink transition-colors font-semibold"
+                    className="text-white hover:text-cyan-400 transition-colors font-semibold"
                   >
                     Profile
                   </Link>
@@ -86,7 +86,7 @@ const Navigation = () => {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 rounded-lg glassmorphic text-white hover:text-hot-pink transition-colors"
+              className="md:hidden p-2 rounded-lg glassmorphic text-white hover:text-cyan-400 transition-colors"
               aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
               aria-expanded={isMobileMenuOpen}
               aria-controls="mobile-menu"
