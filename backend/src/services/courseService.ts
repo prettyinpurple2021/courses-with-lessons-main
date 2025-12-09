@@ -88,12 +88,12 @@ export async function getAllCoursesWithStatus(userId: string): Promise<CourseWit
     .filter((course: any) => course.enrollments.length > 0)
     .map((course: any) => course.id);
 
-  let progressMap: Record<string, number> = {};
+  const progressMap: Record<string, number> = {};
   if (enrolledCourseIds.length > 0) {
     // Get all lesson IDs for enrolled courses
     const allLessonIds = courses
-      .filter((course: any) => enrolledCourseIds.includes(course.id))
-      .flatMap((course: any) => course.lessons.map((l: { id: string }) => l.id));
+      .filter((course) => enrolledCourseIds.includes(course.id))
+      .flatMap((course) => course.lessons.map((l: { id: string }) => l.id));
 
     // Get all completed lessons for this user in one query
     const completedLessons = await prisma.lessonProgress.findMany({
@@ -122,7 +122,7 @@ export async function getAllCoursesWithStatus(userId: string): Promise<CourseWit
   }
 
   // Map courses with lock status (no async operations in map)
-  const coursesWithStatus: CourseWithLockStatus[] = courses.map((course: any) => {
+  const coursesWithStatus: CourseWithLockStatus[] = courses.map((course) => {
     const enrollment = course.enrollments[0];
     const isEnrolled = !!enrollment;
     const isCompleted = !!enrollment?.completedAt;
@@ -268,7 +268,7 @@ export async function getCourseByIdWithStatus(
   const isLocked = course.courseNumber > highestUnlockedCourse;
 
   // Destructure to exclude enrollments
-  const { enrollments, ...courseData } = course;
+  const { enrollments: _enrollments, ...courseData } = course;
 
   return {
     ...courseData,
@@ -309,7 +309,7 @@ export async function canAccessCourse(userId: string, courseId: string): Promise
 /**
  * Enroll user in a course (only if they have access)
  */
-export async function enrollInCourse(userId: string, courseId: string): Promise<void> {
+export async function enrollInCourse(userId: string, courseId: string): Promise<any> {
   // Check if user can access this course
   const hasAccess = await canAccessCourse(userId, courseId);
   if (!hasAccess) {
@@ -350,7 +350,7 @@ export async function enrollInCourse(userId: string, courseId: string): Promise<
   const unlockedCourses = currentEnrollment?.unlockedCourses || 1;
 
   // Create enrollment
-  await prisma.enrollment.create({
+  const enrollment = await prisma.enrollment.create({
     data: {
       userId,
       courseId,
@@ -390,6 +390,8 @@ export async function enrollInCourse(userId: string, courseId: string): Promise<
     // Log error but don't fail enrollment if achievement check fails
     console.error('Failed to check achievements:', error);
   }
+  // ... (webhook and achievements logic stays the same) ...
+  return enrollment;
 }
 
 /**

@@ -3,7 +3,7 @@ import rateLimit from 'express-rate-limit';
 // General API rate limiter
 export const apiLimiter = rateLimit({
   windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000'), // 15 minutes
-  max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '100'),
+  limit: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '100'),
   message: {
     success: false,
     error: {
@@ -12,13 +12,13 @@ export const apiLimiter = rateLimit({
   },
   standardHeaders: true,
   legacyHeaders: false,
-  skip: (req) => process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test',
+  skip: (_req: any) => process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test',
 });
 
 // Stricter rate limiter for authentication endpoints
 export const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 5, // 5 attempts per 15 minutes
+  limit: 5, // 5 attempts per 15 minutes
   message: {
     success: false,
     error: {
@@ -33,7 +33,7 @@ export const authLimiter = rateLimit({
 // Rate limiter for OAuth token endpoint (prevent brute force)
 export const oauthTokenLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 20, // 20 token requests per 15 minutes
+  limit: 20, // 20 token requests per 15 minutes
   message: {
     success: false,
     error: {
@@ -48,7 +48,7 @@ export const oauthTokenLimiter = rateLimit({
 // Rate limiter for OAuth authorize endpoint
 export const oauthAuthorizeLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 50, // 50 authorization requests per 15 minutes
+  limit: 50, // 50 authorization requests per 15 minutes
   message: {
     success: false,
     error: {

@@ -3,6 +3,7 @@ import { comparePassword } from '../utils/password.js';
 import { generateAccessToken, generateRefreshToken } from '../utils/jwt.js';
 import { AuthenticationError, AuthorizationError } from '../utils/errors.js';
 import { checkAndUnlockAchievements } from './achievementService.js';
+import { completeCourse } from './finalExamService.js';
 
 export const adminService = {
   /**
@@ -193,24 +194,13 @@ export const adminService = {
       }
 
       // 2. Check if course is completed (all lessons + final exam passed)
-      // This logic is complex to duplicate. Ideally we'd call a shared service.
-      // For now, we will just ensure the enrollment is updated if it exists.
-
       const exam = await prisma.finalExam.findUnique({
         where: { id: result.examId },
         select: { courseId: true },
       });
 
       if (exam) {
-        await prisma.enrollment.updateMany({
-          where: {
-            userId: result.userId,
-            courseId: exam.courseId,
-          },
-          data: {
-            completedAt: new Date(),
-          },
-        });
+        await completeCourse(result.userId, exam.courseId);
       }
     }
 

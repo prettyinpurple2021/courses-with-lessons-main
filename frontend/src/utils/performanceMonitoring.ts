@@ -8,6 +8,10 @@ import { onCLS, onINP, onFCP, onLCP, onTTFB, Metric } from 'web-vitals';
 // Get API base URL from environment
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8787/api';
 
+interface WindowWithGtag extends Window {
+  gtag: (command: string, eventName: string, eventParams: Record<string, any>) => void;
+}
+
 /**
  * Performance metric types
  */
@@ -31,7 +35,7 @@ const loggedMetrics = new Set<string>();
 function sendToAnalytics(metric: PerformanceMetric) {
   // In production, send to your analytics service
   // Examples: Google Analytics, Sentry, DataDog, New Relic
-  
+
   // Only log each metric type once in development to avoid console spam
   if (process.env.NODE_ENV === 'development') {
     const metricKey = `${metric.name}-${metric.rating}`;
@@ -42,8 +46,8 @@ function sendToAnalytics(metric: PerformanceMetric) {
   }
 
   // Example: Send to Google Analytics 4
-  if (typeof window !== 'undefined' && (window as any).gtag) {
-    (window as any).gtag('event', metric.name, {
+  if (typeof window !== 'undefined' && 'gtag' in window) {
+    (window as WindowWithGtag).gtag('event', metric.name, {
       value: Math.round(metric.value),
       metric_rating: metric.rating,
       metric_delta: Math.round(metric.delta),
@@ -317,7 +321,7 @@ export function monitorLongTasks() {
       });
 
       observer.observe({ entryTypes: ['longtask'] });
-    } catch (error: any) {
+    } catch (error) {
       // Long task API not supported
       console.warn('Long task monitoring not supported', error);
     }

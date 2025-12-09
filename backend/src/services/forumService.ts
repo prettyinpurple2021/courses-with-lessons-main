@@ -80,7 +80,7 @@ export async function getAllCategories(): Promise<ForumCategoryWithThreadCount[]
     },
   });
 
-  return categories.map((category: any) => ({
+  return categories.map((category) => ({
     id: category.id,
     name: category.name,
     description: category.description,
@@ -122,7 +122,7 @@ export async function getThreads(
   const skip = (page - 1) * limit;
 
   // Build where clause
-  const where: any = {};
+  const where: import('@prisma/client').Prisma.ForumThreadWhereInput = {};
 
   if (filters.categoryId) {
     where.categoryId = filters.categoryId;
@@ -183,7 +183,7 @@ export async function getThreads(
     },
   });
 
-  const threadsWithDetails: ForumThreadWithDetails[] = threads.map((thread: any) => ({
+  const threadsWithDetails: ForumThreadWithDetails[] = threads.map((thread) => ({
     id: thread.id,
     categoryId: thread.categoryId,
     authorId: thread.authorId,
@@ -302,7 +302,7 @@ export async function createThread(data: {
   }
 
   // Create thread and initial post in a transaction
-  const result = await prisma.$transaction(async (tx: any) => {
+  const result = await prisma.$transaction(async (tx) => {
     // Create the thread
     const thread = await tx.forumThread.create({
       data: {
@@ -370,7 +370,7 @@ export async function createReply(data: {
   }
 
   // Create the post and update thread's updatedAt
-  const result = await prisma.$transaction(async (tx: any) => {
+  const result = await prisma.$transaction(async (tx) => {
     // Create the post
     const post = await tx.forumPost.create({
       data: {
@@ -582,7 +582,7 @@ export async function searchThreads(
     },
   });
 
-  const threadsWithDetails: ForumThreadWithDetails[] = threads.map((thread: any) => ({
+  const threadsWithDetails: ForumThreadWithDetails[] = threads.map((thread) => ({
     id: thread.id,
     categoryId: thread.categoryId,
     authorId: thread.authorId,

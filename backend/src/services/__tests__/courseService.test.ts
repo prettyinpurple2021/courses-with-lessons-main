@@ -1,12 +1,12 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from '@jest/globals';
+import { describe, it, expect, beforeEach, afterEach, afterAll, jest } from '@jest/globals';
 import { PrismaClient } from '@prisma/client';
 import * as courseService from '../courseService.js';
-import * as webhookService from '../webhookService.js';
+// import * as webhookService from '../webhookService.js'; // Mocked but unused value
 import * as achievementService from '../achievementService.js';
 
 // Mock dependencies
-vi.mock('../webhookService.js');
-vi.mock('../achievementService.js');
+jest.mock('../webhookService.js');
+jest.mock('../achievementService.js');
 
 const prisma = new PrismaClient();
 
@@ -58,11 +58,11 @@ describe('CourseService', () => {
 
   describe('getCoursesWithLockStatus', () => {
     it('should return courses with correct lock status for new user', async () => {
-      const courses = await courseService.getCoursesWithLockStatus(testUserId);
+      const courses = await courseService.getAllCoursesWithStatus(testUserId);
 
       expect(courses).toBeDefined();
       expect(Array.isArray(courses)).toBe(true);
-      
+
       // Course One should be unlocked for new users
       const courseOne = courses.find(c => c.courseNumber === 1);
       expect(courseOne).toBeDefined();
@@ -80,9 +80,9 @@ describe('CourseService', () => {
         },
       });
 
-      const courses = await courseService.getCoursesWithLockStatus(testUserId);
+      const courses = await courseService.getAllCoursesWithStatus(testUserId);
       const courseOne = courses.find(c => c.id === testCourseId);
-      
+
       expect(courseOne?.isEnrolled).toBe(true);
       expect(courseOne?.isLocked).toBe(false);
     });
@@ -99,9 +99,9 @@ describe('CourseService', () => {
         },
       });
 
-      const courses = await courseService.getCoursesWithLockStatus(testUserId);
+      const courses = await courseService.getAllCoursesWithStatus(testUserId);
       const courseTwoResult = courses.find(c => c.id === courseTwo.id);
-      
+
       expect(courseTwoResult?.isLocked).toBe(true);
 
       // Clean up
@@ -123,23 +123,23 @@ describe('CourseService', () => {
         },
       });
 
-      const details = await courseService.getCourseDetails(testCourseId, testUserId);
+      const details = await courseService.getCourseById(testCourseId);
 
-      expect(details).toBeDefined();
-      expect(details.id).toBe(testCourseId);
-      expect(details.lessons).toBeDefined();
-      expect(details.lessons.length).toBeGreaterThan(0);
+      expect(details).not.toBeNull();
+      expect(details!.id).toBe(testCourseId);
+      expect(details!.lessons).toBeDefined();
+      expect(details!.lessons.length).toBeGreaterThan(0);
     });
 
     it('should return null for non-existent course', async () => {
-      const details = await courseService.getCourseDetails('non-existent-id', testUserId);
+      const details = await courseService.getCourseById('non-existent-id');
       expect(details).toBeNull();
     });
   });
 
-  describe('enrollUserInCourse', () => {
+  describe('enrollInCourse', () => {
     it('should enroll user in Course One', async () => {
-      const enrollment = await courseService.enrollUserInCourse(testUserId, testCourseId);
+      const enrollment = await courseService.enrollInCourse(testUserId, testCourseId);
 
       expect(enrollment).toBeDefined();
       expect(enrollment.userId).toBe(testUserId);
@@ -150,11 +150,11 @@ describe('CourseService', () => {
 
     it('should not allow duplicate enrollment', async () => {
       // First enrollment
-      await courseService.enrollUserInCourse(testUserId, testCourseId);
+      await courseService.enrollInCourse(testUserId, testCourseId);
 
       // Attempt second enrollment should throw or return existing
       await expect(
-        courseService.enrollUserInCourse(testUserId, testCourseId)
+        courseService.enrollInCourse(testUserId, testCourseId)
       ).rejects.toThrow();
     });
   });
@@ -162,7 +162,7 @@ describe('CourseService', () => {
   describe('completeCourse', () => {
     it('should mark course as completed and unlock next course', async () => {
       // Enroll user
-      await courseService.enrollUserInCourse(testUserId, testCourseId);
+      await courseService.enrollInCourse(testUserId, testCourseId);
 
       // Create Course Two
       const courseTwo = await prisma.course.create({
@@ -176,7 +176,7 @@ describe('CourseService', () => {
       });
 
       // Complete Course One
-      await courseService.completeCourse(testUserId, testCourseId);
+      await courseService.unlockNextCourse(testUserId, testCourseId);
 
       // Check enrollment updated
       const enrollment = await prisma.enrollment.findUnique({
@@ -188,10 +188,10 @@ describe('CourseService', () => {
         },
       });
 
-      expect(enrollment?.completed).toBe(true);
+      expect(enrollment?.completedAt).not.toBeNull();
 
       // Check Course Two is unlocked
-      const courses = await courseService.getCoursesWithLockStatus(testUserId);
+      const courses = await courseService.getAllCoursesWithStatus(testUserId);
       const courseTwoResult = courses.find(c => c.id === courseTwo.id);
       expect(courseTwoResult?.isLocked).toBe(false);
 
@@ -200,9 +200,9 @@ describe('CourseService', () => {
     });
 
     it('should call achievement service when course is completed', async () => {
-      await courseService.enrollUserInCourse(testUserId, testCourseId);
-      
-      await courseService.completeCourse(testUserId, testCourseId);
+      await courseService.enrollInCourse(testUserId, testCourseId);
+
+      await courseService.unlockNextCourse(testUserId, testCourseId);
 
       expect(achievementService.checkAndUnlockAchievements).toHaveBeenCalled();
     });

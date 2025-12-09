@@ -29,7 +29,7 @@ export class CookieConsentService {
         data: {
           userId: data.userId || null,
           sessionId: data.sessionId || null,
-          preferences: data.preferences as any,
+          preferences: data.preferences as unknown as Record<string, any>,
           version: data.version || '1.0',
           ipAddress: data.ipAddress || null,
           userAgent: data.userAgent || null,
@@ -72,7 +72,7 @@ export class CookieConsentService {
       }
 
       return {
-        preferences: consent.preferences as CookiePreferences,
+        preferences: consent.preferences as unknown as CookiePreferences,
         version: consent.version,
         userId: consent.userId || undefined,
         sessionId: consent.sessionId || undefined,

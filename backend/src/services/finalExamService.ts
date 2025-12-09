@@ -35,7 +35,7 @@ export interface FinalExamDetails {
 }
 
 export interface ExamSubmissionData {
-  answers: Record<string, any>; // questionId -> answer
+  answers: Record<string, string>; // questionId -> answerId
 }
 
 export interface ExamResult {
@@ -44,7 +44,7 @@ export interface ExamResult {
   passed: boolean;
   gradingStatus: 'GRADED' | 'PENDING_REVIEW';
   submittedAt: Date;
-  answers: any;
+  answers: Record<string, string>;
 }
 
 /**
@@ -99,7 +99,7 @@ export async function getFinalExamByCourseId(
     timeLimit: finalExam.timeLimit,
     passingScore: finalExam.passingScore,
     isUnlocked,
-    questions: finalExam.questions.map((q: any) => ({
+    questions: finalExam.questions.map((q) => ({
       id: q.id,
       text: q.text,
       type: q.type,
@@ -173,10 +173,9 @@ export async function submitFinalExam(
   const { score, totalPoints, requiresManualGrading } = calculateExamScore(exam.questions, submissionData.answers);
   const scorePercentage = Math.round((score / totalPoints) * 100);
 
-  // If manual grading is required, we can't determine pass/fail yet
-  // But for now, we'll calculate based on auto-gradable parts
-  // In a real system, we might set passed to false until reviewed
-  const passed = scorePercentage >= exam.passingScore;
+  // If manual grading is required, we CANNOT pass the student yet
+  // passed is ALWAYS false until reviewed if manual grading is needed
+  const passed = !requiresManualGrading && scorePercentage >= exam.passingScore;
   const gradingStatus = requiresManualGrading ? 'PENDING_REVIEW' : 'GRADED';
 
   // Check if result already exists
@@ -244,7 +243,7 @@ export async function submitFinalExam(
     passed: result.passed,
     gradingStatus: result.gradingStatus as 'GRADED' | 'PENDING_REVIEW',
     submittedAt: result.submittedAt,
-    answers: result.answers,
+    answers: result.answers as unknown as Record<string, string>,
   };
 }
 
@@ -262,7 +261,7 @@ function calculateExamScore(
       isCorrect: boolean;
     }>;
   }>,
-  answers: Record<string, any>
+  answers: Record<string, string>
 ): { score: number; totalPoints: number; requiresManualGrading: boolean } {
   let score = 0;
   let totalPoints = 0;
@@ -321,14 +320,17 @@ export async function getExamResult(userId: string, examId: string): Promise<Exa
     passed: result.passed,
     gradingStatus: result.gradingStatus as 'GRADED' | 'PENDING_REVIEW',
     submittedAt: result.submittedAt,
-    answers: result.answers,
+    answers: result.answers as unknown as Record<string, string>,
   };
 }
 
 /**
  * Complete course and unlock next course
  */
-async function completeCourse(userId: string, courseId: string): Promise<void> {
+/**
+ * Complete course and unlock next course
+ */
+export async function completeCourse(userId: string, courseId: string): Promise<void> {
   // Get current course number
   const course = await prisma.course.findUnique({
     where: { id: courseId },

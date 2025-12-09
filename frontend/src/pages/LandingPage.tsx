@@ -11,7 +11,6 @@ import {
   Lock,
   PieChart,
   Rocket,
-  BookOpen,
   Layers,
   ArrowUpRight
 } from 'lucide-react';

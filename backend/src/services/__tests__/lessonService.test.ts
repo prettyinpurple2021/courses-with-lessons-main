@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
+import { describe, it, expect, beforeEach, afterEach, afterAll } from '@jest/globals';
 import { PrismaClient } from '@prisma/client';
 import * as lessonService from '../lessonService.js';
 
@@ -92,10 +92,10 @@ describe('LessonService', () => {
 
       const lesson = await lessonService.getLessonById(testUserId, testLessonId);
 
-      expect(lesson).toBeDefined();
-      expect(lesson?.id).toBe(testLessonId);
-      expect(lesson?.activities).toBeDefined();
-      expect(lesson?.activities.length).toBeGreaterThan(0);
+      expect(lesson).not.toBeNull();
+      expect(lesson!.id).toBe(testLessonId);
+      expect(lesson!.activities).toBeDefined();
+      expect(lesson!.activities.length).toBeGreaterThan(0);
     });
 
     it('should return null for non-existent lesson', async () => {
@@ -114,6 +114,7 @@ describe('LessonService', () => {
             type: 'quiz',
             content: {},
             required: true,
+            description: 'Test Description',
           },
           {
             lessonId: testLessonId,
@@ -122,20 +123,22 @@ describe('LessonService', () => {
             type: 'quiz',
             content: {},
             required: true,
+            description: 'Test Description',
           },
         ],
       });
 
       const lesson = await lessonService.getLessonById(testUserId, testLessonId);
 
-      expect(lesson?.activities[0].isLocked).toBe(false); // First activity unlocked
-      expect(lesson?.activities[1].isLocked).toBe(true); // Second activity locked
+      expect(lesson).not.toBeNull();
+      expect(lesson!.activities[0].isLocked).toBe(false); // First activity unlocked
+      expect(lesson!.activities[1].isLocked).toBe(true); // Second activity locked
     });
   });
 
-  describe('updateLessonProgress', () => {
+  describe('updateVideoPosition', () => {
     it('should create progress record if it does not exist', async () => {
-      await lessonService.updateLessonProgress(testUserId, testLessonId, 30);
+      await lessonService.updateVideoPosition(testUserId, testLessonId, 30);
 
       const progress = await prisma.lessonProgress.findUnique({
         where: {
@@ -161,7 +164,7 @@ describe('LessonService', () => {
         },
       });
 
-      await lessonService.updateLessonProgress(testUserId, testLessonId, 50);
+      await lessonService.updateVideoPosition(testUserId, testLessonId, 50);
 
       const progress = await prisma.lessonProgress.findUnique({
         where: {
@@ -176,7 +179,7 @@ describe('LessonService', () => {
     });
   });
 
-  describe('completeLesson', () => {
+  describe('completeLessonAndUnlockNext', () => {
     it('should mark lesson as completed', async () => {
       // Create required activity and complete it
       const activity = await prisma.activity.create({
@@ -186,6 +189,7 @@ describe('LessonService', () => {
           title: 'Required Activity',
           type: 'quiz',
           content: {},
+          description: 'Test Description',
           required: true,
         },
       });
@@ -199,7 +203,7 @@ describe('LessonService', () => {
         },
       });
 
-      await lessonService.completeLesson(testUserId, testLessonId);
+      await lessonService.completeLessonAndUnlockNext(testUserId, testLessonId);
 
       const progress = await prisma.lessonProgress.findUnique({
         where: {
@@ -222,12 +226,13 @@ describe('LessonService', () => {
           title: 'Required Activity',
           type: 'quiz',
           content: {},
+          description: 'Test Description',
           required: true,
         },
       });
 
       await expect(
-        lessonService.completeLesson(testUserId, testLessonId)
+        lessonService.completeLessonAndUnlockNext(testUserId, testLessonId)
       ).rejects.toThrow();
     });
   });

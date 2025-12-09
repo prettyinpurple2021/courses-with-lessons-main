@@ -19,8 +19,11 @@ export class AppError extends Error {
  * 400 Bad Request - Invalid input data
  */
 export class ValidationError extends AppError {
-  constructor(message: string = 'Validation failed') {
+  public errors?: any[];
+
+  constructor(message: string = 'Validation failed', errors?: any[]) {
     super(message, 400);
+    this.errors = errors;
   }
 }
 

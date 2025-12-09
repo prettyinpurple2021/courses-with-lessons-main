@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { body } from 'express-validator';
 import { cookieConsentController } from '../controllers/cookieConsentController.js';
-import { authenticate } from '../middleware/auth.js';
+// import { authenticate } from '../middleware/auth.js';
 
 const router = Router();
 

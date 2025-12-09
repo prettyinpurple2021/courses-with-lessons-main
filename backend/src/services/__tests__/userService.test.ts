@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
+import { describe, it, expect, beforeEach, afterEach, afterAll } from '@jest/globals';
 import { PrismaClient } from '@prisma/client';
 import { UserService } from '../userService.js';
 
@@ -58,7 +58,7 @@ describe('UserService', () => {
       expect(statistics.coursesCompleted).toBe(0);
       expect(statistics.lessonsViewed).toBe(0);
       expect(statistics.activitiesCompleted).toBe(0);
-      expect(statistics.averageExamScore).toBe(0);
+      expect(statistics.averageScore).toBe(0);
     });
 
     it('should calculate correct statistics for user with progress', async () => {

@@ -16,7 +16,7 @@ export interface LessonDetails {
     title: string;
     description: string;
     type: string;
-    content: any;
+    content: Record<string, unknown> | null;
     required: boolean;
     isCompleted: boolean;
     isLocked: boolean;
@@ -82,7 +82,7 @@ export async function getLessonById(userId: string, lessonId: string): Promise<L
   const activitySubmissions = await prisma.activitySubmission.findMany({
     where: {
       userId,
-      activityId: { in: lesson.activities.map((a: any) => a.id) },
+      activityId: { in: lesson.activities.map((a) => a.id) },
     },
     select: {
       activityId: true,
@@ -91,18 +91,19 @@ export async function getLessonById(userId: string, lessonId: string): Promise<L
   });
 
   const submissionMap = new Map(
-    activitySubmissions.map((s: any) => [s.activityId, s.completed])
+    activitySubmissions.map((s) => [s.activityId, s.completed])
   );
 
   // Determine which activities are locked based on sequential progression
   const currentActivityNumber = progress?.currentActivity || 1;
 
-  const activitiesWithStatus = lesson.activities.map((activity: any) => {
+  const activitiesWithStatus = lesson.activities.map((activity) => {
     const isCompleted = submissionMap.get(activity.id) || false;
     const isLocked = activity.activityNumber > currentActivityNumber;
 
     return {
       ...activity,
+      content: activity.content as unknown as Record<string, unknown> | null,
       isCompleted,
       isLocked,
     };
@@ -199,7 +200,7 @@ export async function areAllActivitiesCompleted(userId: string, lessonId: string
   const completedActivities = await prisma.activitySubmission.count({
     where: {
       userId,
-      activityId: { in: lesson.activities.map((a: any) => a.id) },
+      activityId: { in: lesson.activities.map((a) => a.id) },
       completed: true,
     },
   });

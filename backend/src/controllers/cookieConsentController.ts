@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { body, validationResult } from 'express-validator';
+import { validationResult } from 'express-validator';
 import { cookieConsentService, CookiePreferences } from '../services/cookieConsentService.js';
 import { asyncHandler } from '../middleware/errorHandler.js';
 import { ValidationError } from '../utils/errors.js';
@@ -10,12 +10,12 @@ import { getSecureCookieConfig } from '../utils/cookieConfig.js';
  */
 function getOrCreateSessionId(req: Request): string {
   let sessionId = req.cookies['session_id'];
-  
+
   if (!sessionId) {
     // Generate a simple session ID (in production, use a more secure method)
     sessionId = `anon_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`;
   }
-  
+
   return sessionId;
 }
 
@@ -38,7 +38,7 @@ export class CookieConsentController {
       return next(new ValidationError('Preferences are required'));
     }
 
-    const { necessary, analytics, marketing } = preferences as CookiePreferences;
+    const { necessary, analytics, marketing } = preferences as unknown as CookiePreferences;
 
     if (typeof necessary !== 'boolean' || typeof analytics !== 'boolean' || typeof marketing !== 'boolean') {
       return next(new ValidationError('Invalid preferences format'));
@@ -87,7 +87,7 @@ export class CookieConsentController {
    * GET /api/consent/cookie
    * Get latest cookie consent for current user/session
    */
-  getConsent = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+  getConsent = asyncHandler(async (req: Request, res: Response) => {
     const userId = req.user?.userId;
     const sessionId = req.cookies['session_id'] || req.query.sessionId as string;
 

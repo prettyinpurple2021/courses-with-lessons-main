@@ -139,8 +139,8 @@ export class UserService {
     });
 
     // Batch fetch all lesson progress to avoid N+1 queries
-    const allLessonIds = enrollments.flatMap((enrollment: any) =>
-      enrollment.course.lessons.map((l: any) => l.id)
+    const allLessonIds = enrollments.flatMap((enrollment) =>
+      enrollment.course.lessons.map((l) => l.id)
     );
 
     const completedLessons = await prisma.lessonProgress.findMany({
@@ -157,9 +157,9 @@ export class UserService {
     const completedLessonIds = new Set(completedLessons.map((lp) => lp.lessonId));
 
     // Map progress data (no async operations in map)
-    const progressData = enrollments.map((enrollment: any) => {
+    const progressData = enrollments.map((enrollment) => {
       const totalLessons = enrollment.course.lessons.length;
-      const completedCount = enrollment.course.lessons.filter((l: any) =>
+      const completedCount = enrollment.course.lessons.filter((l) =>
         completedLessonIds.has(l.id)
       ).length;
 

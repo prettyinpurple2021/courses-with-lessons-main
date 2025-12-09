@@ -100,8 +100,10 @@ export async function getYouTubeVideoMetadata(
       isEmbeddable: video.status.embeddable,
       isAvailable: video.status.privacyStatus !== 'private',
     };
-  } catch (error: any) {
-    console.error('YouTube API metadata error:', error.response?.data || error.message);
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    const responseData = axios.isAxiosError(error) ? error.response?.data : null;
+    console.error('YouTube API metadata error:', responseData || errorMessage);
     return null;
   }
 }

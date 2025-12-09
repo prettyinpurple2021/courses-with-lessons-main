@@ -23,7 +23,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 
 // Lazy load non-critical pages with route-based code splitting
-const HomePage = lazy(() => import('./pages/HomePage')); // Keeping as fallback or for reference if needed, but not used in main route
+// const HomePage = lazy(() => import('./pages/HomePage')); // Unused
 const ComponentShowcase = lazy(() => import('./pages/ComponentShowcase'));
 const ForgotPasswordPage = lazy(() => import('./pages/ForgotPasswordPage'));
 const ResetPasswordPage = lazy(() => import('./pages/ResetPasswordPage'));

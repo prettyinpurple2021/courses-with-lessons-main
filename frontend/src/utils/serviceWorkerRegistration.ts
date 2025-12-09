@@ -10,10 +10,20 @@ type ServiceWorkerConfig = {
   onOnline?: () => void;
 };
 
+interface NavigatorWithStandalone extends Navigator {
+  standalone?: boolean;
+}
+
+interface ServiceWorkerRegistrationWithSync extends ServiceWorkerRegistration {
+  sync: {
+    register: (tag: string) => Promise<void>;
+  };
+}
+
 const isLocalhost = Boolean(
   window.location.hostname === 'localhost' ||
-    window.location.hostname === '[::1]' ||
-    window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/)
+  window.location.hostname === '[::1]' ||
+  window.location.hostname.match(/^127(?:\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3}$/)
 );
 
 /**
@@ -34,7 +44,7 @@ export function register(config?: ServiceWorkerConfig) {
           navigator.serviceWorker.ready.then(() => {
             console.log(
               'This web app is being served cache-first by a service worker. ' +
-                'To learn more, visit https://cra.link/PWA'
+              'To learn more, visit https://cra.link/PWA'
             );
           });
         }
@@ -213,7 +223,7 @@ export function clearCaches() {
 export function isStandalone(): boolean {
   return (
     window.matchMedia('(display-mode: standalone)').matches ||
-    (window.navigator as any).standalone === true
+    ('standalone' in window.navigator && (window.navigator as NavigatorWithStandalone).standalone === true)
   );
 }
 
@@ -224,8 +234,10 @@ export async function requestBackgroundSync(tag: string): Promise<void> {
   if ('serviceWorker' in navigator && 'sync' in ServiceWorkerRegistration.prototype) {
     try {
       const registration = await navigator.serviceWorker.ready;
-      await (registration as any).sync.register(tag);
-      console.log('[SW] Background sync registered:', tag);
+      if ('sync' in registration) {
+        await (registration as ServiceWorkerRegistrationWithSync).sync.register(tag);
+        console.log('[SW] Background sync registered:', tag);
+      }
     } catch (error) {
       console.error('[SW] Background sync registration failed:', error);
     }
