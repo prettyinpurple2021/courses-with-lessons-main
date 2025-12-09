@@ -62,34 +62,41 @@ describe('UserService', () => {
     });
 
     it('should calculate correct statistics for user with progress', async () => {
+      const randomStart = Math.floor(Math.random() * 10000);
       // Create course and enrollment
       const course = await prisma.course.create({
         data: {
-          courseNumber: 1,
-          title: 'Test Course',
+          courseNumber: randomStart,
+          title: `Test Course ${randomStart}`,
           description: 'Test',
           thumbnail: 'thumb.jpg',
           published: true,
         },
       });
 
-      await prisma.enrollment.create({
-        data: {
-          userId: testUserId,
-          courseId: course.id,
-          currentLesson: 1,
-          unlockedCourses: 1,
-          completedAt: new Date(),
-        },
-      });
+      try {
+        await prisma.enrollment.create({
+          data: {
+            userId: testUserId,
+            courseId: course.id,
+            currentLesson: 1,
+            unlockedCourses: 1,
+            completedAt: new Date(),
+          },
+        });
 
-      const statistics = await userService.getUserStatistics(testUserId);
+        const statistics = await userService.getUserStatistics(testUserId);
 
-      expect(statistics.coursesCompleted).toBe(1);
-
-      // Clean up
-      await prisma.enrollment.deleteMany({ where: { userId: testUserId } });
-      await prisma.course.delete({ where: { id: course.id } });
+        expect(statistics.coursesCompleted).toBe(1);
+      } finally {
+        // Clean up
+        try {
+          await prisma.enrollment.deleteMany({ where: { userId: testUserId } });
+          await prisma.course.delete({ where: { id: course.id } });
+        } catch (e) {
+          // Ignore cleanup errors
+        }
+      }
     });
   });
 

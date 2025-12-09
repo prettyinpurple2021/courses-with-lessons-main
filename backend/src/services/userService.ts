@@ -197,29 +197,36 @@ export class UserService {
       bio?: string;
     }
   ) {
-    const updatedUser = await prisma.user.update({
-      where: { id: userId },
-      data: {
-        ...(data.firstName && { firstName: data.firstName }),
-        ...(data.lastName && { lastName: data.lastName }),
-        ...(data.bio !== undefined && { bio: data.bio }),
-      },
-      select: {
-        id: true,
-        email: true,
-        firstName: true,
-        lastName: true,
-        avatar: true,
-        bio: true,
-        emailNotifications: true,
-        courseUpdates: true,
-        communityDigest: true,
-        achievementAlerts: true,
-        createdAt: true,
-      },
-    });
+    try {
+      const updatedUser = await prisma.user.update({
+        where: { id: userId },
+        data: {
+          ...(data.firstName && { firstName: data.firstName }),
+          ...(data.lastName && { lastName: data.lastName }),
+          ...(data.bio !== undefined && { bio: data.bio }),
+        },
+        select: {
+          id: true,
+          email: true,
+          firstName: true,
+          lastName: true,
+          avatar: true,
+          bio: true,
+          emailNotifications: true,
+          courseUpdates: true,
+          communityDigest: true,
+          achievementAlerts: true,
+          createdAt: true,
+        },
+      });
 
-    return updatedUser;
+      return updatedUser;
+    } catch (error) {
+      if ((error as any).code === 'P2025') {
+        throw new Error('User not found');
+      }
+      throw error;
+    }
   }
 
   async updateAvatar(userId: string, avatarData: string) {
