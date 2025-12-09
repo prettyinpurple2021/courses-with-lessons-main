@@ -188,6 +188,10 @@ const LandingPage = () => {
                      src="/logo.jpg" 
                      alt="SoloSuccess Intel Academy Logo" 
                      className="w-full h-auto object-contain drop-shadow-[0_0_30px_rgba(6,182,212,0.4)]"
+                     onError={(e) => {
+                       console.error('Failed to load logo');
+                       e.currentTarget.style.display = 'none';
+                     }}
                    />
                 </div>
 
