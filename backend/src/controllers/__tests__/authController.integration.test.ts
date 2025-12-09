@@ -60,7 +60,9 @@ describe('Auth API Integration Tests', () => {
       expect(response.body.success).toBe(true);
       expect(response.body.data.user.email).toBe(testEmail);
       expect(response.body.data.accessToken).toBeDefined();
-      expect(response.body.data.refreshToken).toBeDefined();
+      // Refresh token is in cookie, not body
+      expect(response.headers['set-cookie']).toBeDefined();
+      expect(response.headers['set-cookie'][0]).toMatch(/refreshToken/);
     });
 
     it('should reject registration with existing email', async () => {
@@ -73,7 +75,7 @@ describe('Auth API Integration Tests', () => {
           lastName: 'User',
         });
 
-      expect(response.status).toBe(400);
+      expect(response.status).toBe(409); // Expect Conflict for failing unique constraint
       expect(response.body.success).toBe(false);
     });
 
@@ -105,7 +107,9 @@ describe('Auth API Integration Tests', () => {
       expect(response.body.success).toBe(true);
       expect(response.body.data.user.email).toBe(testEmail);
       expect(response.body.data.accessToken).toBeDefined();
-      expect(response.body.data.refreshToken).toBeDefined();
+      // Refresh token is in cookie, not body
+      expect(response.headers['set-cookie']).toBeDefined();
+      expect(response.headers['set-cookie'][0]).toMatch(/refreshToken/);
     });
 
     it('should reject login with invalid email', async () => {
