@@ -7,21 +7,25 @@ import {
   Menu, 
   X, 
   ChevronRight, 
-  Brain,
   Lock,
   PieChart,
   Rocket,
-  Layers,
-  ArrowUpRight
+  Layers
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-// High-Tech Matrix Background (Restored)
+// High-Tech Matrix Background (Updated with Shield Background)
 const TechBackground = () => (
   <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
-    {/* Deep Space Base */}
-    <div className="absolute inset-0 bg-slate-950 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-slate-900 via-slate-950 to-black"></div>
+    {/* Deep Space Base with Shield's Gradient */}
+    <div className="absolute inset-0 bg-gradient-to-b from-slate-900/90 to-slate-950/90"></div>
     
+    {/* Grid Pattern from Shield */}
+    <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#22d3ee 1px, transparent 1px)', backgroundSize: '10px 10px' }}></div>
+    
+    {/* Scanning Light Effect from Shield */}
+    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-400/10 to-transparent h-[20%] w-full scan-line"></div>
+
     {/* Matrix Grid System */}
     <div className="absolute inset-0 opacity-20" 
          style={{ 
@@ -165,7 +169,7 @@ const LandingPage = () => {
             </div>
           </div>
 
-          {/* Hero Visual - The Shield + Brain + Arrow */}
+          {/* Hero Visual - Logo */}
           <div className="relative flex justify-center items-center h-[400px] lg:h-[500px] perspective-1000">
              
              {/* Base Hologram Platform */}
@@ -177,41 +181,22 @@ const LandingPage = () => {
              </div>
              <div className="absolute w-[300px] h-[300px] border border-blue-500/10 rounded-full animate-[spin_15s_linear_infinite_reverse] border-dashed"></div>
 
-             {/* The Shield Composition */}
+             {/* Logo */}
              <div className="relative z-10 animate-[float_5s_ease-in-out_infinite]">
-                {/* Shield Container */}
-                <div className="relative w-64 h-80">
-                   {/* Shield Background / Glass */}
-                   <div className="absolute inset-0 bg-gradient-to-b from-slate-900/90 to-slate-950/90 backdrop-blur-xl border-2 border-cyan-500/30 rounded-[50%_50%_50%_50%_/_15%_15%_40%_40%] shadow-[0_0_50px_rgba(6,182,212,0.2)] clip-path-shield flex items-center justify-center overflow-hidden">
-                      
-                      {/* Scanning Light Effect inside Shield */}
-                      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-400/10 to-transparent h-[20%] w-full scan-line"></div>
-                      
-                      {/* Grid Pattern Inside Shield */}
-                      <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#22d3ee 1px, transparent 1px)', backgroundSize: '10px 10px' }}></div>
+                <div className="relative w-64 h-80 flex items-center justify-center">
+                   <img 
+                     src="/logo.jpg" 
+                     alt="SoloSuccess Intel Academy Logo" 
+                     className="w-full h-auto object-contain drop-shadow-[0_0_30px_rgba(6,182,212,0.4)]"
+                   />
+                </div>
 
-                      {/* Main Icon Composition */}
-                      <div className="relative z-20 flex flex-col items-center justify-center mt-4">
-                        {/* The Brain */}
-                        <Brain className="w-28 h-28 text-cyan-500 drop-shadow-[0_0_15px_rgba(34,211,238,0.6)]" strokeWidth={1.5} />
-                        
-                        {/* The Arrow Rising (Overlay) */}
-                        <div className="absolute inset-0 flex items-center justify-center">
-                           <ArrowUpRight className="w-40 h-40 text-white/90 drop-shadow-[0_0_10px_rgba(255,255,255,0.8)] stroke-[3px] transform translate-x-4 -translate-y-2" />
-                        </div>
-                      </div>
-
-                      {/* Bottom Glow */}
-                      <div className="absolute bottom-0 w-full h-20 bg-gradient-to-t from-cyan-500/20 to-transparent"></div>
-                   </div>
-
-                   {/* Floating Data Points around Shield */}
-                   <div className="absolute -right-8 top-10 p-2 bg-slate-900/80 border border-cyan-500/30 rounded text-[10px] text-cyan-300 font-mono animate-pulse">
-                      Processing...
-                   </div>
-                   <div className="absolute -left-8 bottom-20 p-2 bg-slate-900/80 border border-blue-500/30 rounded text-[10px] text-blue-300 font-mono">
-                      Data: Secure
-                   </div>
+                {/* Floating Data Points around Logo */}
+                <div className="absolute -right-8 top-10 p-2 bg-slate-900/80 border border-cyan-500/30 rounded text-[10px] text-cyan-300 font-mono animate-pulse">
+                   Processing...
+                </div>
+                <div className="absolute -left-8 bottom-20 p-2 bg-slate-900/80 border border-blue-500/30 rounded text-[10px] text-blue-300 font-mono">
+                   Data: Secure
                 </div>
              </div>
           </div>
