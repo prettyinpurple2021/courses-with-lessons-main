@@ -6,7 +6,7 @@ import { jest, beforeAll, afterAll } from '@jest/globals';
 process.env.NODE_ENV = 'test';
 process.env.JWT_SECRET = 'test-jwt-secret-key-for-testing-only';
 // Mock Redis client
-jest.mock('../config/redis.js', () => ({
+jest.mock('../config/redis', () => ({
     redisClient: {
         connect: jest.fn().mockResolvedValue(true),
         on: jest.fn(),
@@ -25,16 +25,7 @@ jest.mock('../config/redis.js', () => ({
 }));
 
 // Mock rate-limit-redis to avoid Redis connection in rate limiter
-jest.mock('rate-limit-redis', () => {
-    return {
-        default: jest.fn().mockImplementation(() => ({
-            init: jest.fn(),
-            increment: jest.fn(),
-            decrement: jest.fn(),
-            resetKey: jest.fn(),
-        })),
-    };
-});
+jest.mock('rate-limit-redis');
 
 // Mock Logger to reduce noise
 jest.mock('../utils/logger.js', () => ({

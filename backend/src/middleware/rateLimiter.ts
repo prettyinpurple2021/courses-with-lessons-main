@@ -1,18 +1,26 @@
 import rateLimit from 'express-rate-limit';
 import RedisStore from 'rate-limit-redis';
-import { redisClient } from '../config/redis.js';
+import { redisClient } from '../config/redis';
 
 // Helper to Create Store
 const createStore = () => {
   // If Redis is not configured or fails to connect in dev, redisClient might be available but not connected?
   // RedisStore will try to use it.
   // If we are in dev and want to skip redis if not present:
+  if (process.env.NODE_ENV === 'test') {
+    return undefined;
+  }
+
   if (process.env.NODE_ENV === 'development' && !process.env.REDIS_HOST && !process.env.REDIS_URL) {
     return undefined; // Memory store
   }
 
   // In production, we assume Redis is available.
   // Pass the client directly.
+  console.log('DEBUG: redisClient keys:', Object.keys(redisClient));
+  if (typeof redisClient.sendCommand !== 'function') {
+    console.log('DEBUG: redisClient.sendCommand IS NOT A FUNCTION');
+  }
   return new RedisStore({
     sendCommand: (...args: string[]) => redisClient.sendCommand(args),
   });

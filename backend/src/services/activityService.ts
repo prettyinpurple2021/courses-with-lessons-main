@@ -48,14 +48,18 @@ const activityTypeHandlers: Record<string, ActivityTypeHandler> = {
       return response.answers.length === _content.questions.length;
     },
     provideFeedback: (_content: any, _response: any) => {
+      if (!_content.questions || !Array.isArray(_content.questions)) {
+        return 'Unable to generate feedback: Invalid quiz content.';
+      }
+
       let correctCount = 0;
       const totalQuestions = _content.questions.length;
       const questionFeedbacks: string[] = [];
-      
+
       _content.questions.forEach((question: any, index: number) => {
-        const userAnswer = _response.answers[index];
+        const userAnswer = _response.answers ? _response.answers[index] : null;
         const isCorrect = question.correctAnswer === userAnswer;
-        
+
         if (isCorrect) {
           correctCount++;
           let feedback = `Question ${index + 1}: ✓ Correct!`;
@@ -64,27 +68,27 @@ const activityTypeHandlers: Record<string, ActivityTypeHandler> = {
           }
           questionFeedbacks.push(feedback);
         } else {
-          const correctOption = question.options[question.correctAnswer];
+          const correctOption = question.options ? question.options[question.correctAnswer] : question.correctAnswer;
           let feedback = `Question ${index + 1}: ✗ Incorrect.`;
-          
+
           // Add explanation if provided
           if (question.feedback || question.explanation) {
             feedback += ` ${question.feedback || question.explanation}`;
           }
-          
+
           // Show correct answer
           feedback += ` The correct answer is "${correctOption}".`;
-          
+
           questionFeedbacks.push(feedback);
         }
       });
-      
-      const percentage = Math.round((correctCount / totalQuestions) * 100);
-      
+
+      const percentage = totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0;
+
       // Build comprehensive feedback
       let feedback = `You answered ${correctCount} out of ${totalQuestions} questions correctly (${percentage}%).\n\n`;
       feedback += questionFeedbacks.join('\n\n');
-      
+
       return feedback;
     },
   },
@@ -180,12 +184,12 @@ export async function getActivityById(userId: string, activityId: string): Promi
     isLocked,
     submission: submission
       ? {
-          id: submission.id,
-          response: submission.response,
-          completed: submission.completed,
-          submittedAt: submission.submittedAt,
-          feedback: submission.feedback,
-        }
+        id: submission.id,
+        response: submission.response,
+        completed: submission.completed,
+        submittedAt: submission.submittedAt,
+        feedback: submission.feedback,
+      }
       : undefined,
   };
 }
