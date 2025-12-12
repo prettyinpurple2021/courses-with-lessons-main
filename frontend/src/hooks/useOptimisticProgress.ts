@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { updateLessonProgress } from '../services/progressService';
 import { backgroundSync } from '../utils/backgroundSync';
+import { logger } from '../utils/logger';
 
 interface ProgressState {
   videoPosition: number;
@@ -49,7 +50,7 @@ export function useOptimisticProgress({
           });
         }
       } catch (error) {
-        console.error('Failed to update progress:', error);
+        logger.error('Failed to update progress', error);
         
         // Revert optimistic update on error
         setProgress(previousState);

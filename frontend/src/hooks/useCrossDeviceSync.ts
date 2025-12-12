@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { syncProgress, getUserProgress } from '../services/progressService';
 import { useToast } from './useToast';
+import { logger } from '../utils/logger';
 
 interface ProgressItem {
   lessonId: string;
@@ -40,7 +41,7 @@ export function useCrossDeviceSync() {
         }));
       }
     } catch (error) {
-      console.error('Failed to read local progress:', error);
+      logger.error('Failed to read local progress', error);
     }
     return [];
   }, []);
@@ -52,7 +53,7 @@ export function useCrossDeviceSync() {
     try {
       localStorage.setItem('local_progress', JSON.stringify(progress));
     } catch (error) {
-      console.error('Failed to save local progress:', error);
+      logger.error('Failed to save local progress', error);
     }
   }, []);
 
@@ -98,10 +99,10 @@ export function useCrossDeviceSync() {
           `Synced with ${result.conflicts.length} conflict(s) resolved`
         );
       } else {
-        console.log('Progress synced successfully');
+        logger.debug('Progress synced successfully');
       }
     } catch (error) {
-      console.error('Failed to sync progress:', error);
+      logger.error('Failed to sync progress', error);
       showError('Failed to sync progress');
     } finally {
       setIsSyncing(false);
@@ -171,7 +172,7 @@ export function useCrossDeviceSync() {
       
       return progress;
     } catch (error) {
-      console.error('Failed to fetch server progress:', error);
+      logger.error('Failed to fetch server progress', error);
       throw error;
     }
   }, [saveLocalProgress]);
@@ -198,7 +199,7 @@ export function useCrossDeviceSync() {
    */
   useEffect(() => {
     const handleFocus = () => {
-      console.log('Window focused, syncing progress...');
+      logger.debug('Window focused, syncing progress...');
       syncWithServer();
     };
 

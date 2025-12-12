@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { backgroundSync } from '../utils/backgroundSync';
 import { requestBackgroundSync } from '../utils/serviceWorkerRegistration';
+import { logger } from '../utils/logger';
 
 /**
  * Hook for managing offline state and sync
@@ -22,7 +23,7 @@ export function useOfflineSync() {
    */
   const triggerSync = useCallback(async () => {
     if (!isOnline) {
-      console.log('Cannot sync while offline');
+      logger.debug('Cannot sync while offline');
       return;
     }
 
@@ -34,7 +35,7 @@ export function useOfflineSync() {
       // Request background sync via service worker
       await requestBackgroundSync('sync-progress');
     } catch (error) {
-      console.error('Failed to trigger sync:', error);
+      logger.error('Failed to trigger sync', error);
     } finally {
       setIsSyncing(false);
     }
@@ -45,7 +46,7 @@ export function useOfflineSync() {
    */
   useEffect(() => {
     const handleOnline = () => {
-      console.log('Connection restored');
+      logger.info('Connection restored');
       setIsOnline(true);
       
       // Trigger sync when coming back online
@@ -55,7 +56,7 @@ export function useOfflineSync() {
     };
 
     const handleOffline = () => {
-      console.log('Connection lost');
+      logger.info('Connection lost');
       setIsOnline(false);
     };
 
@@ -83,7 +84,7 @@ export function useOfflineSync() {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.addEventListener('message', (event) => {
         if (event.data && event.data.type === 'SYNC_PROGRESS') {
-          console.log('Received sync message from service worker');
+          logger.debug('Received sync message from service worker');
           triggerSync();
         }
       });

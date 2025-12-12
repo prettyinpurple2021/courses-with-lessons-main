@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getLastAccessedLesson } from '../../services/progressService';
 import { useCrossDeviceSync } from '../../hooks/useCrossDeviceSync';
+import { logger } from '../../utils/logger';
 
 interface LastLesson {
   lessonId: string;
@@ -31,7 +32,7 @@ export function ContinueLearning() {
       const lesson = await getLastAccessedLesson();
       setLastLesson(lesson);
     } catch (error) {
-      console.error('Failed to load last lesson:', error);
+      logger.error('Failed to load last lesson', error);
     } finally {
       setLoading(false);
     }

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import CamoBackground from '../components/common/CamoBackground';
 import GlassmorphicCard from '../components/common/GlassmorphicCard';
 import GlassmorphicButton from '../components/common/GlassmorphicButton';
+import { logger } from '../utils/logger';
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
@@ -28,8 +29,8 @@ const ContactPage = () => {
 
     // Simulate form submission (in production, this would send to your backend)
     try {
-      // For now, just log to console and show success
-      console.log('Contact form submission:', formData);
+      // For now, just log and show success
+      logger.info('Contact form submission', { subject: formData.subject });
       
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));

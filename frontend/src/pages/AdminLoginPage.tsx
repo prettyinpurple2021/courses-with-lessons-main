@@ -6,6 +6,7 @@ import { adminService } from '../services/adminService';
 import { setAccessToken } from '../services/api';
 import GlassmorphicCard from '../components/common/GlassmorphicCard';
 import GlassmorphicButton from '../components/common/GlassmorphicButton';
+import { logger } from '../utils/logger';
 
 const AdminLoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -26,9 +27,7 @@ const AdminLoginPage: React.FC = () => {
       return;
     }
     
-    if (import.meta.env.DEV) {
-      console.log('Form submitted', { email, password: '***' });
-    }
+    logger.debug('Form submitted', { email });
     
     if (!email || !password) {
       toast.error('Please fill in all fields');
@@ -38,14 +37,10 @@ const AdminLoginPage: React.FC = () => {
     setIsLoading(true);
 
     try {
-      if (import.meta.env.DEV) {
-        console.log('Calling admin service login...');
-      }
+      logger.debug('Calling admin service login...');
       // Use admin service which handles API URL correctly
       const result = await adminService.login(email, password);
-      if (import.meta.env.DEV) {
-        console.log('Login successful', result);
-      }
+      logger.debug('Login successful');
 
       // Store access token in memory only (not localStorage for security)
       // Refresh token is stored securely in httpOnly cookie by backend
@@ -61,9 +56,7 @@ const AdminLoginPage: React.FC = () => {
       // Use push to allow back button navigation
       navigate('/admin/dashboard', { replace: false });
     } catch (error: any) {
-      if (import.meta.env.DEV) {
-        console.error('Admin login error:', error);
-      }
+      logger.error('Admin login error', error);
       
       // Handle different error types
       let errorMessage = 'Admin login failed';

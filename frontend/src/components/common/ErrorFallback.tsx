@@ -3,6 +3,7 @@ import GlassmorphicCard from './GlassmorphicCard';
 import GlassmorphicButton from './GlassmorphicButton';
 import { AppError } from '../../types/error';
 import { getUserFriendlyMessage, isOfflineError } from '../../utils/errorHandler';
+import { logger } from '../../utils/logger';
 
 interface ErrorFallbackProps {
   error?: AppError | Error | unknown;
@@ -91,9 +92,7 @@ const ErrorFallback: React.FC<ErrorFallbackProps> = ({
               } catch (error) {
                 // Error is already handled by the retry mechanism or parent component
                 // This prevents unhandled promise rejections
-                if (import.meta.env.DEV) {
-                  console.error('Error in retry callback:', error);
-                }
+                logger.error('Error in retry callback', error);
               }
             }}
             variant="primary"

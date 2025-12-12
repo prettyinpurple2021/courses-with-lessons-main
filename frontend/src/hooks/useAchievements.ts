@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { achievementService, Achievement } from '../services/achievementService';
+import { logger } from '../utils/logger';
 
 export function useAchievements() {
   const queryClient = useQueryClient();
@@ -33,7 +34,7 @@ export function useAchievements() {
         queryClient.setQueryData(['achievements'], currentAchievements);
       }
     } catch (error) {
-      console.error('Failed to check achievements:', error);
+      logger.error('Failed to check achievements', error);
     }
   }, [queryClient]);
 

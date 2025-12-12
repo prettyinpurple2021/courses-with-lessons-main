@@ -1,4 +1,5 @@
 import { api } from './api';
+import { logger } from '../utils/logger';
 
 export interface CookiePreferences {
   necessary: boolean;
@@ -62,9 +63,7 @@ export class CookieConsentService {
       });
     } catch (error) {
       // Log error but don't block UX - localStorage is primary
-      if (import.meta.env.DEV) {
-        console.error('Failed to sync cookie consent to backend:', error);
-      }
+      logger.error('Failed to sync cookie consent to backend', error);
       // In production, you might want to retry or queue this
     }
   }
@@ -134,9 +133,7 @@ export class CookieConsentService {
     try {
       await api.delete('/consent/cookie');
     } catch (error) {
-      if (import.meta.env.DEV) {
-        console.error('Failed to delete cookie consent from backend:', error);
-      }
+      logger.error('Failed to delete cookie consent from backend', error);
     }
   }
 

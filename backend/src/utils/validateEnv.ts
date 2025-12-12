@@ -5,6 +5,8 @@
  * This should be called at server startup to fail fast if configuration is invalid.
  */
 
+import { logger } from './logger.js';
+
 interface EnvVar {
   name: string;
   required: boolean;
@@ -223,8 +225,8 @@ export function validateEnvironment(): void {
 
   // Log warnings if any
   if (warnings.length > 0 && process.env.NODE_ENV !== 'production') {
-    console.warn('⚠️  Environment variable warnings:');
-    warnings.forEach(w => console.warn(`  - ${w}`));
+    logger.warn('⚠️  Environment variable warnings:');
+    warnings.forEach(w => logger.warn(`  - ${w}`));
   }
 }
 

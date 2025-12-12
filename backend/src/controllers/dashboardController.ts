@@ -1,6 +1,7 @@
 
 import { Request, Response } from 'express';
 import prisma from '../config/prisma.js';
+import { logger } from '../utils/logger.js';
 
 // Define interface for recent lesson structure
 interface DashboardRecentLesson {
@@ -67,7 +68,7 @@ export const dashboardController = {
                 data: recentLessons,
             });
         } catch (error) {
-            console.error('Get recent lessons error:', error);
+            logger.error('Get recent lessons error', { error, userId });
             return res.status(500).json({
                 status: 'error',
                 message: 'Failed to fetch recent lessons',
@@ -104,7 +105,7 @@ export const dashboardController = {
                 data: achievements,
             });
         } catch (error) {
-            console.error('Get achievements error:', error);
+            logger.error('Get achievements error', { error, userId });
             return res.status(500).json({
                 status: 'error',
                 message: 'Failed to fetch achievements',

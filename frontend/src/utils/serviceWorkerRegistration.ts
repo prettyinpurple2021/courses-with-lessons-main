@@ -3,6 +3,8 @@
  * Handles registration, updates, and lifecycle events
  */
 
+import { logger } from './logger';
+
 type ServiceWorkerConfig = {
   onSuccess?: (registration: ServiceWorkerRegistration) => void;
   onUpdate?: (registration: ServiceWorkerRegistration) => void;
@@ -42,10 +44,7 @@ export function register(config?: ServiceWorkerConfig) {
         // Log additional info in localhost
         if (import.meta.env.DEV) {
           navigator.serviceWorker.ready.then(() => {
-            console.log(
-              'This web app is being served cache-first by a service worker. ' +
-              'To learn more, visit https://cra.link/PWA'
-            );
+            logger.info('This web app is being served cache-first by a service worker. To learn more, visit https://cra.link/PWA');
           });
         }
       } else {
@@ -66,9 +65,7 @@ function registerValidSW(swUrl: string, config?: ServiceWorkerConfig) {
   navigator.serviceWorker
     .register(swUrl)
     .then((registration) => {
-      if (import.meta.env.DEV) {
-        console.log('[SW] Service Worker registered:', registration);
-      }
+      logger.debug('[SW] Service Worker registered', { registration });
 
       registration.onupdatefound = () => {
         const installingWorker = registration.installing;
@@ -80,18 +77,14 @@ function registerValidSW(swUrl: string, config?: ServiceWorkerConfig) {
           if (installingWorker.state === 'installed') {
             if (navigator.serviceWorker.controller) {
               // New update available
-              if (import.meta.env.DEV) {
-                console.log('[SW] New content is available; please refresh.');
-              }
+              logger.info('[SW] New content is available; please refresh.');
 
               if (config && config.onUpdate) {
                 config.onUpdate(registration);
               }
             } else {
               // Content cached for offline use
-              if (import.meta.env.DEV) {
-                console.log('[SW] Content is cached for offline use.');
-              }
+              logger.info('[SW] Content is cached for offline use.');
 
               if (config && config.onSuccess) {
                 config.onSuccess(registration);
@@ -107,9 +100,7 @@ function registerValidSW(swUrl: string, config?: ServiceWorkerConfig) {
       }, 60 * 60 * 1000);
     })
     .catch((error) => {
-      if (import.meta.env.DEV) {
-        console.error('[SW] Error during service worker registration:', error);
-      }
+      logger.error('[SW] Error during service worker registration', error);
     });
 }
 
@@ -138,9 +129,7 @@ function checkValidServiceWorker(swUrl: string, config?: ServiceWorkerConfig) {
       }
     })
     .catch(() => {
-      if (import.meta.env.DEV) {
-        console.log('[SW] No internet connection found. App is running in offline mode.');
-      }
+      logger.info('[SW] No internet connection found. App is running in offline mode.');
     });
 }
 
@@ -149,18 +138,14 @@ function checkValidServiceWorker(swUrl: string, config?: ServiceWorkerConfig) {
  */
 function setupNetworkListeners(config?: ServiceWorkerConfig) {
   window.addEventListener('online', () => {
-    if (import.meta.env.DEV) {
-      console.log('[SW] Connection restored');
-    }
+    logger.info('[SW] Connection restored');
     if (config && config.onOnline) {
       config.onOnline();
     }
   });
 
   window.addEventListener('offline', () => {
-    if (import.meta.env.DEV) {
-      console.log('[SW] Connection lost');
-    }
+    logger.info('[SW] Connection lost');
     if (config && config.onOffline) {
       config.onOffline();
     }
@@ -177,9 +162,7 @@ export function unregister() {
         registration.unregister();
       })
       .catch((error) => {
-        if (import.meta.env.DEV) {
-          console.error('[SW] Error unregistering service worker:', error);
-        }
+        logger.error('[SW] Error unregistering service worker', error);
       });
   }
 }
@@ -194,7 +177,7 @@ export function update() {
         registration.update();
       })
       .catch((error) => {
-        console.error('[SW] Error updating service worker:', error);
+        logger.error('[SW] Error updating service worker', error);
       });
   }
 }
@@ -236,10 +219,10 @@ export async function requestBackgroundSync(tag: string): Promise<void> {
       const registration = await navigator.serviceWorker.ready;
       if ('sync' in registration) {
         await (registration as ServiceWorkerRegistrationWithSync).sync.register(tag);
-        console.log('[SW] Background sync registered:', tag);
+        logger.debug('[SW] Background sync registered', { tag });
       }
     } catch (error) {
-      console.error('[SW] Background sync registration failed:', error);
+      logger.error('[SW] Background sync registration failed', error);
     }
   }
 }

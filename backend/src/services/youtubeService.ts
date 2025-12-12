@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { logger } from '../utils/logger.js';
 
 const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 const YOUTUBE_API_BASE_URL = 'https://www.googleapis.com/youtube/v3';
@@ -20,7 +21,7 @@ export interface YouTubeVideoMetadata {
  */
 export async function validateYouTubeVideoId(videoId: string): Promise<boolean> {
   if (!YOUTUBE_API_KEY) {
-    console.warn('YouTube API key not configured. Skipping validation.');
+    logger.warn('YouTube API key not configured. Skipping validation.');
     return true; // Allow if API key not configured
   }
 
@@ -44,7 +45,7 @@ export async function validateYouTubeVideoId(videoId: string): Promise<boolean> 
 
     return false;
   } catch (error) {
-    console.error('YouTube API validation error:', error);
+    logger.error('YouTube API validation error', { error, videoId });
     return false;
   }
 }
@@ -56,7 +57,7 @@ export async function getYouTubeVideoMetadata(
   videoId: string
 ): Promise<YouTubeVideoMetadata | null> {
   if (!YOUTUBE_API_KEY) {
-    console.warn('YouTube API key not configured. Returning minimal metadata.');
+    logger.warn('YouTube API key not configured. Returning minimal metadata.');
     return {
       id: videoId,
       title: 'Video',
@@ -103,7 +104,7 @@ export async function getYouTubeVideoMetadata(
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     const responseData = axios.isAxiosError(error) ? error.response?.data : null;
-    console.error('YouTube API metadata error:', responseData || errorMessage);
+    logger.error('YouTube API metadata error', { error: responseData || errorMessage, videoId });
     return null;
   }
 }
@@ -154,7 +155,7 @@ export async function batchValidateYouTubeVideos(
   videoIds: string[]
 ): Promise<Map<string, boolean>> {
   if (!YOUTUBE_API_KEY) {
-    console.warn('YouTube API key not configured. Skipping batch validation.');
+    logger.warn('YouTube API key not configured. Skipping batch validation.');
     return new Map(videoIds.map((id) => [id, true]));
   }
 
@@ -187,7 +188,7 @@ export async function batchValidateYouTubeVideos(
         });
       }
     } catch (error) {
-      console.error('YouTube API batch validation error:', error);
+      logger.error('YouTube API batch validation error', { error, batchSize: batch.length });
       // Mark all videos in failed batch as invalid
       batch.forEach((id) => results.set(id, false));
     }

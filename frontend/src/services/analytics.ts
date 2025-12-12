@@ -5,6 +5,8 @@
  * Supports Google Analytics 4 and Plausible Analytics.
  */
 
+import { logger } from '../utils/logger';
+
 // Analytics event types
 export type AnalyticsEvent =
   // User events
@@ -83,39 +85,29 @@ class AnalyticsService {
     // Check for Google Analytics 4
     if (typeof window !== 'undefined' && (window as any).gtag) {
       this.analyticsProvider = 'ga4';
-      if (import.meta.env.DEV) {
-        console.log('[Analytics] Google Analytics 4 initialized');
-      }
+      logger.debug('[Analytics] Google Analytics 4 initialized');
     }
     // Check for Plausible Analytics
     else if (typeof window !== 'undefined' && (window as any).plausible) {
       this.analyticsProvider = 'plausible';
-      if (import.meta.env.DEV) {
-        console.log('[Analytics] Plausible Analytics initialized');
-      }
+      logger.debug('[Analytics] Plausible Analytics initialized');
     }
     // No analytics provider found
     else {
       this.analyticsProvider = 'none';
-      if (import.meta.env.DEV) {
-        console.warn('[Analytics] No analytics provider found');
-      }
+      logger.warn('[Analytics] No analytics provider found');
     }
 
     // Listen for cookie consent events
     if (typeof window !== 'undefined') {
       window.addEventListener('enableAnalytics', () => {
         this.consentEnabled = true;
-        if (import.meta.env.DEV) {
-          console.log('[Analytics] Analytics enabled by user consent');
-        }
+        logger.debug('[Analytics] Analytics enabled by user consent');
       });
 
       window.addEventListener('disableAnalytics', () => {
         this.consentEnabled = false;
-        if (import.meta.env.DEV) {
-          console.log('[Analytics] Analytics disabled by user consent');
-        }
+        logger.debug('[Analytics] Analytics disabled by user consent');
       });
 
       // Check for existing consent in localStorage
@@ -143,9 +135,7 @@ class AnalyticsService {
     }
 
     // Log in development
-    if (import.meta.env.DEV) {
-      console.log('[Analytics] Event:', eventName, eventData);
-    }
+    logger.debug('[Analytics] Event', { eventName, eventData });
 
     switch (this.analyticsProvider) {
       case 'ga4':
@@ -170,15 +160,11 @@ class AnalyticsService {
 
     // Respect cookie consent - don't track if analytics is disabled
     if (!this.analyticsEnabled) {
-      if (import.meta.env.DEV) {
-        console.log('[Analytics] Page view blocked (analytics disabled by consent):', path);
-      }
+      logger.debug('[Analytics] Page view blocked (analytics disabled by consent)', { path });
       return;
     }
 
-    if (import.meta.env.DEV) {
-      console.log('[Analytics] Page view:', path, title);
-    }
+    logger.debug('[Analytics] Page view', { path, title });
 
     switch (this.analyticsProvider) {
       case 'ga4':

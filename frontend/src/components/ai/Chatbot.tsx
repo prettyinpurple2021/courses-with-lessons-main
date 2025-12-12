@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { sendChatRequest } from '../../services/aiService';
 import type { ChatMessage, ChatMode, ChatResponse } from '../../types/ai';
 import { useToast } from '../../contexts/ToastContext';
+import { logger } from '../../utils/logger';
 
 interface ModeConfig {
   modelLabel: string;
@@ -98,7 +99,7 @@ export default function Chatbot() {
         )
       );
     } catch (error: any) {
-      console.error('AI chat failure', error);
+      logger.error('AI chat failure', error);
       const fallback = error?.response?.data?.error?.message ?? 'Intel Bot is offline. Try again shortly.';
       setMessages((prev) =>
         prev.map((message) => (message.id === loadingMessage.id ? { ...message, text: fallback, isLoading: false } : message))

@@ -10,6 +10,7 @@ import FormInput from '../components/common/FormInput';
 import { useToast } from '../contexts/ToastContext';
 import { useErrorHandler } from '../hooks/useErrorHandler';
 import { loginSchema, LoginFormData } from '../utils/validationSchemas';
+import { logger } from '../utils/logger';
 
 const LoginPage: React.FC = () => {
   const { login, isAuthenticated } = useAuth();
@@ -41,9 +42,7 @@ const LoginPage: React.FC = () => {
       success('Welcome back! Login successful.');
       navigate(from, { replace: true });
     } catch (error) {
-      if (import.meta.env.DEV) {
-        console.log('Login error caught:', error);
-      }
+      logger.debug('Login error caught', { error });
       handleError(error);
     }
   };

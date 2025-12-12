@@ -1,6 +1,7 @@
 import rateLimit from 'express-rate-limit';
 import RedisStore from 'rate-limit-redis';
 import { redisClient } from '../config/redis';
+import { logger } from '../utils/logger.js';
 
 // Helper to Create Store
 const createStore = () => {
@@ -17,9 +18,11 @@ const createStore = () => {
 
   // In production, we assume Redis is available.
   // Pass the client directly.
-  console.log('DEBUG: redisClient keys:', Object.keys(redisClient));
-  if (typeof redisClient.sendCommand !== 'function') {
-    console.log('DEBUG: redisClient.sendCommand IS NOT A FUNCTION');
+  if (process.env.NODE_ENV === 'development') {
+    logger.debug('Redis client keys', { keys: Object.keys(redisClient) });
+    if (typeof redisClient.sendCommand !== 'function') {
+      logger.warn('redisClient.sendCommand IS NOT A FUNCTION');
+    }
   }
   return new RedisStore({
     sendCommand: (...args: string[]) => redisClient.sendCommand(args),

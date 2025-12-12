@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { logger } from '../../utils/logger';
 
 interface GoogleAnalyticsProps {
   measurementId: string;
@@ -16,7 +17,7 @@ export default function GoogleAnalytics({ measurementId }: GoogleAnalyticsProps)
 
     // Check if gtag is already loaded
     if ((window as any).gtag) {
-      console.log('[GA4] Already initialized');
+      logger.debug('[GA4] Already initialized');
       return;
     }
 
@@ -38,7 +39,7 @@ export default function GoogleAnalytics({ measurementId }: GoogleAnalyticsProps)
     `;
     document.head.appendChild(script2);
 
-    console.log('[GA4] Initialized with measurement ID:', measurementId);
+    logger.info('[GA4] Initialized with measurement ID', { measurementId });
 
     return () => {
       // Cleanup scripts on unmount

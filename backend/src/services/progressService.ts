@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { queueWebhook } from './webhookService.js';
+import { logger } from '../utils/logger.js';
 
 const prisma = new PrismaClient();
 
@@ -92,7 +93,7 @@ export async function updateLessonProgress(
       }
     } catch (error) {
       // Log error but don't fail progress update if webhook fails
-      console.error('Failed to send progress webhook:', error);
+      logger.error('Failed to send progress webhook', { error, userId, lessonId });
     }
   }
 }
@@ -113,7 +114,7 @@ export async function batchUpdateProgress(
       await updateLessonProgress(userId, update.lessonId, update);
       success++;
     } catch (error) {
-      console.error(`Failed to update progress for lesson ${update.lessonId}:`, error);
+      logger.error(`Failed to update progress for lesson ${update.lessonId}`, { error, lessonId: update.lessonId });
       failed++;
     }
   }

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
+import { logger } from '../../utils/logger';
 
 interface YouTubePlayerProps {
   videoId: string;
@@ -118,9 +119,7 @@ export default function YouTubePlayer({
       });
     } catch (err) {
       setError('Failed to load video player');
-      if (import.meta.env.DEV) {
-        console.error('YouTube Player Error:', err);
-      }
+      logger.error('YouTube Player Error', err);
     }
   };
 
@@ -180,9 +179,7 @@ export default function YouTubePlayer({
     }
 
     setError(errorMessage);
-    if (import.meta.env.DEV) {
-      console.error('YouTube Player Error:', errorCode, errorMessage);
-    }
+    logger.error('YouTube Player Error', new Error(errorMessage), { errorCode });
   };
 
   const startProgressTracking = () => {

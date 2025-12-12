@@ -3,6 +3,7 @@ import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { adminService } from '../../services/adminService';
 import LoadingSpinner from '../common/LoadingSpinner';
+import { logger } from '../../utils/logger';
 
 /**
  * Protected route component for admin-only pages
@@ -28,9 +29,7 @@ const AdminRoute: React.FC = () => {
       const result = await adminService.verifyAdmin();
       setIsAdmin(result.isAdmin);
     } catch (error) {
-      if (import.meta.env.DEV) {
-        console.error('Admin verification failed:', error);
-      }
+      logger.error('Admin verification failed', error);
       setIsAdmin(false);
     } finally {
       setIsVerifying(false);

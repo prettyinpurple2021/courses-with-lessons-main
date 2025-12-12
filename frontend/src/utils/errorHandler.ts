@@ -1,5 +1,6 @@
 import { AxiosError } from 'axios';
 import { ErrorType, AppError, ApiErrorResponse } from '../types/error';
+import { logger } from './logger';
 
 /**
  * Parse an error from various sources into a standardized AppError format
@@ -151,32 +152,19 @@ export const isRetryableError = (error: AppError): boolean => {
  * Log error for debugging (can be extended to send to error tracking service)
  */
 export const logError = (error: AppError, context?: string): void => {
-  if (import.meta.env.DEV) {
-    console.error(`[Error${context ? ` - ${context}` : ''}]:`, {
-      type: error.type,
-      message: error.message,
-      statusCode: error.statusCode,
-      timestamp: error.timestamp,
-      details: error.details,
-    });
-  }
+  const errorDetails = {
+    type: error.type,
+    message: error.message,
+    statusCode: error.statusCode,
+    timestamp: error.timestamp,
+    details: error.details,
+  };
 
-  // In production, send to error tracking service (e.g., Sentry)
-  if (import.meta.env.PROD) {
-    // Example implementation for Sentry:
-    // if (window.Sentry) {
-    //   window.Sentry.captureException(error.details || new Error(error.message), {
-    //     tags: {
-    //       errorType: error.type,
-    //       statusCode: error.statusCode,
-    //     },
-    //     extra: {
-    //       context,
-    //       timestamp: error.timestamp,
-    //     },
-    //   });
-    // }
-  }
+  logger.error(
+    `Error${context ? ` - ${context}` : ''}`,
+    error.details instanceof Error ? error.details : new Error(error.message),
+    errorDetails
+  );
 };
 
 /**

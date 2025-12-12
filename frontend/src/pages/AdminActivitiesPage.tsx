@@ -6,6 +6,7 @@ import GlassmorphicCard from '../components/common/GlassmorphicCard';
 import GlassmorphicButton from '../components/common/GlassmorphicButton';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import { api } from '../services/api';
+import { logger } from '../utils/logger';
 
 interface Activity {
   id: string;
@@ -51,9 +52,7 @@ const AdminActivitiesPage: React.FC = () => {
         setLessonTitle(data.data.title);
       }
     } catch (error) {
-      if (import.meta.env.DEV) {
-        console.error('Failed to fetch lesson:', error);
-      }
+      logger.error('Failed to fetch lesson', error);
     }
   };
 

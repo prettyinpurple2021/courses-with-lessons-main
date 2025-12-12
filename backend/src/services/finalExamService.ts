@@ -3,6 +3,7 @@ import * as finalProjectService from './finalProjectService.js';
 import * as certificateService from './certificateService.js';
 import { queueWebhook } from './webhookService.js';
 import { checkAndUnlockAchievements } from './achievementService.js';
+import { logger } from '../utils/logger.js';
 
 const prisma = new PrismaClient();
 
@@ -228,7 +229,7 @@ export async function submitFinalExam(
       await checkAndUnlockAchievements(userId, 'exam_submitted');
     } catch (error) {
       // Log error but don't fail exam submission if achievement check fails
-      console.error('Failed to check achievements:', error);
+      logger.error('Failed to check achievements', { error, userId, examId });
     }
 
     // If passed, mark course as completed and unlock next course
@@ -385,7 +386,7 @@ export async function completeCourse(userId: string, courseId: string): Promise<
     try {
       await certificateService.createCertificate(userId, courseId);
     } catch (error) {
-      console.error('Error creating certificate:', error);
+      logger.error('Error creating certificate', { error, userId, courseId });
       // Don't fail the course completion if certificate creation fails
     }
 
@@ -410,7 +411,7 @@ export async function completeCourse(userId: string, courseId: string): Promise<
       }
     } catch (error) {
       // Log error but don't fail course completion if webhook fails
-      console.error('Failed to send completion webhook:', error);
+      logger.error('Failed to send completion webhook', { error, userId, courseId });
     }
 
     // Check and unlock achievements for course completion
@@ -418,7 +419,7 @@ export async function completeCourse(userId: string, courseId: string): Promise<
       await checkAndUnlockAchievements(userId, 'course_completed');
     } catch (error) {
       // Log error but don't fail course completion if achievement check fails
-      console.error('Failed to check achievements:', error);
+      logger.error('Failed to check achievements', { error, userId, courseId });
     }
   }
 }

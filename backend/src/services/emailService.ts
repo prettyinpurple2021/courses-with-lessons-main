@@ -1,4 +1,5 @@
 import resend from '../config/email.js';
+import { logger } from '../utils/logger.js';
 
 export class EmailService {
   private fromEmail: string;
@@ -63,9 +64,9 @@ export class EmailService {
         `,
       });
 
-      console.log(`Welcome email sent to ${to}`);
+      logger.info(`Welcome email sent to ${to}`);
     } catch (error) {
-      console.error('Failed to send welcome email:', error);
+      logger.error('Failed to send welcome email', { error, to });
       // Don't throw error for welcome emails - it's not critical
     }
   }
@@ -97,9 +98,9 @@ export class EmailService {
         `,
       });
 
-      console.log(`Course completion email sent to ${to}`);
+      logger.info(`Course completion email sent to ${to}`);
     } catch (error) {
-      console.error('Failed to send course completion email:', error);
+      logger.error('Failed to send course completion email', { error, to });
       // Don't throw error - it's not critical
     }
   }

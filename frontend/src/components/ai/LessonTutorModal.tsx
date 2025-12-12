@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { sendTutorQuestion } from '../../services/aiService';
 import type { ChatMessage, TutorMode } from '../../types/ai';
 import { useToast } from '../../contexts/ToastContext';
+import { logger } from '../../utils/logger';
 
 interface LessonTutorModalProps {
   lessonId: string;
@@ -68,7 +69,7 @@ export default function LessonTutorModal({ lessonId, lessonTitle, lessonSummary,
         ),
       );
     } catch (error: any) {
-      console.error('AI tutor failure', error);
+      logger.error('AI tutor failure', error);
       const fallback = error?.response?.data?.error?.message ?? 'Tutor link is disrupted. Retry in a moment.';
       setMessages((prev) => prev.map((message) => (message.id === loadingMessage.id ? { ...message, text: fallback, isLoading: false } : message)));
       showToast('The AI tutor is unavailable right now.', 'error');

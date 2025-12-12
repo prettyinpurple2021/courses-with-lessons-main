@@ -1,6 +1,7 @@
 import { useEffect, useRef, useCallback } from 'react';
 import { updateLessonProgress } from '../services/progressService';
 import { useToast } from './useToast';
+import { logger } from '../utils/logger';
 
 interface UseProgressSyncOptions {
   lessonId: string;
@@ -38,7 +39,7 @@ export function useProgressSync({ lessonId, enabled = true, onError }: UseProgre
           await updateLessonProgress(lessonId, { videoPosition: position });
           lastSavedPositionRef.current = position;
         } catch (error) {
-          console.error('Failed to save video position:', error);
+          logger.error('Failed to save video position', error);
           if (onError) {
             onError(error as Error);
           }
@@ -74,7 +75,7 @@ export function useProgressSync({ lessonId, enabled = true, onError }: UseProgre
       try {
         await updateLessonProgress(lessonId, { currentActivity });
       } catch (error) {
-        console.error('Failed to save activity progress:', error);
+        logger.error('Failed to save activity progress', error);
         showError('Failed to save progress');
         if (onError) {
           onError(error as Error);
@@ -97,7 +98,7 @@ export function useProgressSync({ lessonId, enabled = true, onError }: UseProgre
         await updateLessonProgress(lessonId, { completed: true });
         showSuccess('Lesson completed!');
       } catch (error) {
-        console.error('Failed to mark lesson as complete:', error);
+        logger.error('Failed to mark lesson as complete', error);
         showError('Failed to save completion status');
         if (onError) {
           onError(error as Error);

@@ -4,6 +4,7 @@ import { generateAccessToken, generateRefreshToken } from '../utils/jwt.js';
 import { AuthenticationError, AuthorizationError } from '../utils/errors.js';
 import { checkAndUnlockAchievements } from './achievementService.js';
 import { completeCourse } from './finalExamService.js';
+import { logger } from '../utils/logger.js';
 
 export const adminService = {
   /**
@@ -190,7 +191,7 @@ export const adminService = {
       try {
         await checkAndUnlockAchievements(result.userId, 'exam_submitted');
       } catch (error) {
-        console.error('Failed to check achievements:', error);
+        logger.error('Failed to check achievements', { error, userId: result.userId });
       }
 
       // 2. Check if course is completed (all lessons + final exam passed)

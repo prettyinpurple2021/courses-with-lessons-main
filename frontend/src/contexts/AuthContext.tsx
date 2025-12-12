@@ -3,6 +3,7 @@ import { useAuthStore } from '../store/authStore';
 import { authService } from '../services/authService';
 import { AuthContextType, LoginCredentials, RegisterCredentials } from '../types/auth';
 import { setAccessToken, setInitialAuthCheck } from '../services/api';
+import { logger } from '../utils/logger';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -65,9 +66,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       await authService.logout();
     } catch (error) {
-      if (import.meta.env.DEV) {
-        console.error('Logout error:', error);
-      }
+      logger.error('Logout error', error);
     } finally {
       clearAuth();
       setAccessToken(null);

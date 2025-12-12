@@ -4,6 +4,7 @@ import { generateAccessToken, generateRefreshToken, TokenPayload } from '../util
 import { generateResetToken, verifyResetToken, deleteResetToken } from '../utils/tokenStore.js';
 import emailService from './emailService.js';
 import { ValidationError, AuthenticationError, ConflictError, NotFoundError } from '../utils/errors.js';
+import { logger } from '../utils/logger.js';
 
 const prisma = new PrismaClient();
 
@@ -75,17 +76,27 @@ export class AuthService {
       });
 
       // Auto-enroll in Course One
+      // Use upsert for atomic enrollment creation to handle edge cases
       const courseOne = await prisma.course.findFirst({
         where: { courseNumber: 1 },
       });
 
       if (courseOne) {
-        await prisma.enrollment.create({
-          data: {
+        await prisma.enrollment.upsert({
+          where: {
+            userId_courseId: {
+              userId: user.id,
+              courseId: courseOne.id,
+            },
+          },
+          create: {
             userId: user.id,
             courseId: courseOne.id,
             currentLesson: 1,
             unlockedCourses: 1,
+          },
+          update: {
+            // No-op: enrollment already exists (shouldn't happen on registration, but safe)
           },
         });
       }
@@ -146,26 +157,44 @@ export class AuthService {
       }
 
       // Auto-enroll in Course One if user has no enrollments
-      const existingEnrollments = await prisma.enrollment.findFirst({
-        where: { userId: user.id },
-      });
-
-      if (!existingEnrollments) {
-        const courseOne = await prisma.course.findFirst({
-          where: { courseNumber: 1 },
+      // Use transaction with upsert to atomically handle race conditions where
+      // concurrent login requests might try to create the same enrollment
+      await prisma.$transaction(async (tx) => {
+        // Check if user has any enrollments (atomic within transaction)
+        const existingEnrollments = await tx.enrollment.findFirst({
+          where: { userId: user.id },
         });
 
-        if (courseOne) {
-          await prisma.enrollment.create({
-            data: {
-              userId: user.id,
-              courseId: courseOne.id,
-              currentLesson: 1,
-              unlockedCourses: 1,
-            },
+        // Only create Course One enrollment if user has no enrollments
+        if (!existingEnrollments) {
+          const courseOne = await tx.course.findFirst({
+            where: { courseNumber: 1 },
           });
+
+          if (courseOne) {
+            // Use upsert to handle race condition: if another concurrent request
+            // created the enrollment between our check and this upsert, upsert will
+            // update instead of failing with unique constraint violation
+            await tx.enrollment.upsert({
+              where: {
+                userId_courseId: {
+                  userId: user.id,
+                  courseId: courseOne.id,
+                },
+              },
+              create: {
+                userId: user.id,
+                courseId: courseOne.id,
+                currentLesson: 1,
+                unlockedCourses: 1,
+              },
+              update: {
+                // No-op: enrollment already exists from concurrent request, keep existing data
+              },
+            });
+          }
         }
-      }
+      });
 
       // Generate tokens
       const tokenPayload: TokenPayload = {
@@ -225,15 +254,19 @@ export class AuthService {
       try {
         await emailService.sendPasswordResetEmail(user.email, resetToken);
       } catch (error) {
-        console.error('Failed to send password reset email:', error);
-        // Still log to console as fallback
-        console.log(`Password reset token for ${email}: ${resetToken}`);
-        console.log(`Reset link: http://localhost:3000/reset-password?token=${resetToken}`);
+        logger.error('Failed to send password reset email', { error, email });
+        // Log token for development/testing (only in dev mode)
+        if (process.env.NODE_ENV === 'development') {
+          logger.info(`Password reset token for ${email}: ${resetToken}`);
+          logger.info(`Reset link: http://localhost:3000/reset-password?token=${resetToken}`);
+        }
       }
     } else {
-      // Fallback: log to console if email not configured
-      console.log(`Password reset token for ${email}: ${resetToken}`);
-      console.log(`Reset link: http://localhost:3000/reset-password?token=${resetToken}`);
+      // Fallback: log token if email not configured (only in dev mode)
+      if (process.env.NODE_ENV === 'development') {
+        logger.info(`Password reset token for ${email}: ${resetToken}`);
+        logger.info(`Reset link: http://localhost:3000/reset-password?token=${resetToken}`);
+      }
     }
 
     return 'If an account exists with this email, a password reset link has been sent';

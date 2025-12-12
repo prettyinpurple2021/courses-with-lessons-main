@@ -1,4 +1,5 @@
 import cloudinary from '../config/cloudinary.js';
+import { logger } from './logger.js';
 
 /**
  * Validate base64 image data
@@ -49,7 +50,7 @@ export const uploadImageToCloudinary = async (
 
     return result.secure_url;
   } catch (error) {
-    console.error('Cloudinary upload error:', error);
+    logger.error('Cloudinary upload error', { error });
     if (error instanceof Error) {
       throw error;
     }
@@ -70,7 +71,7 @@ export const deleteImageFromCloudinary = async (imageUrl: string): Promise<void>
 
     await cloudinary.uploader.destroy(publicId);
   } catch (error) {
-    console.error('Cloudinary delete error:', error);
+    logger.error('Cloudinary delete error', { error, publicId });
     // Don't throw error, just log it
   }
 };

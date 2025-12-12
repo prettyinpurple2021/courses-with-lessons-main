@@ -1,5 +1,6 @@
 import { batchUpdateProgress } from '../services/progressService';
 import { ProgressUpdate } from '../services/progressService';
+import { logger } from './logger';
 
 const SYNC_QUEUE_KEY = 'progress_sync_queue';
 const SYNC_INTERVAL = 30000; // 30 seconds
@@ -23,17 +24,13 @@ class BackgroundSyncManager {
   private setupOnlineListener() {
     window.addEventListener('online', () => {
       this.isOnline = true;
-      if (import.meta.env.DEV) {
-        console.log('Connection restored, syncing queued updates...');
-      }
+      logger.info('Connection restored, syncing queued updates...');
       this.syncQueue();
     });
 
     window.addEventListener('offline', () => {
       this.isOnline = false;
-      if (import.meta.env.DEV) {
-        console.log('Connection lost, updates will be queued');
-      }
+      logger.info('Connection lost, updates will be queued');
     });
   }
 
@@ -79,9 +76,7 @@ class BackgroundSyncManager {
       const queueStr = localStorage.getItem(SYNC_QUEUE_KEY);
       return queueStr ? JSON.parse(queueStr) : [];
     } catch (error) {
-      if (import.meta.env.DEV) {
-        console.error('Failed to read sync queue:', error);
-      }
+      logger.error('Failed to read sync queue', error);
       return [];
     }
   }
@@ -93,9 +88,7 @@ class BackgroundSyncManager {
     try {
       localStorage.setItem(SYNC_QUEUE_KEY, JSON.stringify(queue));
     } catch (error) {
-      if (import.meta.env.DEV) {
-        console.error('Failed to save sync queue:', error);
-      }
+      logger.error('Failed to save sync queue', error);
     }
   }
 
@@ -115,9 +108,7 @@ class BackgroundSyncManager {
     this.isSyncing = true;
 
     try {
-      if (import.meta.env.DEV) {
-        console.log(`Syncing ${queue.length} queued updates...`);
-      }
+      logger.debug(`Syncing ${queue.length} queued updates...`);
       
       // Remove timestamp before sending to server
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -125,9 +116,7 @@ class BackgroundSyncManager {
       
       const result = await batchUpdateProgress(updates);
       
-      if (import.meta.env.DEV) {
-        console.log(`Sync complete: ${result.success} succeeded, ${result.failed} failed`);
-      }
+      logger.debug(`Sync complete: ${result.success} succeeded, ${result.failed} failed`);
 
       // Clear queue on success
       if (result.failed === 0) {
@@ -138,9 +127,7 @@ class BackgroundSyncManager {
         this.saveQueue(failedUpdates);
       }
     } catch (error) {
-      if (import.meta.env.DEV) {
-        console.error('Failed to sync queue:', error);
-      }
+      logger.error('Failed to sync queue', error);
       // Keep queue for retry
     } finally {
       this.isSyncing = false;
@@ -173,9 +160,7 @@ class BackgroundSyncManager {
       this.syncQueue();
     }, SYNC_INTERVAL);
 
-    if (import.meta.env.DEV) {
-      console.log('Background sync started');
-    }
+    logger.debug('Background sync started');
   }
 
   /**
@@ -185,7 +170,7 @@ class BackgroundSyncManager {
     if (this.syncInterval) {
       clearInterval(this.syncInterval);
       this.syncInterval = null;
-      console.log('Background sync stopped');
+      logger.debug('Background sync stopped');
     }
   }
 

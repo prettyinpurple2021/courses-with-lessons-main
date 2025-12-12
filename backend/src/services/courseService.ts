@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { queueWebhook } from './webhookService.js';
 import { checkAndUnlockAchievements } from './achievementService.js';
+import { logger } from '../utils/logger.js';
 
 const prisma = new PrismaClient();
 
@@ -380,7 +381,7 @@ export async function enrollInCourse(userId: string, courseId: string): Promise<
     }
   } catch (error) {
     // Log error but don't fail enrollment if webhook fails
-    console.error('Failed to send enrollment webhook:', error);
+    logger.error('Failed to send enrollment webhook', { error, userId, courseId });
   }
 
   // Check and unlock achievements for course enrollment
@@ -388,7 +389,7 @@ export async function enrollInCourse(userId: string, courseId: string): Promise<
     await checkAndUnlockAchievements(userId, 'course_enrolled');
   } catch (error) {
     // Log error but don't fail enrollment if achievement check fails
-    console.error('Failed to check achievements:', error);
+    logger.error('Failed to check achievements', { error, userId, courseId });
   }
   // ... (webhook and achievements logic stays the same) ...
   return enrollment;

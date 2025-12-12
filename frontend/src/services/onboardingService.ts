@@ -5,6 +5,8 @@
  * Uses localStorage for persistence across sessions.
  */
 
+import { logger } from '../utils/logger';
+
 export interface OnboardingStep {
   id: string;
   completed: boolean;
@@ -156,9 +158,7 @@ class OnboardingService {
     try {
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(state));
     } catch (error) {
-      if (import.meta.env.DEV) {
-        console.error('Failed to save onboarding state:', error);
-      }
+      logger.error('Failed to save onboarding state', error);
     }
   }
 

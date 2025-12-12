@@ -1,5 +1,6 @@
 import axios, { AxiosError, InternalAxiosRequestConfig, AxiosResponse } from 'axios';
 import { parseError, logError, isRetryableError } from '../utils/errorHandler';
+import { logger } from '../utils/logger';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8787/api';
 
@@ -177,9 +178,10 @@ api.interceptors.response.use(
         const delay = RETRY_DELAY * Math.pow(2, retryCount);
         await sleep(delay);
 
-        if (import.meta.env.DEV) {
-          console.log(`Retrying request (${retryCount + 1}/${MAX_RETRIES})...`);
-        }
+        logger.debug(`Retrying request (${retryCount + 1}/${MAX_RETRIES})...`, {
+          url: originalRequest.url,
+          method: originalRequest.method,
+        });
         return api(originalRequest);
       }
     }

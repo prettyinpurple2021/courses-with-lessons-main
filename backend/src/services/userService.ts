@@ -1,4 +1,5 @@
 import prisma from '../config/prisma.js';
+import { logger } from '../utils/logger.js';
 
 export class UserService {
   async getProfileData(userId: string) {
@@ -250,7 +251,7 @@ export class UserService {
           await deleteImageFromCloudinary(currentUser.avatar);
         }
       } catch (error) {
-        console.error('Failed to upload to Cloudinary, using base64:', error);
+        logger.error('Failed to upload to Cloudinary, using base64', { error, userId });
         // Fall back to storing base64 if Cloudinary fails
       }
     }

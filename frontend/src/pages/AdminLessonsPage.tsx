@@ -4,6 +4,7 @@ import { useToast } from '../hooks/useToast';
 import GlassmorphicCard from '../components/common/GlassmorphicCard';
 import GlassmorphicButton from '../components/common/GlassmorphicButton';
 import LoadingSpinner from '../components/common/LoadingSpinner';
+import { logger } from '../utils/logger';
 
 interface Lesson {
   id: string;
@@ -50,9 +51,7 @@ const AdminLessonsPage: React.FC = () => {
         setCourseName(data.data.title);
       }
     } catch (error) {
-      if (import.meta.env.DEV) {
-        console.error('Failed to fetch course:', error);
-      }
+      logger.error('Failed to fetch course', error);
     }
   };
 

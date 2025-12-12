@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { logger } from '../../utils/logger';
 
 interface PlausibleAnalyticsProps {
   domain: string;
@@ -20,7 +21,7 @@ export default function PlausibleAnalytics({
 
     // Check if plausible is already loaded
     if ((window as any).plausible) {
-      console.log('[Plausible] Already initialized');
+      logger.debug('[Plausible] Already initialized');
       return;
     }
 
@@ -31,7 +32,7 @@ export default function PlausibleAnalytics({
     script.src = scriptSrc;
     document.head.appendChild(script);
 
-    console.log('[Plausible] Initialized for domain:', domain);
+    logger.info('[Plausible] Initialized for domain', { domain });
 
     return () => {
       // Cleanup script on unmount

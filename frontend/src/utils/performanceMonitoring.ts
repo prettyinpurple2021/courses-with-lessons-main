@@ -4,6 +4,7 @@
  */
 
 import { onCLS, onINP, onFCP, onLCP, onTTFB, Metric } from 'web-vitals';
+import { logger } from './logger';
 
 // Get API base URL from environment
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8787/api';
@@ -40,7 +41,11 @@ function sendToAnalytics(metric: PerformanceMetric) {
   if (process.env.NODE_ENV === 'development') {
     const metricKey = `${metric.name}-${metric.rating}`;
     if (!loggedMetrics.has(metricKey)) {
-      console.log('[Performance]', metric);
+      logger.performance(metric.name, metric.value, {
+        rating: metric.rating,
+        delta: metric.delta,
+        id: metric.id,
+      });
       loggedMetrics.add(metricKey);
     }
   }
@@ -65,9 +70,7 @@ function sendToAnalytics(metric: PerformanceMetric) {
       body: JSON.stringify(metric),
       keepalive: true, // Ensure request completes even if page is closing
     }).catch((error) => {
-      if (import.meta.env.DEV) {
-        console.error('Failed to send performance metric:', error);
-      }
+      logger.error('Failed to send performance metric', error);
     });
   }
 }
@@ -154,9 +157,7 @@ export function trackCustomMetric(name: string, value: number, metadata?: Record
     timestamp: Date.now(),
   };
 
-  if (process.env.NODE_ENV === 'development') {
-    console.log(`[Performance] ${name}:`, value, metadata);
-  }
+  logger.performance(name, value, metadata);
 
   // Send to analytics with metadata
   if (process.env.NODE_ENV === 'production') {
@@ -172,9 +173,7 @@ export function trackCustomMetric(name: string, value: number, metadata?: Record
       }),
       keepalive: true,
     }).catch((error) => {
-      if (import.meta.env.DEV) {
-        console.error('Failed to send custom metric:', error);
-      }
+      logger.error('Failed to send custom metric', error);
     });
   }
 }
@@ -220,7 +219,7 @@ export const PerformanceMarker = {
         trackCustomMetric(name, measure.duration);
         return measure.duration;
       } catch (error) {
-        console.error('Performance measure error:', error);
+        logger.error('Performance measure error', error);
         return 0;
       }
     }
@@ -323,7 +322,7 @@ export function monitorLongTasks() {
       observer.observe({ entryTypes: ['longtask'] });
     } catch (error) {
       // Long task API not supported
-      console.warn('Long task monitoring not supported', error);
+      logger.warn('Long task monitoring not supported', { error });
     }
   }
 }

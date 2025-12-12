@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import { checkAndUnlockAchievements } from './achievementService.js';
+import { logger } from '../utils/logger.js';
 
 const prisma = new PrismaClient();
 
@@ -493,7 +494,7 @@ export async function submitActivity(
         await checkAndUnlockAchievements(userId, 'lesson_completed');
       } catch (error) {
         // Log error but don't fail activity submission if achievement check fails
-        console.error('Failed to check achievements:', error);
+        logger.error('Failed to check achievements', { error, userId, activityId });
       }
     }
   }

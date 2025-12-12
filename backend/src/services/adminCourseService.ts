@@ -1,6 +1,7 @@
 import prisma from '../config/prisma.js';
 import { NotFoundError, ValidationError } from '../utils/errors.js';
 import axios from 'axios';
+import { logger } from '../utils/logger.js';
 
 interface CourseData {
   courseNumber: number;
@@ -289,7 +290,7 @@ export const adminCourseService = {
 
     if (!apiKey) {
       // If no API key, just return basic validation
-      console.warn('YouTube API key not configured, skipping video validation');
+      logger.warn('YouTube API key not configured, skipping video validation');
       return {
         valid: true,
         videoId,

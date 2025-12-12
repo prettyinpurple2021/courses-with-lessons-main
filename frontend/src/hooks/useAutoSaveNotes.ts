@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { api } from '../services/api';
 import { useToast } from './useToast';
+import { logger } from '../utils/logger';
 
 interface Note {
   id: string;
@@ -78,7 +79,7 @@ export function useAutoSaveNotes({
           lastSaved: new Date().toISOString(),
         }));
       } catch (error) {
-        console.error('Failed to save note:', error);
+        logger.error('Failed to save note', error);
         setSaveStatus('error');
         showError('Failed to save note');
 
@@ -156,7 +157,7 @@ export function useAutoSaveNotes({
         return draft;
       }
     } catch (error) {
-      console.error('Failed to load draft:', error);
+      logger.error('Failed to load draft', error);
     }
     return null;
   }, [lessonId]);
@@ -197,7 +198,7 @@ export function useAutoSaveNotes({
 
         return result;
       } catch (error) {
-        console.error('Failed to resolve conflict:', error);
+        logger.error('Failed to resolve conflict', error);
         showError('Failed to sync note');
         return null;
       }
