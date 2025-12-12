@@ -118,7 +118,8 @@ export class AuthService {
   /**
    * Authenticate user and generate JWT tokens
    * 
-   * Validates email and password, generates access and refresh tokens.
+   * Validates email and password, auto-enrolls in Course One if user has no enrollments,
+   * and generates access and refresh tokens.
    * 
    * @param input - Login credentials containing email and password
    * @returns Authentication response with user data and JWT tokens
@@ -142,6 +143,28 @@ export class AuthService {
 
       if (!isPasswordValid) {
         throw new AuthenticationError('Invalid email or password');
+      }
+
+      // Auto-enroll in Course One if user has no enrollments
+      const existingEnrollments = await prisma.enrollment.findFirst({
+        where: { userId: user.id },
+      });
+
+      if (!existingEnrollments) {
+        const courseOne = await prisma.course.findFirst({
+          where: { courseNumber: 1 },
+        });
+
+        if (courseOne) {
+          await prisma.enrollment.create({
+            data: {
+              userId: user.id,
+              courseId: courseOne.id,
+              currentLesson: 1,
+              unlockedCourses: 1,
+            },
+          });
+        }
       }
 
       // Generate tokens

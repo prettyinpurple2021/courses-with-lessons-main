@@ -151,3 +151,7 @@ The HomePage component is well-structured, properly implemented, and follows bes
 
 The code structure is production-ready. Manual visual verification is recommended once the dev server is running.
 
+---
+
+**← [Back to Wiki Home](Home.md)** | **[Implementation Progress](Implementation-Progress.md)**
+

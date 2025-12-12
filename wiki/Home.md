@@ -9,10 +9,26 @@ Welcome to the SoloSuccess Intel Academy Production Wiki. This wiki contains all
 - **[Deployment Guide](Deployment.md)** - Complete deployment instructions
 - **[Environment Setup](Environment-Setup.md)** - Environment variable configuration
 
+### Pre-Launch
+- **[Pre-Launch Checklist](Pre-Launch-Checklist.md)** - Complete pre-launch verification checklist
+- **[Pre-Launch Status](Pre-Launch-Status.md)** - Current pre-launch status summary
+- **[Implementation Progress](Implementation-Progress.md)** - Development progress tracking
+- **[Landing Page Verification](Landing-Page-Verification.md)** - Landing page audit report
+
 ### Architecture & Planning
 - **[Architecture](Architecture.md)** - Production architecture overview
 - **[Readiness Guide](Readiness-Guide.md)** - Production readiness verification
-- **[Readiness Checklist](Readiness-Checklist.md)** - Pre-launch checklist
+- **[Readiness Checklist](Readiness-Checklist.md)** - Production readiness checklist
+
+### Testing & Quality
+- **[Testing Guide](Testing-Guide.md)** - Testing guide and status
+- **[Testing Checklist](Testing-Checklist.md)** - Comprehensive testing checklist
+- **[Accessibility Audit](Accessibility-Audit.md)** - Accessibility audit report
+- **[Security Audit](Security-Audit.md)** - Security audit report
+- **[Performance Audit](Performance-Audit.md)** - Performance optimization report
+
+### Setup & Configuration
+- **[Redis Setup](Redis-Setup.md)** - Redis production setup guide
 
 ### Reference
 - **[Quick Commands](Quick-Commands.md)** - Common production commands
@@ -34,7 +50,16 @@ wiki/
 ├── Environment-Setup.md       # Environment variables
 ├── Architecture.md            # System architecture
 ├── Readiness-Guide.md         # Readiness verification
-├── Readiness-Checklist.md     # Pre-launch checklist
+├── Readiness-Checklist.md     # Production readiness checklist
+├── Pre-Launch-Checklist.md    # Pre-launch verification checklist
+├── Pre-Launch-Status.md       # Pre-launch status summary
+├── Implementation-Progress.md # Development progress
+├── Landing-Page-Verification.md # Landing page audit
+├── Testing-Checklist.md       # Comprehensive testing checklist
+├── Accessibility-Audit.md     # Accessibility audit report
+├── Security-Audit.md         # Security audit report
+├── Performance-Audit.md       # Performance optimization report
+├── Redis-Setup.md            # Redis setup guide
 ├── Quick-Commands.md          # Common commands
 └── Troubleshooting.md        # Troubleshooting guide
 ```

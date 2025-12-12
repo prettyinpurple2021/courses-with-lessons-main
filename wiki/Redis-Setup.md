@@ -143,7 +143,7 @@ You should see:
 
 ---
 
-### Option 2: Redis Cloud (Alternative)
+### Option 3: Redis Cloud (Alternative)
 
 #### Step 1: Sign Up
 
@@ -171,32 +171,7 @@ Same as Upstash - add `REDIS_URL` to your `.env` file.
 
 ---
 
-### Option 3: Railway Redis
-
-#### Step 1: Sign Up
-
-1. Go to https://railway.app
-2. Sign up (get $5 free credit/month)
-
-#### Step 2: Create Redis Service
-
-1. Click **"New Project"**
-2. Click **"New"** → **"Database"** → **"Add Redis"**
-3. Railway automatically creates Redis instance
-
-#### Step 3: Get Connection String
-
-1. Click on your Redis service
-2. Go to **"Variables"** tab
-3. Copy `REDIS_URL`
-
-#### Step 4: Configure
-
-Add `REDIS_URL` to your environment variables.
-
----
-
-### Option 3: Railway Redis (Alternative)
+### Option 4: Railway Redis (Alternative)
 
 #### Step 1: Sign Up
 
@@ -220,37 +195,6 @@ Add `REDIS_URL` to your environment variables.
 Add `REDIS_URL` to your Fly.io secrets:
 ```bash
 fly secrets set REDIS_URL="redis://default:password@host.upstash.io:6379"
-```
-
----
-
-### Option 4: Redis Cloud (Alternative)
-
-#### Step 1: Sign Up
-
-1. Go to https://redis.com/cloud
-2. Sign up for free tier (30MB)
-3. Create account
-
-#### Step 2: Create Database
-
-1. Click **"Create Database"**
-2. Choose **"Free"** tier
-3. Select region
-4. Create database
-
-#### Step 3: Get Connection String
-
-Copy the connection string from the dashboard:
-```
-redis://default:password@host:port
-```
-
-#### Step 4: Configure
-
-Add `REDIS_URL` to your Fly.io secrets:
-```bash
-fly secrets set REDIS_URL="redis://default:password@host:port"
 ```
 
 ---
@@ -415,7 +359,7 @@ NODE_ENV=production
 
 ## Quick Start Checklist
 
-- [ ] Choose Redis provider (Upstash recommended)
+- [ ] Choose Redis provider (Fly.io Redis recommended)
 - [ ] Create Redis database/instance
 - [ ] Copy connection string (`REDIS_URL`)
 - [ ] Add `REDIS_URL` to `backend/.env`
@@ -444,6 +388,8 @@ NODE_ENV=production
    - Implement Redis persistence if needed
 
 ---
+
+**← [Back to Wiki Home](Home.md)** | **[Environment Setup](Environment-Setup.md)** | **[Architecture](Architecture.md)**
 
 **Redis is now configured and ready for production!** 🚀
 

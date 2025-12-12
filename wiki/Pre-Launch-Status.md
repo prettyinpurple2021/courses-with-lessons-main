@@ -74,11 +74,15 @@ All code-level items have been implemented and verified:
 
 ## Next Steps
 
-1. Review `PRE_LAUNCH_CHECKLIST_COMPLETED.md` for detailed checklist
+1. Review [Pre-Launch Checklist](Pre-Launch-Checklist.md) for detailed checklist
 2. Set up production environment variables
 3. Run database migrations in production
 4. Test error tracking and analytics
 5. Perform manual browser/device testing
 6. Create/review legal documents
 7. Launch! 🚀
+
+---
+
+**← [Back to Wiki Home](Home.md)** | **[Pre-Launch Checklist](Pre-Launch-Checklist.md)** | **[Readiness Checklist](Readiness-Checklist.md)**
 

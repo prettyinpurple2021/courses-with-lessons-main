@@ -163,11 +163,13 @@ Tests run automatically on:
 
 ## Related Documentation
 
-- **[TESTING_CHECKLIST.md](./TESTING_CHECKLIST.md)** - Detailed testing checklist
-- **[e2e/README.md](./e2e/README.md)** - E2E testing guide
-- **[e2e/TEST_PLAN.md](./e2e/TEST_PLAN.md)** - E2E test plan
+- **[Testing Checklist](Testing-Checklist.md)** - Detailed testing checklist
+- **[e2e/README.md](../e2e/README.md)** - E2E testing guide
+- **[e2e/TEST_PLAN.md](../e2e/TEST_PLAN.md)** - E2E test plan
 
 ---
+
+**← [Back to Wiki Home](Home.md)** | **[Testing Checklist](Testing-Checklist.md)** | **[Pre-Launch Checklist](Pre-Launch-Checklist.md)**
 
 **Last Updated:** December 3, 2025
 
