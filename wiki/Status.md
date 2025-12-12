@@ -107,35 +107,6 @@ All 14 required variables are set on Fly.io:
 - [x] Smoke tests passing
 - [x] Deployment protection disabled
 
-## Quick Commands
-
-### Check Status
-```bash
-# Production readiness check
-npm run check:production
-
-# Verify content
-npm run verify:content
-
-# Generate production report
-npm run report:production
-
-# Run smoke tests
-npm run test:smoke
-```
-
-### Monitor
-```bash
-# View backend logs
-fly logs -a intel-academy-api
-
-# Check backend status
-fly status -a intel-academy-api
-
-# Health check
-curl https://intel-academy-api.fly.dev/api/health
-```
-
 ## Application URLs
 
 - **Frontend:** https://frontend-29u1pna3b-solosupport-ai.vercel.app
@@ -158,13 +129,9 @@ curl https://intel-academy-api.fly.dev/api/health
 3. **Gather Feedback:** Set up feedback collection
 4. **Review Analytics:** Check user behavior and engagement
 
-## Related Documentation
-
-- **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Complete deployment guide
-- **[PRODUCTION_READINESS_CHECKLIST.md](./PRODUCTION_READINESS_CHECKLIST.md)** - Full production readiness checklist
-- **[PRODUCTION_ENV_SETUP.md](./PRODUCTION_ENV_SETUP.md)** - Environment variable guide
-
 ---
+
+**← [Back to Wiki Home](Home.md)** | **[Deployment Guide](Deployment.md)**
 
 **Status:** ✅ **PRODUCTION READY - ALL SYSTEMS OPERATIONAL**
 

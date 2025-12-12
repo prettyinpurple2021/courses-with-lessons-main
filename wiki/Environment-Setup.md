@@ -96,10 +96,6 @@ GEMINI_API_KEY=your-gemini-api-key
 # Format: redis://user:password@host:port
 # Example: redis://default:password@redis.example.com:6379
 REDIS_URL=redis://YOUR_REDIS_HOST:6379
-
-# ============================================
-# ERROR TRACKING (Highly Recommended)
-# ============================================
 ```
 
 ### Frontend Environment Variables
@@ -332,7 +328,7 @@ After configuring environment variables and setting up content:
 
 ---
 
+**← [Back to Wiki Home](Home.md)** | **[Deployment Guide](Deployment.md)**
+
 **Important:** Never commit `.env.production` files to git. Always use your hosting platform's environment variable configuration.
-
-
 

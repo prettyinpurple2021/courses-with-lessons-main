@@ -13,13 +13,15 @@ Complete guide for deploying SoloSuccess Intel Academy to production.
 
 ### Quick Deploy (5 Steps)
 
-1. **Configure Environment Variables** (see [Environment Setup](#environment-setup))
+1. **Configure Environment Variables** (see [Environment Setup](Environment-Setup.md))
 2. **Deploy Backend** to Fly.io
 3. **Run Database Migrations**
 4. **Set Up Production Content** (CRITICAL - see [Content Setup](#content-setup))
 5. **Deploy Frontend** to Vercel
 
 ## Environment Setup
+
+See [Environment Setup](Environment-Setup.md) for complete details.
 
 ### Backend Environment Variables (Fly.io)
 
@@ -57,8 +59,6 @@ VITE_GA_MEASUREMENT_ID=G-XXXXXXXXXX  # Optional
 VITE_PLAUSIBLE_DOMAIN=yourdomain.com  # Optional
 VITE_ANALYTICS_PROVIDER=ga4  # Optional: 'ga4', 'plausible', or 'none'
 ```
-
-See [PRODUCTION_ENV_SETUP.md](./PRODUCTION_ENV_SETUP.md) for complete details.
 
 ## Backend Deployment (Fly.io)
 
@@ -209,6 +209,8 @@ npm run test:e2e
 
 ## Troubleshooting
 
+See [Troubleshooting](Troubleshooting.md) for common issues and solutions.
+
 ### Frontend Can't Connect to Backend
 
 **Symptoms:** CORS errors, API calls failing
@@ -276,14 +278,9 @@ fly status -a intel-academy-api
 - Backend: `https://intel-academy-api.fly.dev/api/health`
 - Frontend: Your Vercel URL
 
-## Additional Resources
-
-- **[PRODUCTION_ENV_SETUP.md](./PRODUCTION_ENV_SETUP.md)** - Complete environment variable guide
-- **[PRODUCTION_READINESS_CHECKLIST.md](./PRODUCTION_READINESS_CHECKLIST.md)** - Full production readiness checklist
-- **[docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md)** - Detailed deployment guide
-- **[docs/TROUBLESHOOTING.md](./docs/TROUBLESHOOTING.md)** - Troubleshooting guide
-
 ---
+
+**← [Back to Wiki Home](Home.md)** | **[Status](Status.md)** | **[Environment Setup](Environment-Setup.md)**
 
 **Ready to deploy?** Start with environment setup, then follow the steps above!
 

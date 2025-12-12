@@ -1,4 +1,4 @@
-# Production Architecture - SoloSuccess Intel Academy
+# Production Architecture
 
 ## ✅ Your Production Setup (Perfect for Production!)
 
@@ -149,6 +149,8 @@ Redis:     Fly.io Redis (or Upstash)
 
 ---
 
+**← [Back to Wiki Home](Home.md)** | **[Deployment Guide](Deployment.md)**
+
 **Next Steps:**
 1. Deploy frontend to Vercel
 2. Deploy backend to Fly.io
@@ -156,5 +158,4 @@ Redis:     Fly.io Redis (or Upstash)
 4. Configure all environment variables
 5. Test everything
 6. Launch! 🚀
-
 

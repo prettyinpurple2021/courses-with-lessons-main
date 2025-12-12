@@ -133,12 +133,14 @@ npm run report:production
 
 If you encounter issues:
 
-1. Check [TROUBLESHOOTING.md](./docs/TROUBLESHOOTING.md)
+1. Check [Troubleshooting](Troubleshooting.md)
 2. Review error logs in Sentry (if configured)
 3. Check production readiness report: `npm run report:production`
 4. Verify environment variables: `npm run check:production`
 
 ---
+
+**← [Back to Wiki Home](Home.md)** | **[Readiness Guide](Readiness-Guide.md)**
 
 **Remember:** It's better to delay launch than to launch with broken content or security issues. Take the time to verify everything is working correctly.
 

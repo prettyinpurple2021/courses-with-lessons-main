@@ -115,21 +115,6 @@ This will:
 
 **Important:** Replace any placeholder video IDs with real YouTube video IDs before production.
 
-### 4. Content Review
-
-The content verification script (`npm run verify:content`) will automatically check:
-
-- [x] All 7 courses exist (automated check)
-- [x] Each course has 12 lessons (automated check)
-- [x] All lessons have YouTube video IDs (automated check)
-- [x] All lessons have activities (automated check)
-- [x] All courses have final projects (automated check)
-- [x] All courses have final exams (automated check)
-- [x] Activity numbering is sequential (automated check)
-- [x] Lesson numbering is sequential (automated check)
-- [ ] All YouTube video IDs are valid (run `npm run verify:videos`)
-- [ ] All activities have real content (manual review recommended)
-
 ### 5. Security Audit
 
 Run security checks:
@@ -204,7 +189,7 @@ Set up monitoring:
 
 Follow the deployment guide:
 
-See [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md) for detailed instructions.
+See [Deployment Guide](Deployment.md) for detailed instructions.
 
 **Quick Deploy:**
 1. Deploy frontend to Vercel
@@ -326,8 +311,8 @@ After deploying, verify:
 
 If you encounter issues:
 
-1. Check [TROUBLESHOOTING.md](./docs/TROUBLESHOOTING.md)
-2. Review [DEPLOYMENT.md](./docs/DEPLOYMENT.md)
+1. Check [Troubleshooting](Troubleshooting.md)
+2. Review [Deployment Guide](Deployment.md)
 3. Check error logs
 4. Verify environment variables
 
@@ -343,6 +328,8 @@ Once all checks pass:
 6. ✅ Prepare support team
 
 ---
+
+**← [Back to Wiki Home](Home.md)** | **[Readiness Checklist](Readiness-Checklist.md)**
 
 **Ready for Production?** Run `npm run check:production` to verify!
 

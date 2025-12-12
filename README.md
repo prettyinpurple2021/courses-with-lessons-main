@@ -350,11 +350,17 @@ Each course contains:
 
 ## 📖 Documentation
 
-### Getting Started
-- **[Deployment Guide](./DEPLOYMENT.md)** - Complete deployment guide for production
-- **[Production Status](./PRODUCTION_STATUS.md)** - Current production status and readiness
-- **[Production Environment Setup](./PRODUCTION_ENV_SETUP.md)** - Complete environment variable guide
-- **[Production Readiness Checklist](./PRODUCTION_READINESS_CHECKLIST.md)** - Full production readiness checklist
+### Production Wiki 📚
+**All production documentation is now organized in the [Production Wiki](./wiki/Home.md):**
+- **[Wiki Home](./wiki/Home.md)** - Production wiki index
+- **[Status](./wiki/Status.md)** - Current production status
+- **[Deployment Guide](./wiki/Deployment.md)** - Complete deployment guide
+- **[Environment Setup](./wiki/Environment-Setup.md)** - Environment variable configuration
+- **[Architecture](./wiki/Architecture.md)** - Production architecture overview
+- **[Readiness Guide](./wiki/Readiness-Guide.md)** - Production readiness verification
+- **[Readiness Checklist](./wiki/Readiness-Checklist.md)** - Pre-launch checklist
+- **[Quick Commands](./wiki/Quick-Commands.md)** - Common production commands
+- **[Troubleshooting](./wiki/Troubleshooting.md)** - Common issues and solutions
 
 ### User & Admin Guides
 - **[User Guide](./docs/USER_GUIDE.md)** - Student user guide
@@ -404,7 +410,7 @@ npm run test:e2e:debug  # Debug mode
 #### Current Production Setup
 - **Frontend**: Vercel
 - **Backend**: Fly.io
-- See [DEPLOYMENT.md](./DEPLOYMENT.md) for complete guide
+- See [Production Wiki - Deployment Guide](./wiki/Deployment.md) for complete guide
 
 ### Docker Deployment (Optional)
 
@@ -453,8 +459,9 @@ All detailed documentation is organized in the `docs/` folder:
 
 ### Getting Started
 - **[SETUP.md](./docs/SETUP.md)** - Complete setup guide for local development
-- **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Production deployment guide (Vercel + Fly.io)
-- **[PRODUCTION_STATUS.md](./PRODUCTION_STATUS.md)** - Current production status
+- **[Production Wiki](./wiki/Home.md)** - Complete production documentation
+- **[Deployment Guide](./wiki/Deployment.md)** - Production deployment guide (Vercel + Fly.io)
+- **[Production Status](./wiki/Status.md)** - Current production status
 
 ### Content Management
 - **[CONTENT_AUTOMATION.md](./docs/CONTENT_AUTOMATION.md)** - AI-powered content generation guide
@@ -472,6 +479,7 @@ All detailed documentation is organized in the `docs/` folder:
 - **[AUTH.md](./docs/AUTH.md)** - Authentication guide
 - **[TESTING.md](./TESTING.md)** - Testing status and guidelines
 - **[TROUBLESHOOTING.md](./docs/TROUBLESHOOTING.md)** - Troubleshooting guide
+- **[Production Wiki](./wiki/Home.md)** - Complete production documentation and guides
 
 ### Service Setup
 - **[SERVICES_CLOUDINARY.md](./docs/SERVICES_CLOUDINARY.md)** - Cloudinary setup
